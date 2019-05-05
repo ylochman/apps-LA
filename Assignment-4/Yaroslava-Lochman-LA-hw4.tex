@@ -1,0 +1,1752 @@
+\documentclass[12pt,a4]{article}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\input{Problems_head}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\usepackage{amsmath,amsthm}
+\usepackage{amsfonts}
+\usepackage{amssymb}
+\usepackage[normalem]{ulem}
+\usepackage{enumerate}
+\usepackage{graphicx}
+\usepackage{datetime,verbatim}
+\usepackage{bm}
+\usepackage{xcolor}
+\usepackage[makeroom]{cancel}
+\usepackage{pgffor}
+\graphicspath{ {./images/} }
+
+%%%%%%%%%%%%%%%%%%%%%    page setup   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+
+\textheight=235truemm \textwidth=175truemm \hoffset=-15truemm
+\voffset=-15truemm
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\usepackage{fancyhdr}
+\pagestyle{fancy}
+\lhead{{\sf\scriptsize R.H.}}
+\rhead{{\sf\scriptsize Autumn~2018}}
+\chead{{\sf\scriptsize Linear Algebra: Homework~4 @ CSDS UCU%~\Versia
+}}
+\lfoot{}
+\rfoot{}
+\cfoot{\rm\thepage} 
+%\pagestyle{myheadings}
+%%\markright{}
+%\markboth{}{}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+%%%%%%%%%%%%%%%   matrix extension  %%%%%%%%
+\makeatletter
+\renewcommand*\env@matrix[1][*\c@MaxMatrixCols c]{%
+	\hskip -\arraycolsep
+	\let\@ifnextchar\new@ifnextchar
+	\array{#1}}
+\makeatother
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\newenvironment{proofNoQED}[1]{\smallskip\noindent{\it Proof #1.}\ \rm}
+{\hfill \smallskip}
+\newcommand{\ProofNoQED}[1]{\smallskip\noindent{\it Proof} #1\ \hfill\smallskip}
+%\renewcommand{\qedsymbol}{\text{$\square$}}
+\newtheorem{problem}{Problem}
+\newtheorem{solution}{Solution to the problem}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%   Definitions       %%%%%%%
+
+
+\newcommand\rank{\operatorname{rank}}
+\newcommand{\trace}{\operatorname{tr}}
+\newcommand{\ls}{\operatorname{ls}}
+% \newcommand\grad{\operatorname{grad}}
+\newcommand{\grad}{\nabla}
+\DeclareMathOperator{\sgn}{sgn}
+
+\newcommand{\ov}{\overline}
+\newcommand{\wt}{\widetilde}
+
+\newcommand{\bN}{{\mathbb N}}
+\newcommand{\bR}{{\mathbb R}}
+\newcommand{\bZ}{{\mathbb Z}}
+
+\newcommand{\ba}{{\mathbf a}}
+\newcommand{\bb}{{\mathbf b}}
+\newcommand{\bff}{{\mathbf f}}
+
+\newcommand{\bu}{{\mathbf u}}
+\newcommand{\bv}{{\mathbf v}}
+\newcommand{\bp}{{\mathbf p}}
+\newcommand{\bq}{{\mathbf q}}
+\newcommand{\br}{{\mathbf r}}
+\newcommand{\bx}{{\mathbf x}}
+\newcommand{\by}{{\mathbf y}}
+\newcommand{\bw}{{\mathbf w}}
+\newcommand{\be}{{\mathbf e}}
+
+\newcommand{\cB}{{\mathcal B}}
+\newcommand{\cF}{{\mathcal F}}
+\newcommand{\cG}{{\mathcal G}}
+\newcommand{\cN}{{\mathcal N}}
+\newcommand{\cP}{{\mathcal P}}
+\newcommand{\cT}{{\mathcal T}}
+
+\newcommand{\one}{{\mathbf 1}}
+
+\renewcommand{\Im}{{\mathcal C}}
+\newcommand{\Ker}{{\mathcal N}}
+
+\newcommand{\sprod}[2]{\left \langle #1, #2 \right \rangle}
+\newcommand{\norm}[1]{\left\lVert#1\right\rVert}
+\newcommand{\abs}[1]{\left | #1 \right |}
+\newcommand{\vect}[1]{\overrightarrow{#1}}
+
+\newcommand{\answer}[1]{\textbf{Answer:} #1}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+\begin{document}
+	
+\begin{center}
+	\Large\bf{Linear Algebra\\
+		Homework 4: Factorization and iteration}
+\end{center}
+Solutions are by Yaroslava Lochman.
+	%\vspace{.5cm}
+	
+
+\begin{problem}[Rank of a matrix; 2~pt]\label{prb:4.1}\rm
+\begin{enumerate}[(a)]
+	\item Assume that $A$ is an $m\times n$ matrix of rank~$r$. Without using the  singular value decomposition, prove that $A$ can be written as a sum of $r$ summands $\bu_j\bv_j^\top$  of rank~$1$. Is such a representation unique?
+	\item For the matrices below, find their ranks $r$ and represent them as the sum of $r$ rank-one summands (do not use SVD yet!).
+\[
+    A =
+    \begin{pmatrix}[rrrr]
+        1 & -2 & 3 & -4 \\
+        -2 & 4 & -6 & 8 \\
+        3 & -6 & 9 & -12 \\
+        -4 & 8 & -12 & 16
+    \end{pmatrix}, 
+    \qquad
+        B =
+    \begin{pmatrix}[rrrr]
+        1 & 2 & 3 & 4 \\
+        2 & 3 & 4 & 5 \\
+        3 & 4 & 5 & 6 \\
+        4 & 5 & 6 & 7
+    \end{pmatrix}.
+\]
+\end{enumerate}	
+\end{problem}
+
+% \textcolor{blue}{
+\begin{solution}[] \rm .
+\begin{enumerate}[(a)]
+\item Let $A = \begin{pmatrix}\ba_1 & \cdots & \ba_n \end{pmatrix}$, \quad $a_i \in \bR^m \quad i=\overline{1,n}$.
+\[
+\rank A = r
+~\Rightarrow~
+\exists \{\bu_1, \dots, \bu_r \} \text{ -- 	basis of $\Im(A)$}, ~ \bu_j \in \bR^m
+\]
+\[
+~\Rightarrow~
+\forall i=\overline{1,n} \quad \exists \{v^{(i)}_1, \dots, v^{(i)}_r\},~  v^{(i)}_j\in\bR: \quad \ba_i = \sum_{j=1}^r v^{(i)}_j \bu_j
+\]
+\[
+\bv_j := \begin{pmatrix}v^{(1)}_j & \cdots & v^{(n)}_j \end{pmatrix}^\top
+~\Rightarrow~
+A = \begin{pmatrix}\sum_{j=1}^r v^{(1)}_j \bu_j & \cdots & \sum_{j=1}^r v^{(n)}_j \bu_j \end{pmatrix} = \sum_{j=1}^r\bu_j\bv_j^\top
+\]
+Since the basis of the vector space is not unique (can be constructed in different ways), the representation is not unique.
+\item
+\[
+A =
+\begin{pmatrix}[rrrr]
+1 & -2 & 3 & -4 \\
+-2 & 4 & -6 & 8 \\
+3 & -6 & 9 & -12 \\
+-4 & 8 & -12 & 16
+\end{pmatrix} = \begin{pmatrix}[rrrr] \ba_1 & \ba_2 & \ba_3 & \ba_4 \end{pmatrix} 
+\]
+One can see that $\ba_2 = -2\ba_1$, ~$\ba_3 = 3\ba_1$, ~$\ba_4 = -4\ba_1$, so $\rank A = 1$ and:
+\[
+\{\bu_1\} = \{\ba_1\}=\left\{\begin{pmatrix}[r]1\\-2\\3\\-4\end{pmatrix}\right\} \text{ -- basis of $\Im(A)$},
+\qquad
+\{\bv_1\} = \left\{\begin{pmatrix}[r]1\\-2\\3\\-4\end{pmatrix}\right\}
+\quad
+\text{and}\quad
+A = \bu_1\bv_1^\top
+\]
+\[
+B =
+\begin{pmatrix}[rrrr]
+1 & 2 & 3 & 4 \\
+2 & 3 & 4 & 5 \\
+3 & 4 & 5 & 6 \\
+4 & 5 & 6 & 7
+\end{pmatrix} = \begin{pmatrix}[rrrr] \bb_1 & \bb_2 & \bb_3 & \bb_4 \end{pmatrix}
+\]
+Let $\bu =\begin{pmatrix}1&1&1&1\end{pmatrix}^\top$. One can see that $\bb_2 = \bb_1 + \bu$, ~$\bb_3 = \bb_1 + 2 \bu$, ~$\bb_4 = \bb_1 + 3 \bu$, so $\rank B = 2$ and:
+\[
+\{\bu_1, \bu_2\} = \{\bb_1, \bu\}=\left\{\begin{pmatrix}[r]1\\2\\3\\4\end{pmatrix}, \begin{pmatrix}[r]1\\1\\1\\1\end{pmatrix}\right\} \text{ -- basis of $\Im(B)$},
+\qquad
+\{\bv_1, \bv_2\} = \left\{\begin{pmatrix}[r]1\\1\\1\\1\end{pmatrix}, \begin{pmatrix}[r]0\\1\\2\\3\end{pmatrix}\right\}
+\]
+\[
+B = \bu_1 \bv_1^\top + \bu_2 \bv_2^\top
+\]
+\answer{$
+A = \begin{pmatrix}1&-2&3&-4\end{pmatrix}^\top\begin{pmatrix}1&-2&3&-4\end{pmatrix}
+\\[6pt] \hspace*{18mm}
+B = \begin{pmatrix}1&2&3&4\end{pmatrix}^\top\begin{pmatrix}1&1&1&1\end{pmatrix} +
+\begin{pmatrix}1&1&1&1\end{pmatrix}^\top\begin{pmatrix}0&1&2&3\end{pmatrix}
+$}\\[5pt]
+\end{enumerate}
+\end{solution}
+% }
+
+
+\begin{problem}[Singular values; 3~pt]\label{prb:4.2}\rm
+\begin{enumerate}[(a)]
+%	\item If $A = U\Sigma V^\top$ is the SVD of $A$, what is the SVD of $A^\top$?
+	\item Prove that matrices $A$ and $A^\top$ have the same non-zero singular values.
+%	\item Assume that $A = \bu\bv^\top$ is an $m\times n$ matrix of rank~$1$. Find the SVD of $A$.
+	\item Find singular values of the following matrices:
+\[
+    \begin{matrix} (i) \end{matrix} \quad
+    \begin{pmatrix}[rrr]
+        0 & 1 & 2
+    \end{pmatrix};
+    \qquad
+    \begin{matrix} (ii) \end{matrix} \quad
+	\begin{pmatrix}[rrr]
+		0 & 1 & 2
+	\end{pmatrix}^\top;
+	\qquad
+    \begin{matrix} (iii) \end{matrix} \quad
+    \begin{pmatrix}[rrr]
+        1 & 2 & 2 \\
+        1 & 3 & 3 \\
+    \end{pmatrix};
+    \qquad
+    \begin{matrix} (iv) \end{matrix} \quad
+    \begin{pmatrix}[rr]
+        2 &  0 \\
+        1 & 2
+    \end{pmatrix}.
+\]
+{\small \textsf{Hint:
+		Use (a) in (i) and (iii)}}
+\end{enumerate}
+\end{problem}
+
+% \textcolor{blue}{
+\begin{solution}[] \rm .
+\begin{enumerate}[(a)]
+\item
+Let $A$ be $m\times n$ matrix.
+\[
+A = U \Sigma V^\top \text{~--~ SVD of $A$}
+~\Rightarrow~
+A^\top = (U \Sigma V^\top)^\top = V \Sigma^\top U^\top
+\]
+$V$ and $U$ are orthogonal. $\Sigma^\top$ is $n\times m$ and has non-zero values only on the main diagonal (because $\Sigma$ has singular values of A on the main diagonal and zeros otherwise). Therefore $A^\top = V \Sigma^\top U^\top$ ~--~ SVD of $A^\top$. And since the main diagonal of $\Sigma^\top$ corresponds to singular values of $A^\top$, $A$ and $A^\top$ have the same non-zero singular values.
+\item
+\begin{enumerate}[(i)]
+	\item
+\[
+A = 
+\begin{pmatrix}[rrr]
+0 & 1 & 2
+\end{pmatrix}
+\]
+Let's find singular values for $A^\top$:
+\[
+(A^\top)^\top A^\top = AA^\top = \begin{pmatrix}[r] 5 \end{pmatrix}
+\]
+\[
+\Rightarrow~
+\lambda_1 = 5 
+\quad
+\Rightarrow
+\quad
+\sigma_1 = \sqrt5
+\]
+The same singular value $\sigma_1 = \sqrt5$ is for $A$.\\
+\answer{$\sigma_1 = \sqrt5$}
+	\item
+\[
+A = 
+\begin{pmatrix}[rrr]
+0 & 1 & 2
+\end{pmatrix}^\top
+\]
+From (i): $\sigma_1 = \sqrt5$.\\
+\answer{$\sigma_1 = \sqrt5$}
+	\item
+\[
+A = 
+\begin{pmatrix}[rrr]
+1 & 2 & 2 \\
+1 & 3 & 3 \\
+\end{pmatrix}
+\]
+Let's find singular values for $A^\top$:
+\[
+AA^\top = 
+\begin{pmatrix}[rrr]
+9 & 13\\
+13 & 19\\
+\end{pmatrix}
+\]
+\[
+\lambda^2 - 28 \lambda + 2 = 0
+\quad
+\Rightarrow
+\quad
+\lambda_{1,2} = 14 \pm \sqrt{194}
+\quad
+\Rightarrow
+\quad
+\sigma_{1,2} = \sqrt{14 \pm \sqrt{194}}
+\]
+\answer{$\sigma_1 = \sqrt{14 + \sqrt{194}}, ~ \sigma_2 = \sqrt{14 - \sqrt{194}}$}
+	\item
+\[
+A =
+\begin{pmatrix}[rr]
+2 &  0 \\
+1 & 2
+\end{pmatrix}
+\quad
+A^\top A = 
+\begin{pmatrix}[rrr]
+5 & 2\\
+2 & 4\\
+\end{pmatrix}
+\]
+\[
+\lambda^2 - 9 \lambda + 16 = 0
+\quad
+\Rightarrow
+\quad
+\lambda_{1,2} = \frac{9 \pm \sqrt{17}}{2}
+\quad
+\Rightarrow
+\quad
+\sigma_{1,2} = \sqrt{\frac{9 \pm \sqrt{17}}{2}}
+\]
+\answer{$\sigma_1 = \sqrt{\frac{9 + \sqrt{17}}{2}}, ~ \sigma_2 = \sqrt{\frac{9 - \sqrt{17}}{2}}$}\\[5pt]
+\end{enumerate}
+\end{enumerate}
+\end{solution}
+% }
+
+\begin{problem}[Singular value decomposition; 4~pt]\label{prb:13.2}\rm
+	\begin{enumerate}[(a)]
+		\item If $A = U\Sigma V^\top$ is the SVD of $A$, what is the SVD of $A^\top$?
+%		\item Prove that matrices $A$ and $A^\top$ have the same non-zero singular values.
+		\item Assume that $A = \bu\bv^\top$ is an $m\times n$ matrix of rank~$1$. Find the SVD of $A$.
+		\item Find SVD of the following matrices:
+		\[
+		\begin{matrix} (i) \end{matrix} \quad
+		\begin{pmatrix}[rrr]
+		0 & 1 & 2
+		\end{pmatrix};
+		\qquad
+		\begin{matrix} (ii) \end{matrix} \quad
+		\begin{pmatrix}[rrr]
+		0 & 1 & 2
+		\end{pmatrix}^\top;
+		\qquad
+	 	\begin{matrix} (iii) \end{matrix} \quad  
+	 	\begin{pmatrix}[rrr]
+		2 & 1 & -2 \\ -2 & -1 & 2
+		\end{pmatrix}.
+		\]
+	\end{enumerate}
+\end{problem}
+
+% \textcolor{blue}{
+\begin{solution}[] \rm .
+\begin{enumerate}[(a)]
+\item From the \textbf{Problem 2} (a): $A^\top = V \Sigma^\top U^\top$. So let $\hat A = A^\top$, then $\hat U = V$; $\hat\Sigma=\Sigma^\top$; $\hat V = U$.
+\item
+\[
+A = \bu\bv^\top = (\norm{\bu}\norm{\bv})\frac{\bu}{\norm{\bu}}\frac{\bv}{\norm{\bv}}^\top = \sigma \hat \bu \hat \bv^\top
+\]
+\[
+\sigma = \norm{\bu}\norm{\bv}
+\qquad
+\hat \bu = \frac{\bu}{\norm{\bu}}
+\qquad
+\hat \bv = \frac{\bv}{\norm{\bv}}
+\]
+\answer{$
+A ~ = ~\norm{\bu}\norm{\bv}~\cdot~\frac{\bu}{\norm{\bu}}~\cdot~\frac{\bv}{\norm{\bv}}^\top
+$}
+\item
+\begin{enumerate}[(i)]
+	\item
+\[
+A =
+\begin{pmatrix}[rrr]
+0 & 1 & 2
+\end{pmatrix}
+\]
+First let's solve the next item (ii). So for $A^\top$:
+$
+\hat \sigma_1 = \sqrt5
+\quad \hat\bv_1 = \begin{pmatrix}[r] 1 \end{pmatrix}
+\quad \hat\bu_1 = \frac1{\sqrt5} \begin{pmatrix}[rrr] 0 & 1 & 2 \end{pmatrix}^\top
+$
+Hence for $A$ we will have:
+$
+\sigma_1 = \hat \sigma_1 = \sqrt5
+\quad \bv_1 = \hat \bu_1 = \frac1{\sqrt5} \begin{pmatrix}[rrr] 0 & 1 & 2 \end{pmatrix}^\top
+\quad \bu_1 = \hat \bv_1 = \begin{pmatrix}[r] 1 \end{pmatrix}
+$
+\answer{$
+A = \sqrt5 \cdot \begin{pmatrix}[r] 1 \end{pmatrix} \cdot \begin{pmatrix} ~0~ & 1/\sqrt5 & 2/\sqrt5 \end{pmatrix}
+$}
+% Since $A^\top = V \Sigma^T U^\top$
+	\item
+\[
+A =
+\begin{pmatrix}[rrr]
+0 & 1 & 2
+\end{pmatrix}^\top
+\qquad
+\rank A = 1
+\]
+\[
+A^\top A = \begin{pmatrix}[r] 5 \end{pmatrix}
+\]
+\[
+\lambda_1 = 5 \quad \sigma_1 = \sqrt5
+\qquad \bv_1 = \begin{pmatrix}[r] 1 \end{pmatrix}
+ \qquad \bu_1 = \frac{A\bv_1}{\sigma_1} = \frac1{\sqrt5} \begin{pmatrix}[c] ~0~ \\ 1 \\ 2 \end{pmatrix}
+\]
+\answer{$
+A = \sqrt5 \cdot \begin{pmatrix}[c] ~0~ \\ 1/\sqrt5 \\ 2/\sqrt5 \end{pmatrix} \cdot \begin{pmatrix}[r] 1 \end{pmatrix}
+$}
+	\item
+\[
+A =
+\begin{pmatrix}[rrr]
+2 & 1 & -2 \\
+-2 & -1 & 2
+\end{pmatrix}
+\qquad
+\rank A = 1 ~\text{ ~ -- ~ number of non-zero singular values of $A$}
+\]
+Let's solve for $\hat A = A^\top$:
+\[
+\hat A =
+\begin{pmatrix}[rr]
+2 & -2\\
+1 & -1\\
+-2 & 2\\
+\end{pmatrix}
+\qquad
+C = \hat A^\top \hat A = 
+\begin{pmatrix}[rr]
+9 & -9\\
+-9 & 9\\
+\end{pmatrix}
+\]
+\[
+\lambda_1 = 18 \quad \lambda_2 = 0
+\]
+\[
+\hat \sigma_1 = 3 \sqrt2 \quad \hat \sigma_2 = 0
+\]
+\[
+(C - 18I)\bv = 0 ~\Rightarrow ~
+\hat \bv_1 =
+\frac1{\sqrt2}
+\begin{pmatrix}[rr] 1 \\ -1 \\ \end{pmatrix}
+\]
+\[
+\hat \bu_1 = \frac{1}{3 \sqrt2}
+\frac1{\sqrt2}
+\begin{pmatrix}[rr]
+2 & -2\\
+1 & -1\\
+-2 & 2\\
+\end{pmatrix}
+\begin{pmatrix}[rr] 1 \\ -1 \\ \end{pmatrix}
+=
+\frac{1}{6}
+\begin{pmatrix}[rr]
+4 \\ 2 \\ -4
+\end{pmatrix}
+\]
+Hence for $A$ we have:
+\[
+\sigma_1 = \hat \sigma_1 = 3 \sqrt2 
+\qquad
+\bv_1 = \hat \bu_1 =
+\frac{1}{6}
+\begin{pmatrix}[rr]
+4 \\ 2 \\ -4
+\end{pmatrix}
+\qquad
+\bu_1 = \hat \bv_1 =
+\frac1{\sqrt2}
+\begin{pmatrix}[rr] 1 \\ -1 \\ \end{pmatrix}
+\]
+\answer{$
+A = 
+3 \sqrt2 
+\cdot
+\begin{pmatrix}[rr]
+2/3 \\ 1/3 \\ -2/3
+\end{pmatrix}
+\cdot
+\begin{pmatrix}[rr] 1/\sqrt2 & -1/\sqrt2 \end{pmatrix}
+$}\\[10pt]
+\end{enumerate}
+\end{enumerate}
+\end{solution}
+% }
+
+
+\begin{problem}[Singular value decomposition, 4~pt]\label{prb:13.3}\rm
+Find the singular value decomposition of the matrix 
+\[
+     A = 
+    \begin{pmatrix}[rrr]
+   		  3 & 2 & 2 \\ 2 & \hphantom{-}3 & -2
+    \end{pmatrix}
+\]
+To this end, complete the following steps:
+\begin{enumerate}[(a)]
+  \item How many singular values $\sigma_j$ does $A$ have? How many of them are non-zero? Find the nonzero singular values $\sigma_1,\dots,\sigma_r$.
+  \item find the right singular vectors $A \bv_j = \sigma_j \bu_j$, $j=1,\dots, r$;
+  \item find the left singular vectors $A^\top \bu_j = \sigma_j \bv_j$, $j=1,\dots, r$;
+  \item form the unitary matrices $U$ and $V$ and write the singular value decomposition of~$A$.
+\end{enumerate}
+
+(\small{\textsf{Hint: you may find it easier to work with $A^\top$}})
+\end{problem}
+
+% \textcolor{blue}{
+\begin{solution}[] \rm .
+\[
+ A = 
+\begin{pmatrix}[rrr]
+3 & 2 & 2 \\
+2 & \hphantom{-}3 & -2
+\end{pmatrix}
+~\text{ -- ~ $2\times 3$ matrix}
+\qquad
+\rank A = 2
+\]
+\begin{enumerate}[(a)]
+	\item A has $\min\{2,~3\} = 2$ singular values $\sigma_j$, the number of non-zero singular values is $\rank A = 2$. To find it let's consider $\hat A=A^\top$:
+\[
+\hat A =
+\begin{pmatrix}[rrr]
+3 & 2 \\
+2 & 3 \\
+2 & -2 \\
+\end{pmatrix}
+\qquad
+C = \hat A^\top \hat A = 
+\begin{pmatrix}[rr]
+17 & 8 \\
+8 & 17
+\end{pmatrix}
+\qquad
+\lambda_1 = 25
+\quad
+\lambda_2 = 34 - 25 = 9
+\]
+\[
+\Rightarrow ~ 
+\sigma_1 = 5
+\quad
+\sigma_2 = 3
+\]
+	\item and (c):
+\[
+(C - 25I)\bv = 0
+~\Rightarrow~
+\hat \bv_1 = \frac{1}{\sqrt2}
+\begin{pmatrix} 1 \\ 1 \end{pmatrix}
+\qquad
+\hat \bu_1 = \frac{\hat A\bv_1}{\sigma_1} = \frac1{\sqrt2}
+\begin{pmatrix} 1 \\ 1 \\ 0 \end{pmatrix} 
+\]
+\[
+(C - 9I)\bv = 0
+~\Rightarrow~
+\hat \bv_2 = \frac{1}{\sqrt2}
+\begin{pmatrix} 1 \\ -1 \end{pmatrix}
+\qquad
+\hat \bu_2 = \frac{\hat A\bv_2}{\sigma_1} = \frac1{3\sqrt2}
+\begin{pmatrix} 1 \\ -1 \\ 4 \end{pmatrix} 
+\]
+Hence for A:
+\[
+\bv_1 = \hat \bu_1 = \frac1{\sqrt2}
+\begin{pmatrix} 1 \\ 1 \\ 0 \end{pmatrix} 
+\qquad
+\bv_2 = \hat \bu_2 = \frac1{3\sqrt2}
+\begin{pmatrix} 1 \\ -1 \\ 4 \end{pmatrix} 
+\]
+\[
+\bu_1 = \hat \bv_1 = \frac1{\sqrt2}
+\begin{pmatrix} 1 \\ 1 \end{pmatrix} 
+\qquad
+\bu_2 = \hat \bv_2 = \frac1{\sqrt2}
+\begin{pmatrix} 1 \\ -1  \end{pmatrix} 
+\]
+% Indeed:
+% \[
+% A\bv_1 = 
+% \]
+\end{enumerate}
+	(d)
+\[
+U = \begin{pmatrix} \bu_1 & \bu_2 \end{pmatrix} 
+ = \frac1{\sqrt2}
+ \begin{pmatrix}
+ 1 & 1 \\
+ 1 & -1 \\
+ \end{pmatrix} 
+\]
+\[
+\bv_3 = \frac{\bv_1 \times \bv_2}{\norm{\bv_1 \times \bv_2}} =
+\frac{\begin{pmatrix} 1 & -1 & 4 \end{pmatrix}^\top \times
+\begin{pmatrix} 1 & 1 & 0 \end{pmatrix}^\top}{\norm{\cdot}} =
+\frac{\begin{pmatrix} -4 & 4 & 2 \end{pmatrix}^\top}{6} =
+\begin{pmatrix} -2/3 \\ 2/3 \\ 1/3 \end{pmatrix}
+\]
+\[
+V = \begin{pmatrix} \bv_1 & \bv_2 & \bv_3 \end{pmatrix} 
+= \frac1{3\sqrt2}
+\begin{pmatrix}
+3 & 1 & -2\sqrt2 \\
+3 & -1 & 2\sqrt2 \\
+0 & 4 & \sqrt2 \\
+\end{pmatrix} 
+\]
+\answer{$
+A = U\Sigma V^\top =
+\frac1{\sqrt2}
+\begin{pmatrix}
+1 & 1 \\
+1 & -1 \\
+\end{pmatrix} 
+\cdot
+\begin{pmatrix}
+5 & 0 & 0 \\
+0 & 3 & 0 \\
+\end{pmatrix} 
+\cdot
+\frac1{3\sqrt2}
+\begin{pmatrix}
+3 & 1 & -2\sqrt2 \\
+3 & -1 & 2\sqrt2 \\
+0 & 4 & \sqrt2 \\
+\end{pmatrix} ^\top
+$}\\[10pt]
+\end{solution}
+% }
+
+
+\begin{problem}[Low-rank approximation; 2 pt]\label{prb:13.5}\rm
+\begin{enumerate}[(a)]
+	\item For the matrix $A$ in Problem~\ref{prb:13.3}, find a unit vector $\bx \in \bR^3$ for which $A\bx$ has the maximal length $\alpha$. What is $\alpha$?
+	\item Find the best rank one approximation for the matrix~$A$ of Problem~\ref{prb:13.3} in the Frobenius norm.	
+\end{enumerate}
+\end{problem}
+
+% \textcolor{red}{
+\begin{solution}[] \rm .
+\begin{enumerate}[(a)]
+	\item Let $A = U\Sigma V^\top$ be the SVD of A with $\sigma_1 \geq \cdots \geq \sigma_r$.
+\[
+\bx^*: \norm{A\bx^*} = \max_{\norm{\bx} = 1} \norm{A\bx} = \max_{\norm{\bx} = 1} \norm{U^\top A \bx} = \max_{\norm{\by} = 1} \norm{U^\top A V \by} = \max_{\norm{\by} = 1} \norm{\Sigma\by} = \norm{\Sigma\be_1} = \sigma_1
+\]
+\[
+\by^* = \be_1 \qquad \bx^* = V \by^* = \bv_1
+\]
+So, the maximal length $\alpha$ is the maximum singular value of A: $\sigma_1=5$, and the unit vector, for which it is achieved, is the corresponding right singular vector: $\bv_1=\frac1{\sqrt2}\begin{pmatrix} 1 & 1 & 0 \end{pmatrix}^\top$.\\
+% \[
+% \norm{A\bv_1} = \norm{\sigma_1 \bu_1} = \sigma_1= 5  ~\text{~--~ the maximum singular value of A}
+% \]
+\answer{$
+\bx^* = \frac1{\sqrt2}\begin{pmatrix} 1 & 1 & 0 \end{pmatrix}^\top
+\quad
+\alpha=5
+$}
+	\item The best rank one approximation in the Frobenius norm is $\sigma_1\bu_1\bv_1^\top$:
+\[
+\sigma_1\bu_1\bv_1^\top = \frac52
+\begin{pmatrix} 1 \\ 1 \end{pmatrix}
+\begin{pmatrix} 1 & 1 & 0 \end{pmatrix}
+= \frac52
+\begin{pmatrix}
+1 & 1 & 0 \\
+1 & 1 & 0 \\
+\end{pmatrix}
+\]\\
+\end{enumerate}
+\end{solution}
+% }
+
+\begin{problem}[Low-rank approximation; 4 pt]\label{prb:13.5}\rm
+Prove that the best rank $k$ approximation $A_k$ of an $m\times n$ matrix~$A$ in the Frobenius norm is given by the first $k$ terms in the SVD of~$A$, i.e., 
+\[
+	A_k = \sigma_1\bu_1\bv_1^\top + \dots + \sigma_k \bu_k\bv_k^\top.
+\]
+\end{problem}
+
+% \textcolor{red}{
+\begin{solution}[] \rm Let $A=U\Sigma V^\top$. We need to prove that:
+\[
+\norm{A-A_k}_F^2 = \min_{\rank B = k}\norm{A-B}_F^2
+\]
+% \[
+% A - A_k = \sigma_{k+1}\bu_{k+1}\bv_{k+1}^\top + \dots + \sigma_r \bu_r\bv_r^\top
+% \]
+% \[
+% \norm{A-A_k}_F^2
+% = \trace\left((\sum_{i=k+1}^r \sigma_i\bu_i\bv_i^\top)^\top \sum_{i=k+1}^r \sigma_i\bu_i\bv_i^\top \right)=
+% \]
+% \[
+% = \trace\left(\sum_{i=k+1}^r \sigma_i\bv_i\bu_i^\top \sum_{i=k+1}^r \sigma_i\bu_i\bv_i^\top \right)
+% = \trace\left(\sum_{i=k+1}^r \sum_{j=k+1}^r \sigma_i \sigma_j \bv_i\bu_i^\top\bu_j\bv_j^\top \right) =
+% \]
+% \[
+% = \trace\left(\sum_{i=k+1}^r \sigma_i^2 \bv_i\bv_i^\top \right) = \sum_{i=k+1}^r \sigma_i^2 = ~(?)~ = \min_{\rank B=k}\norm{A-B}_F^2
+% \]
+Let $B$ be rank-$k$ matrix.
+\[
+\norm{A-B}^2_F = \norm{U\Sigma V^\top - U U^\top B V V^\top}^2_F = \norm{U(\Sigma - U^\top B V) V^\top}^2_F = \norm{\Sigma - U^\top B V}^2_F
+\]
+Let $U^\top B V = D + \hat B$, where $D$ -- diagonal matrix, $\hat B$ -- off-diagonal.
+\[
+\norm{A-B}^2_F = \sum_i{(\Sigma_{ii} - D_{ii})^2} + \sum_{i,j}{\hat B_{ij}^2}
+\]
+To minimize this expression $\hat B$ should be zero matrix, so $U^\top B V = D$. Since $\rank B = k ~\Rightarrow~ \rank D \leq k ~\Rightarrow~ $ at most $k$ elements of $D$ are none-zero: $d_i \neq 0, ~i \in K, ~|K|\leq k$.
+\[
+~\Rightarrow~ \norm{A-B}^2_F = \sum_{i\in K}{(\sigma_{i} - d_{i})^2} + \sum_{i\notin K}{\sigma_{i}^2}
+\]
+From this expression one can see that $d_i$ should be equal to the first $k$ largest singular values to minimize it. So let $\sigma_1 > \cdots > \sigma_r$, then:
+\[
+D = diag\{\sigma_1, \cdots, \sigma_k, 0, \cdots, 0\}
+\]
+\[
+~\Rightarrow~
+B = U D V^\top = \sigma_1\bu_1\bv_1^\top + \dots + \sigma_k \bu_k\bv_k^\top = A_k
+\qquad
+\norm{A-B}_F^2 = \sum_{i=k+1}^r \sigma_i^2
+\]\\
+\end{solution}
+% }
+
+
+\begin{problem}[SVD and image compression; 5~pt]\rm
+	Take a jpg-picture $A$ of yourselves of reasonable size (say $1000\times 1000$ pixels), perform the SVD (use \texttt{Python} or $\texttt{R}$ or any other program of your choice) and find the best rank-$k$ approximation of~$A$ with $k=1,2,5,10,20,50$. For what $k$ can one recognize the picture? Comment on how much the quality and the size increase along with $k$.
+	
+	(\small{\textsf{Hint: one can use the Frobenius distance to the original picture as a quality measure}})
+\end{problem}
+
+% \textcolor{red}{
+\begin{solution}[] \rm The original image:\\
+\begin{center}
+\includegraphics[width=0.4\textwidth]{img}\\[15pt]
+\end{center}
+% {\centering
+The result of calculating best rank-k approximation of picture for k$ = 1, 2, 5, 10, 20, 50$:\\[10pt]
+\foreach \k in {01,02,05,10,20,50}{\includegraphics[width=0.19\textwidth]{img\k}}
+\\[10pt]
+Below is the dependence between quality (that can be considered e.g. as the Frobenius norm of image minus Frobenius distance between image and its approximation) and $k$, image size and $k$:\\[10pt]
+\includegraphics[width=0.56\textwidth]{ImageQuality}
+\includegraphics[width=0.56\textwidth]{ImageSize}
+A person may be recognized starting from $k$ equal to 5-10 already. The quality of image increases considerably when $k$ is small, and then increasing slows down. The size increases even harder as $k$ increases until $k\approx100$, after that it doesn't change too much.\\
+\end{solution}
+% }
+
+
+\begin{problem}[Polar decomposition; 3 pt]\label{prb:13.8}\rm
+Find the positive definite square root $S = V\Sigma V^\top$ of~$A^\top A$ and its polar decomposition $A = QS$:
+\[
+   A = \frac1{\sqrt{10}} \begin{pmatrix}
+     10 & 6 \\ 0 & 8
+    \end{pmatrix}
+\]
+\end{problem}
+
+% \textcolor{blue}{
+\begin{solution}[] \rm .
+\[
+A = \frac1{\sqrt{10}}
+\begin{pmatrix}
+10 & 6 \\
+0 & 8
+\end{pmatrix}
+\qquad A^\top A =
+\begin{pmatrix}
+10 & 6 \\
+6 & 10
+\end{pmatrix}
+\]
+\[
+\lambda_1 = 16
+\quad
+\sigma_1 = 4
+\qquad
+\lambda_2 = 20 - 16 = 4
+\quad
+\sigma_2 = 2
+\]
+\[
+\bv_1 = \frac1{\sqrt2}\begin{pmatrix} 1 \\ 1 \end{pmatrix}
+\quad
+\bu_1 = A \bv_1 / \sigma_1 = 
+\frac1{8\sqrt{5}}
+\begin{pmatrix} 16 \\ 8 \end{pmatrix} = 
+\frac1{\sqrt{5}}
+\begin{pmatrix} 2 \\ 1  \end{pmatrix}
+\]
+\[
+\bv_2 = \frac1{\sqrt2}\begin{pmatrix} 1 \\ -1 \end{pmatrix}
+\quad
+\bu_2 = A \bv_2 / \sigma_2 = \frac1{4\sqrt{5}}
+\begin{pmatrix} 4 \\ - 8 \end{pmatrix} = \frac1{\sqrt{5}}
+\begin{pmatrix} 1 \\ - 2 \end{pmatrix}
+\]
+\[
+S = V\Sigma V^\top
+=
+\frac1{\sqrt2}
+\begin{pmatrix}
+1 & 1 \\
+1 & -1
+\end{pmatrix}
+\begin{pmatrix}
+4 & 0 \\
+0 & 2
+\end{pmatrix}
+\frac1{\sqrt2}
+\begin{pmatrix}
+1 & 1 \\
+1 & -1
+\end{pmatrix}
+=
+\frac1{2}
+\begin{pmatrix}
+1 & 1 \\
+1 & -1
+\end{pmatrix}
+\begin{pmatrix}
+4 & 4 \\
+2 & -2
+\end{pmatrix}
+=
+\begin{pmatrix}
+3 & 1 \\
+1 & 3
+\end{pmatrix}
+\]
+\[
+A = U\Sigma V^\top = UV^\top (V\Sigma V^\top) = QS
+\]
+\[
+Q = UV^\top = 
+\frac1{\sqrt5}
+\begin{pmatrix}
+2 & 1 \\
+1 & -2
+\end{pmatrix}
+\frac1{\sqrt2}
+\begin{pmatrix}
+1 & 1 \\
+1 & -1
+\end{pmatrix}
+=
+\frac1{\sqrt{10}}
+\begin{pmatrix}
+3 & 1 \\
+-1 & 3
+\end{pmatrix}
+\]
+\answer{
+$
+S = \begin{pmatrix}
+3 & 1 \\
+1 & 3
+\end{pmatrix};~
+A = QS = 
+\frac1{\sqrt{10}}
+\begin{pmatrix}
+3 & 1 \\
+-1 & 3
+\end{pmatrix}
+\begin{pmatrix}
+3 & 1 \\
+1 & 3
+\end{pmatrix}
+$
+}\\[5pt]
+\end{solution}
+% }
+
+
+\begin{problem}[Pseudoinverses and shortest solutions; 5 pt]\rm
+	\begin{enumerate}[(a)]
+		\item Find the SVD and the pseudoinverse $V\Sigma^+U^\top$ of the matrices
+		\[
+		A =
+		\begin{pmatrix}
+			1 & 1 & 1 & 1
+		\end{pmatrix},
+		\qquad
+		B = \begin{pmatrix}
+			0 & 1 & 0 \\ 1 & 0 & 0
+		\end{pmatrix},\qquad
+		C =
+		\begin{pmatrix}
+		1 & 1 \\ 0 & 0
+		\end{pmatrix}.
+		\]
+		\item Find the minimum-length solution $\bx^+ = A^+ \bb$ of the equation $A\bx = \bb$ with
+		\[
+		A =  \begin{pmatrix}[rrr]
+		1 & 0 & 0 \\ 1 & 0 & 0 \\ 1 & 1 & 1
+		\end{pmatrix},
+		\qquad \bb = \begin{pmatrix}
+		0 \\ 2 \\ 2
+		\end{pmatrix}.
+		\]
+	\end{enumerate}
+\end{problem}
+
+% \textcolor{blue}{
+\begin{solution}[] \rm
+% \[
+% A = U \Sigma V^\top
+% \]
+Let $\hat A = A^T$.
+\[
+\hat A = \hat U \hat\Sigma \hat V^\top
+~\Rightarrow~
+% A = \hat V \hat\Sigma^\top \hat U^\top \Rightarrow 
+\left \{ \begin{matrix}
+U = \hat V \\
+\Sigma = \hat\Sigma^\top \\
+V = \hat U \\
+\end{matrix}\right. \text{ for } A
+~\Rightarrow~
+A^+ = V \Sigma^+ U^\top = \hat U \Sigma^+ \hat V^\top\\
+\]
+\begin{enumerate}[(a)]
+	\item
+\[
+A =
+\begin{pmatrix}
+1 & 1 & 1 & 1
+\end{pmatrix}
+\qquad
+\hat A =
+\begin{pmatrix}
+1 \\ 1 \\ 1 \\ 1
+\end{pmatrix}
+\qquad
+\hat A^\top\hat A = 
+\begin{pmatrix} 4 \end{pmatrix}
+\]
+\[
+\lambda_1 = 4 \qquad \sigma_1 = 2
+\qquad
+\hat \Sigma = \begin{pmatrix} 2 \\ 0 \\ 0 \\ 0 \end{pmatrix}
+~\Rightarrow~
+\Sigma^+ = \begin{pmatrix} 1/2 \\ 0 \\ 0 \\ 0 \end{pmatrix}
+\qquad
+\hat \bv_1 = \begin{pmatrix} 1 \end{pmatrix}
+\qquad
+\hat \bu_1 = \frac{\hat A \hat \bv}{\norm{\cdot}} = \frac12 \begin{pmatrix} 1 \\ 1 \\ 1 \\ 1 \end{pmatrix}
+\]
+Let's complete $\hat U$ to an ONB of $\bR^4$:
+\[
+\hat U = \frac12
+\begin{pmatrix}[rrrr]
+1 & 1 & 1 & 1\\
+1 & -1 & -1 & 1\\
+1 & 1 & -1 & -1\\
+1 & -1 & 1 & -1
+\end{pmatrix}
+\Rightarrow
+A^+ =\frac12
+\begin{pmatrix}[rrrr]
+1 & 1 & 1 & 1\\
+1 & -1 & -1 & 1\\
+1 & 1 & -1 & -1\\
+1 & -1 & 1 & -1
+\end{pmatrix}
+\begin{pmatrix} 1/2 \\ 0 \\ 0 \\ 0 \end{pmatrix}
+= \frac14
+\begin{pmatrix} 1 \\ 1 \\ 1 \\ 1 \end{pmatrix}
+\]\\[10pt]
+\[
+B = \begin{pmatrix}
+0 & 1 & 0 \\
+1 & 0 & 0
+\end{pmatrix}
+\qquad
+\hat B = \begin{pmatrix}
+0 & 1 \\
+1 & 0 \\
+0 & 0 \\
+\end{pmatrix}
+\qquad
+\hat B^\top \hat B = \begin{pmatrix}
+1 & 0\\
+0 & 1 
+\end{pmatrix}
+\]
+\[
+\lambda_1=\lambda_2=1
+\qquad
+\sigma_1=\sigma_2=1
+\qquad
+\hat\Sigma = \begin{pmatrix}
+1 & 0 \\
+0 & 1 \\
+0 & 0 \\
+\end{pmatrix}
+= \Sigma^+
+\]
+\[
+\hat \bv_1 = \begin{pmatrix} 1 \\ 0 \end{pmatrix}
+\quad
+\hat \bv_2 = \begin{pmatrix} 0 \\ 1 \end{pmatrix}
+\qquad
+\hat \bu_1 = \begin{pmatrix} 0 \\ 1 \\ 0 \end{pmatrix}
+\quad
+\hat \bu_2 = \begin{pmatrix} 1 \\ 0 \\ 0 \end{pmatrix}
+\quad
+\hat \bu_3 = \begin{pmatrix} 0 \\ 0 \\ 1 \end{pmatrix}
+\]
+\[
+B^+ = \hat U \Sigma^+ \hat V^\top = 
+\begin{pmatrix}
+0 & 1 & 0 \\
+1 & 0 & 0 \\
+0 & 0 & 1 \\
+\end{pmatrix}
+\begin{pmatrix}
+1 & 0 \\
+0 & 1 \\
+0 & 0 \\
+\end{pmatrix}
+\begin{pmatrix}
+1 & 0 \\
+0 & 1 \\
+\end{pmatrix}
+=
+\begin{pmatrix}
+0 & 1 \\
+1 & 0 \\
+0 & 0 \\
+\end{pmatrix}
+\]
+\\[10pt]
+\[
+C =
+\begin{pmatrix}
+1 & 1 \\ 0 & 0
+\end{pmatrix}
+\hat C =
+\begin{pmatrix}
+1 & 0 \\ 1 & 0
+\end{pmatrix}
+\hat C^\top \hat C = 
+\begin{pmatrix}
+2 & 0 \\ 0 & 0
+\end{pmatrix}
+\]
+\[
+\lambda_1 = 2
+\qquad
+\sigma_1 = \sqrt2
+\qquad
+\hat \Sigma = 
+\begin{pmatrix}
+\sqrt2 & 0 \\ 0 & 0
+\end{pmatrix}
+~\Rightarrow~
+\Sigma^+ = 
+\begin{pmatrix}
+1/\sqrt2 & 0 \\ 0 & 0
+\end{pmatrix}
+\]
+\[
+\qquad
+\hat \bv_1 = \begin{pmatrix} 1 \\ 0 \end{pmatrix}
+\quad
+\hat \bv_2 = \begin{pmatrix} 0 \\ 1 \end{pmatrix}
+\qquad
+\hat \bu_1 = \frac1{\sqrt2}\begin{pmatrix} 1 \\ 1 \end{pmatrix}
+\quad
+\hat \bu_2 = \frac1{\sqrt2}\begin{pmatrix} 1 \\ -1 \end{pmatrix}
+\]
+\[
+C^+ = \hat U \Sigma^+ \hat V^\top = 
+\frac1{\sqrt2}
+\begin{pmatrix}
+1 & 1 \\
+1 & -1 \\
+\end{pmatrix}
+\begin{pmatrix}
+1/\sqrt2 & 0 \\
+0 & 0
+\end{pmatrix}
+\begin{pmatrix}
+1 & 0 \\
+0 & 1 \\
+\end{pmatrix}
+= \frac12
+\begin{pmatrix}
+1 & 0 \\
+1 & 0 \\
+\end{pmatrix}
+\]
+\answer{$
+A^+ = \frac14
+\begin{pmatrix} 1 \\ 1 \\ 1 \\ 1 \end{pmatrix}
+\qquad
+B^+ =
+\begin{pmatrix}
+0 & 1 \\
+1 & 0 \\
+0 & 0 \\
+\end{pmatrix}
+\qquad
+C^+ = 
+\frac12
+\begin{pmatrix}
+1 & 0 \\
+1 & 0 \\
+\end{pmatrix}
+$}
+	\item 
+\[
+\bb = 
+\begin{pmatrix}
+0 \\ 2 \\ 2
+\end{pmatrix}
+\qquad
+A = \begin{pmatrix}[rrr]
+1 & 0 & 0 \\ 1 & 0 & 0 \\ 1 & 1 & 1
+\end{pmatrix}
+\qquad
+\hat A = 
+\begin{pmatrix}[rrr]
+1 & 1 & 1 \\
+0 & 0 & 1 \\
+0 & 0 & 1
+\end{pmatrix}
+\qquad
+\hat A^\top \hat A =
+\begin{pmatrix}[rrr]
+1 & 1 & 1 \\
+1 & 1 & 1 \\
+1 & 1 & 3
+\end{pmatrix}
+\]
+\[
+\lambda_1 = 4
+\quad
+\lambda_2 = 1
+\qquad
+\sigma_1 = 2
+\quad
+\sigma_2 = 1
+\qquad
+\hat \Sigma = \begin{pmatrix}
+2 & 0 & 0 \\
+0 & 1 & 0 \\
+0 & 0 & 0
+\end{pmatrix}
+~\Rightarrow~
+\Sigma^+ = \begin{pmatrix}
+1/2 & 0 & 0 \\
+0 & 1 & 0 \\
+0 & 0 & 0
+\end{pmatrix}
+\]
+\[
+\begin{pmatrix}[rrr]
+-3 & 1 & 1 \\
+1 & -3 & 1 \\
+1 & 1 & -1
+\end{pmatrix}\bv = 0
+\qquad
+\hat \bv_1 = \frac1{\sqrt6}
+\begin{pmatrix}[rrr] 
+1 \\ 1 \\ 2
+\end{pmatrix}
+\qquad
+\hat \bu_1 = \frac{
+\begin{pmatrix}[rrr]
+1 & 1 & 1 \\
+0 & 0 & 1 \\
+0 & 0 & 1
+\end{pmatrix}
+\begin{pmatrix}[rrr] 
+1 \\ 1 \\ 2
+\end{pmatrix}}{\norm{\cdot}}
+= \frac1{\sqrt6}
+\begin{pmatrix}[rrr] 
+2 \\ 1 \\ 1
+\end{pmatrix}
+\]
+\[
+\begin{pmatrix}[rrr]
+0 & 1 & 1 \\
+1 & 0 & 1 \\
+1 & 1 & 2
+\end{pmatrix}\bv = 0
+\qquad
+\hat \bv_2 = \frac1{\sqrt3}
+\begin{pmatrix}[rrr] 
+1 \\ 1 \\ -1
+\end{pmatrix}
+\qquad
+\hat \bu_2 = \frac{
+\begin{pmatrix}[rrr]
+1 & 1 & 1 \\
+0 & 0 & 1 \\
+0 & 0 & 1
+\end{pmatrix}
+\begin{pmatrix}[rrr] 
+1 \\ 1 \\ -1
+\end{pmatrix}}{\norm{\cdot}}
+= \frac1{\sqrt3}
+\begin{pmatrix}[rrr] 
+1 \\ -1 \\ -1
+\end{pmatrix}
+\]
+\[
+\hat \bu_3 = \frac1{\sqrt2}
+\begin{pmatrix}[rrr] 
+0 \\ 1 \\ -1
+\end{pmatrix} \text{ (by G-S) }
+\qquad
+\hat V = \frac1{\sqrt6}
+\begin{pmatrix}[rrr] 
+1 & \sqrt2 & \sqrt3\\
+1 & \sqrt2 & -\sqrt3\\
+2 & -\sqrt2 & 0\\
+\end{pmatrix}
+\qquad
+\hat U = \frac1{\sqrt6}
+\begin{pmatrix}[rrr] 
+2 & \sqrt2 & 0\\
+1 & -\sqrt2 & \sqrt3\\
+1 & -\sqrt2 & -\sqrt3\\
+\end{pmatrix}
+\]
+\[
+A^+ = \frac16
+\begin{pmatrix}[rrr] 
+2 & \sqrt2 & 0\\
+1 & -\sqrt2 & \sqrt3\\
+1 & -\sqrt2 & -\sqrt3\\
+\end{pmatrix}
+\begin{pmatrix}
+1/2 & 0 & 0 \\
+0 & 1 & 0 \\
+0 & 0 & 0
+\end{pmatrix}
+\begin{pmatrix}[rrr] 
+1 & \sqrt2 & \sqrt3\\
+1 & \sqrt2 & -\sqrt3\\
+2 & -\sqrt2 & 0\\
+\end{pmatrix}
+= \frac14
+\begin{pmatrix}[rrr] 
+2 & 2 & 0 \\
+-1 & -1 & 2 \\
+-1 & -1 & 2 \\
+\end{pmatrix}
+\]
+\[
+\bx^+ = A^+\bb =  \frac14
+\begin{pmatrix}[rrr] 
+2 & 2 & 0 \\
+-1 & -1 & 2 \\
+-1 & -1 & 2 \\
+\end{pmatrix}
+\begin{pmatrix}
+0 \\ 2 \\ 2
+\end{pmatrix}
+=
+\begin{pmatrix}
+1 \\ 1/2 \\ 1/2
+\end{pmatrix}
+\]
+\answer{$
+\bx^+ =
+\begin{pmatrix}
+1 \\ 1/2 \\ 1/2
+\end{pmatrix}
+$}\\[5pt]
+\end{enumerate}
+\end{solution}
+% }
+
+
+\begin{problem}[Principal component analysis; 3 pt]\label{prb:13.7}\rm
+\begin{enumerate}[(a)]
+  \item Convert the matrix of observation $A$ to the zero-mean form and then construct the sample covariance matrix:
+  \[
+    A = \begin{pmatrix}[rrrrrr]
+      19 & 22 & 6 & 3 & 2 & 20\\ 12 & 6 & 9 & 15 & 13 & 5
+    \end{pmatrix}
+  \]  
+  \item Find the principal components of the data in matrix~$A$.
+  \item Let $x_1$, $x_2$ denote the variables for the two-dimensional data in (a). Find the new variable $y_1 = a_1x_1 + a_2 x_2$ such that $y_1$ has maximum possible variance over the given data. How much of the variance in the data is explained by~$y_1$?
+\end{enumerate}
+\end{problem}
+
+% \textcolor{red}{
+\begin{solution}[] \rm .
+\begin{enumerate}[(a)]
+  \item The matrix of observation A is $m\times n$, where $m=2$ is the dimensionality of the data, $n=6$ -- number of observations (columns). To convert to zero-mean form we calculate mean point across the observations and subtract it from each column of A.
+\[
+A = \begin{pmatrix}[rrrrrr]
+19 & 22 & 6 & 3 & 2 & 20\\
+12 & 6 & 9 & 15 & 13 & 5
+\end{pmatrix}
+\qquad
+\mu = \begin{pmatrix}[rrrrrr]
+12 \\ 10
+\end{pmatrix}
+\qquad
+A_0 = \begin{pmatrix}[rrrrrr]
+7 & 10 & -6 & -9 & -10 & 8 \\
+2 & -4 & -1 & 5 &  3 & -5
+\end{pmatrix}
+\]
+\[
+C = A_0 A_0^\top = \begin{pmatrix}[rr]
+ 430 & -135 \\
+-135 &   80 \\
+ \end{pmatrix} ~\text{ -- ~sample covariance matrix}
+\]
+  \item To find the principal components we find the eigenvalues and eigenvectors of the covariance matrix.
+\[
+\det(C-\lambda) = \lambda^2 - 510 \lambda + 16175
+\]
+\[
+\lambda_1 = 5\left(51+\sqrt{1954}\right) \approx 476.02
+\qquad
+\lambda_2 = 5\left(51-\sqrt{1954}\right) \approx 33.98
+\]
+\[
+\begin{pmatrix}[rr]
+ 430-\lambda & -135 \\
+-135 &   80-\lambda \\
+\end{pmatrix}
+\bv = 0
+\]
+Solving the equation for the eigenvalues $\lambda_1, \lambda_2$ we get:
+\[
+\bv_1 \approx \begin{pmatrix}0.95 \\-0.32\end{pmatrix}
+\text{ -- the first principal component~~~~}
+\]
+\[
+\bv_2 \approx \begin{pmatrix}0.32 \\ 0.95\end{pmatrix}
+\text{ -- the second principal component}
+\]
+  \item The new transformed variable with maximum possible variance can be found from the first principal component:
+ \[
+ y_1 = \bv_1^\top \bx = 0.95 x_1 - 0.32 x_2
+ \qquad
+ \lambda_1 = 476.02 \text{ -- corresponds to the variance of $y_1$}
+ \]
+ And the fraction of the total variance is:
+ \[
+ \frac{\lambda_1}{\sum_{i=1}^2 \lambda_i} = 93.3\%
+ \]
+ So, the new transformed and restricted data would be:
+ \[
+Y_1 = \begin{pmatrix}[rrrrrr]
+14.11 & 18.89 & 2.78 & -2 & -2.3 & 17.32
+\end{pmatrix}
+ \]
+And, indeed:
+\[
+\frac{Var(Y_1)}{\sum_{i=1}^2 Var(A_i)} = \frac{79.34}{71.67+13.33} = 93.3\%
+\]
+, where $A_i$ corresponds to observations of the $i^{th}$ component (row) of the data.\\
+\end{enumerate}
+\end{solution}
+% }
+
+
+%\newpage
+
+\begin{problem}[PCA; 5~pt]\label{prb:PCA}\rm
+	\begin{itemize}
+		\item[(a)] Simulate $N=100$ data $(x_k,y_k)$ from the two-dimensional Gaussian (normal) distribution $\mathcal{N}(\mu_1,\mu_2; \sigma_1^2,\sigma_2^2, \rho)$ with $\mu_1 = 1$, $\mu_2 = 2$, $\sigma_1 = 4$, $\sigma_2 = 9$, $\rho=\tfrac13$.
+		
+		\small{\textsf{Hint: Can you do this easily if $\rho = 0$? If $(Z_1,Z_2)^\top \sim \mathcal{N}(0,0; 1,1, 0)$, show that $(X,Y)^\top$ with $X = \mu_1+ \sigma_1 Z_1$ and $Y = \mu_2 + \sigma_2\rho Z_1 + \sqrt{1-\rho^2}\sigma_2Z_2$ has the required distribution}}
+		
+		\item[(b)] Form the empirical covariance matrix $C$ for the data simulated and find its eigenvalues and eigenvectors.
+		
+		\item[(c)] Perform the PCA on the data generated. Calculate the variance along the first component; what fraction of the total variance does it include?
+		
+		\item[(d)] Predict how the above fraction depends on $\rho$ and confirm your reasoning numerically.
+	\end{itemize}
+\end{problem}
+
+% \textcolor{red}{
+\begin{solution}[] \rm .
+Since $Z_1, Z_2$ are normally distributed, and $X, Y$ are given from the linear transformations of $Z_1, Z_2$, it's also normally distributed. Let's find the parameters:
+\[
+EX = E(\mu_1 + \sigma_1 Z_1) = \mu_1
+\quad
+EY = E(\mu_2 + \sigma_2 \rho Z_1 + \sigma_2\sqrt{1 − \rho^2} Z_2) = \mu_2
+\]
+\[
+Var(X) = Var(\mu_1 + \sigma_1 Z_1) = \sigma_1^2 Var(Z_1) = \sigma_1^2
+\]
+\[
+Var(Y) = Var\left(\mu_2+\sigma_2 (\rho Z_1 + \sqrt{1 − \rho^2} Z_2)\right)
+= \sigma_2^2 Var\left(\rho Z_1 + \sqrt{1 − \rho^2} Z_2\right) =
+\]
+\[
+= \left\| \text{ $Z_1$ and $Z_2$ are independent } \right\|
+= \sigma_2^2 (\rho^2 Var(Z_1) + (1 - \rho^2)Var(Z_2))
+\]
+\[
+= \sigma_2^2  (\rho^2  + 1 - \rho^2) = \sigma_2^2 
+\]
+\[
+Corr(X,Y) = \frac{Cov(X,Y)}{\sigma_1 \sigma_2}
+= \frac{1}{\sigma_1 \sigma_2}
+Cov\left(\mu_1+\sigma_1Z_1,~\mu_2+\sigma_2(\rho Z_1 + \sqrt{1 − \rho^2} Z_2)\right) =
+\]
+\[
+= \frac{\sigma_1 \sigma_2}{\sigma_1 \sigma_2} Cov\left(Z_1,~\rho Z_1 + \sqrt{1 − \rho^2} Z_2\right)
+= (\rho Var(Z_1) + \sqrt{1 − \rho^2} Cov(Z_1,  Z_2)) =
+\]
+\[
+= \left| \text{ $Z_1$ and $Z_2$ are independent } \right|
+= \rho
+\]
+So $(X,Y)$ has the required distribution. See the code with its output below:
+\input{Problem11}
+So, the variance fraction increases with increasing of absolute value of $\rho$.\\
+\end{solution}
+% }
+
+
+\begin{problem}[PCA in many dimensions; 8~pt]\rm 
+	This is a $10$-dimensional analogue of Problem~\ref{prb:PCA}.
+	\begin{itemize}
+		\item[(a)] Simulate $N=100$ data $\bx_j=(x_1^{(j)},x_2^{(j)},\dots,x_{10}^{(j)})^\top$ from the Gaussian (normal) distribution
+		$\mathcal{N}(\mathbf{0},\Sigma)$ with $\Sigma = I + \bu \bu^\top$, where $\bu = (1; -2; 3; \ldots; -10)^\top$
+		
+		\small{\textsf{Hint: if you factorize $\Sigma = L L^\top$  with a lower-triangular~$L$ (Cholesky factorization), simulate the standard Gaussian vectors $\mathbf{z}_j = (z_1^{(j)},z_2^{(j)},\dots,z_{10}^{(j)})^\top$ (ie, with independent components of variance $1$), then $\bx = L\mathbf{z} + \bm{\mu}$ will follow $\mathcal{N}(\bm{\mu},\Sigma)$. Justify before using that!}}
+		
+		\item[(b)] Form the empirical covariance matrix $C$ for the data simulated and find its eigenvalues and eigenvectors.
+		
+		\item[(c)] Perform the PCA on the data generated. Calculate the variance along the several first component; what fraction of the total variance does it include?
+		
+		\item[(d)] Predict how the above fraction depends on the shape of the set $\{\bx \mid \bx^\top \Sigma \bx = 1\}$ and confirm your reasoning numerically.
+		
+		\small{\textsf{Hint: certainly you will need to use R, Python or MatLab libraries to solve this problem!}}
+		
+	\end{itemize}
+\end{problem}
+
+% \textcolor{red}{
+\begin{solution}[] \rm .
+Let $Z$ be a $d \times N$ data matrix ($d = 10, N=100$) generated from the standard Gaussian distribution $\mathcal N(\mathbf0_d,I_d)$. Let $\Sigma$ be a covariance matrix and $L$ -- a lower-triangular matrix from the Cholesky decomposition $\Sigma = LL^\top$, $\mu = \begin{pmatrix}\mu_1 & \cdots & \mu_d \end{pmatrix}^\top$. Since the linear transformation of the normal random variable is also a normal random variable and:
+\[
+X = LZ+\mu
+~\Rightarrow~
+EX = LE(Z)+\mu = L\b0_d+\mu = \mu
+\]
+\[
+Var(X) = E((X - EX)(X - EX)^\top)= E(LZ (LZ)^\top) = L E(Z Z^\top)L^\top = L I_d L^\top = \Sigma
+\]
+we can simulate $X$ sampling using $Z$, $L$ and $\mu$: $X = LZ+\mu$.
+\[
+\{\bx \mid \bx^\top \Sigma \bx = 1\} = \{\bx \mid (L^\top\bx)^\top L^\top \bx = 1\} = \{\bx = L^{-\top}\by \mid \norm{\by} = 1\}
+\]
+Intuitively it seems that for the first principal components the fraction of the total variance will be more with such covariance matrix that skews the unit ball.
+We can look at the projections of some points of the set in 2D using $\by$ (such that $\by$ has only 2 non-zero coordinates). See the code with the output below:
+\input{Problem12}
+So, in the first example (corresponding to the matrix from the task) we can see that in some dimensions the set of points looks like a skewed ellipse, and the fraction for the 1 component is $97.61\%$. In the second example the covariance matrix is close to $I_d$, so the set is close to a ball, and the fraction is not so big -- $34.24\%$. In the last example there are two dimensions in which the ellipse is highly skewed, and the fraction is also very high -- $99.98\% $.\\
+\end{solution}
+% }
+
+
+\begin{problem}[Jacobi and Gauss--Seidel iteration scheme; 6~pt]\rm
+	Use the Jacobi and Gauss--Seidel methods to solve the $3\times 3$ system $A\bx = \bb$ with 
+	\[
+		A = \alpha I_3 + \bu \bu^\top, \qquad \bb = \bu,
+	\]
+	where $\bu = (1, -1, 1)^\top$. 
+	\begin{enumerate}[(a)]
+		\item For what $\alpha$ do the methods work?
+		\item Write the corresponding iteration scheme for the Jacobi method and find the solution starting with $\bx^{(1)} = \mathbf{0}$. How many iteration are required to achieve $0.001$ accuracy? 
+		\item Write the corresponding iteration scheme for the Gauss--Seidel method and find the solution starting with $\bx^{(1)} = \mathbf{0}$. How many iteration are required to achieve $0.001$ accuracy? 
+	\end{enumerate}		
+		
+\end{problem}
+
+% \textcolor{red}{
+\begin{solution}[] \rm
+\[
+A =
+% \begin{pmatrix}
+% \alpha & 0 & 0\\
+% 0 & \alpha & 0\\
+% 0 & 0 & \alpha\\
+% \end{pmatrix}
+% +
+% \begin{pmatrix}
+% 1 & -1 & 1\\
+% -1 & 1 & -1\\
+% 1 & -1 & 1\\
+% \end{pmatrix}
+% =
+\begin{pmatrix}
+0 & 0 & 0\\
+-1 & 0 & 0\\
+1 & -1 & 0\\
+\end{pmatrix}
++
+\begin{pmatrix}
+1+\alpha & 0 & 0\\
+0 & 1+\alpha & 0\\
+0 & 0 & 1+\alpha\\
+\end{pmatrix}
++
+\begin{pmatrix}
+0 & -1 & 1\\
+0 & 0 & -1\\
+0 & 0 & 0\\
+\end{pmatrix}
+= L + D + U
+\]
+For the Jacobi method $\bx^{(k+1)}=B_J\bx^{(k)}+\bb_J$
+\[
+B_J = - \frac1{1+\alpha}
+\begin{pmatrix}
+1 & 0 & 0\\
+0 & 1 & 0\\
+0 & 0 & 1\\
+\end{pmatrix}
+\begin{pmatrix}
+0 & -1 & 1\\
+-1 & 0 & -1\\
+1 & -1 & 0\\
+\end{pmatrix}
+= \frac1{1+\alpha}
+\begin{pmatrix}
+0 & 1 & -1\\
+1 & 0 & 1\\
+-1 & 1 & 0\\
+\end{pmatrix}
+\]
+\[
+\bb_J = \frac1{1+\alpha} \begin{pmatrix} 1 \\ -1\\ 1 \\ \end{pmatrix}
+\]
+So
+\[
+\bx^{(k+1)}=\frac1{1+\alpha}\left(
+\begin{pmatrix}
+0 & 1 & -1\\
+1 & 0 & 1\\
+-1 & 1 & 0\\
+\end{pmatrix}
+\bx^{(k)}+
+\begin{pmatrix} 1 \\ -1\\ 1 \\ \end{pmatrix}
+\right)
+\]
+To check what $\alpha$ should be to converge, we need to find eigenvalues of $B_J$:
+\[
+-\lambda^3+\frac3{(\alpha+1)^2}\lambda-\frac2{(\alpha+1)^3} = 0
+~\Leftrightarrow~
+\left(\lambda-\frac1{\alpha+1}\right)^2\left(\lambda+\frac2{\alpha+1}\right)=0
+\]
+\[
+\lambda_{1,2} = \frac1{\alpha+1}
+\qquad
+\lambda_{3} = -\frac2{\alpha+1}
+\]
+The maximum absolute value of eigenvalue must be less than 1 $
+\Rightarrow -0.5<\frac1{\alpha+1}<0.5
+~\Rightarrow~ {\alpha+1} \in (-\infty;-2) \cup (2;\infty)
+~\Rightarrow~ \alpha \in (-\infty;-3) \cup (1;\infty)
+$ -- this are the possible values of $\alpha$, for which the Jacobi method works.
+\\
+% \[
+% (\alpha+1)^2\lambda^3-\lambda+2(\alpha+1) = 0
+% \] 
+For the Gauss-Seidel method $\bx^{(k+1)}=B_{GS}\bx^{(k)}+\bb_{GS}$
+\[
+B_{GS} = -
+\begin{pmatrix}
+1+\alpha & 0 & 0\\
+-1 & 1+\alpha & 0\\
+1 & -1 & 1+\alpha\\
+\end{pmatrix}^{-1}
+\begin{pmatrix}
+0 & -1 & 1\\
+0 & 0 & -1\\
+0 & 0 & 0\\
+\end{pmatrix} =
+\]
+\[
+= \frac{1}{(1+\alpha)^3}
+\begin{pmatrix}
+(1+\alpha)^2 & 0 & 0\\
+1+\alpha     & (1+\alpha)^2 & 0\\
+-\alpha      & 1+\alpha & (1+\alpha)^2\\
+\end{pmatrix}
+\begin{pmatrix}
+0 & -1 & 1\\
+0 & 0 & -1\\
+0 & 0 & 0\\
+\end{pmatrix}
+= \frac{1}{(1+\alpha)^3}
+\begin{pmatrix}
+0 & (1+\alpha)^2 & -(1+\alpha)^2\\
+0 & 1+\alpha & \alpha(1+\alpha)\\
+0 & -\alpha & 1+2\alpha\\
+\end{pmatrix}
+\]
+% \[
+% -\lambda^3+\frac{2+3\alpha}{(1+\alpha)^3}\lambda^2-\lambda=0
+% \]
+% \[
+% \lambda_1=0
+% \qquad
+% \lambda^2-\frac{2+3\alpha}{(1+\alpha)^3}\lambda+1=0
+% \]
+\[
+b_{GS}
+= \frac{1}{(1+\alpha)^3}
+\begin{pmatrix}
+(1+\alpha)^2 & 0 & 0\\
+1+\alpha     & (1+\alpha)^2 & 0\\
+-\alpha      & 1+\alpha & (1+\alpha)^2\\
+\end{pmatrix}
+\begin{pmatrix} 1 \\ -1\\ 1 \\ \end{pmatrix}
+=
+\frac{1}{(1+\alpha)^3}
+\begin{pmatrix} (1+\alpha)^2 \\ -\alpha(1+\alpha)\\ \alpha^2 \end{pmatrix}
+\]
+So
+\[
+\bx^{(k+1)}=\frac{1}{(1+\alpha)^3}\left(
+\begin{pmatrix}
+0 & (1+\alpha)^2 & -(1+\alpha)^2\\
+0 & 1+\alpha & \alpha(1+\alpha)\\
+0 & -\alpha & 1+2\alpha\\
+\end{pmatrix}\bx^{(k)}+\begin{pmatrix} (1+\alpha)^2 \\ -\alpha(1+\alpha)\\ \alpha^2 \end{pmatrix}\right)
+\]
+To study the methods convergence we can also check when $A$ is row diagonally dominant:\\
+$|1+\alpha|>2 ~\Rightarrow~ \alpha \in (-\infty;-3) \cup (1;\infty)$. For these $\alpha$ the methods work.\\
+The provided code with its output is below:
+\input{Problem13}
+\end{solution}
+% }
+
+
+\begin{problem}[Conjugate gradient method; 6~pt]\rm %\hfill
+	Consider the quadratic function \[f(\bx) = \tfrac12\bx^\top G\bx - \bb^\top\bx\]
+	in four variables $\bx = (x_1,x_2,x_3,x_4)$, where
+	\[
+	G= \begin{pmatrix}[rrrr]
+	2 & -1 && \\ -1 & 2 & -1 & \\ &-1&2&-1\\&&-1&2
+	\end{pmatrix}
+	\]
+	and $\bb = (1,0,2,\sqrt{5})^\top $. Apply the conjugate gradient method to this problem with $\bx_0=(0,0,0,0)^\top$ and show that it converges in two iterations to the exact solution of $G\bx = \bb$.
+\end{problem}
+
+% \textcolor{green}{
+\begin{solution}[] \rm The provided code with its output is below:
+\input{Problem14}
+So, the GCM convergd to the exact solution $G\bx = \bb$ in $n=4$ steps, as it has to. 
+% \[
+% \bb = \begin{pmatrix}[c]~1~\\0\\2\\\sqrt5\end{pmatrix}
+% \]
+% \[
+% \grad F(\bx) = G\bx - \bb
+% \]
+% \[
+% \bx_0 = \begin{pmatrix}[c]~0~\\0\\0\\0\end{pmatrix}
+% \qquad
+% \bp_0 = - \grad F(\bx_0) = \bb = \begin{pmatrix}[c]~1~\\0\\2\\\sqrt5\end{pmatrix}
+% \]
+% \[
+% \alpha_0 = \frac{\bp_0^\top\bb}{\bp_0^\top G\bp_0} =
+% \frac{10}{\begin{pmatrix}1&0&2&\sqrt5\end{pmatrix} \begin{pmatrix}[c]2\\-3\\4-\sqrt5\\-2+2\sqrt5\end{pmatrix}} =
+% \frac{5}{-10+2\sqrt5}
+% \]
+% \[
+% \bx_1 = \bx_0 + \alpha_0 \bp_0 = \frac{-5}{10-2\sqrt5} \begin{pmatrix}[c]~-1~\\0\\-2\\-\sqrt5\end{pmatrix}
+% \]
+% \[
+% \]
+% \[
+% \bp_1 = \grad F(\bx_1) = G\bx_1 - \bb = 
+% \frac{-5}{10-2\sqrt5}
+% \begin{pmatrix}[rrrr]
+% 2 & -1 & 0 & 0\\
+% -1 & 2 & -1 & 0\\
+% 0 &-1 & 2 & -1 \\
+% 0 & 0 & - 1 & 2
+% \end{pmatrix} \begin{pmatrix}[c]~-1~\\0\\-2\\-\sqrt5\end{pmatrix} - \begin{pmatrix}[c]~1~\\0\\2\\\sqrt5\end{pmatrix}
+% =
+% \]
+% \[
+% = \frac{-5}{10-2\sqrt5} \left(
+% \begin{pmatrix}[c]-2\\3\\-4+\sqrt5\\2-2\sqrt5\end{pmatrix} - \begin{pmatrix}[c]-2+2\sqrt5/5~\\0\\-4+4\sqrt5/5\\-2\sqrt5+2\end{pmatrix}
+% \right)
+% = \frac{1}{10-2\sqrt5}
+% \begin{pmatrix}[c]2\sqrt5\\-15\\-\sqrt5\\0\end{pmatrix}
+% \]
+% \[
+% \bp_1^\top\bb = \frac{1}{10-2\sqrt5}
+% \begin{pmatrix}2\sqrt5&-15&-\sqrt5&0\end{pmatrix}
+% \begin{pmatrix}[c]~1~\\0\\2\\\sqrt5\end{pmatrix}
+% = 0
+% ~\Rightarrow~ \alpha_1 = 0
+% ~\Rightarrow~ \bx_2 = \bx_1 =  \frac{5}{10-2\sqrt5} \begin{pmatrix}[c]~1~\\0\\2\\\sqrt5\end{pmatrix}
+% \]
+% So, $\bx_2 - \bx_1 = 0$, the method converged to the soluion in 2 iterations. Indeed:
+% \[
+% G\bx = \frac{5}{10-2\sqrt5}
+% \begin{pmatrix}[rrrr]
+% 2 & -1 & 0 & 0\\
+% -1 & 2 & -1 & 0\\
+% 0 &-1 & 2 & -1 \\
+% 0 & 0 & - 1 & 2
+% \end{pmatrix} \begin{pmatrix}[c]~1~\\0\\2\\\sqrt5\end{pmatrix}
+% =
+% \begin{pmatrix}[c]\frac{5+\sqrt5}{4}\\\frac{-15-3\sqrt5}{8}\\\frac{15-\sqrt5}{8}\\\sqrt5\end{pmatrix}
+% \]
+\end{solution}
+% }
+
+\end{document}
+

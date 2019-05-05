@@ -1,0 +1,284 @@
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}1}]:} \PY{k+kn}{import} \PY{n+nn}{numpy} \PY{k}{as} \PY{n+nn}{np}
+        \PY{k+kn}{import} \PY{n+nn}{scipy}\PY{n+nn}{.}\PY{n+nn}{stats} \PY{k}{as} \PY{n+nn}{stats}
+        \PY{k+kn}{from} \PY{n+nn}{scipy} \PY{k}{import} \PY{n}{linalg} \PY{k}{as} \PY{n}{LA}
+        \PY{k+kn}{from} \PY{n+nn}{matplotlib} \PY{k}{import} \PY{n}{pyplot} \PY{k}{as} \PY{n}{plt}
+        \PY{k+kn}{import} \PY{n+nn}{matplotlib} \PY{k}{as} \PY{n+nn}{mpl}
+        
+        
+        \PY{k}{def} \PY{n+nf}{sample\PYZus{}mvn\PYZus{}from1D}\PY{p}{(}\PY{n}{Mu}\PY{p}{,} \PY{n}{Sigma}\PY{p}{,} \PY{n}{N}\PY{p}{)}\PY{p}{:}
+            \PY{n}{d} \PY{o}{=} \PY{n}{Sigma}\PY{o}{.}\PY{n}{shape}\PY{p}{[}\PY{l+m+mi}{0}\PY{p}{]}
+            \PY{n}{Z} \PY{o}{=} \PY{n}{np}\PY{o}{.}\PY{n}{random}\PY{o}{.}\PY{n}{normal}\PY{p}{(}\PY{n}{size}\PY{o}{=}\PY{p}{(}\PY{n}{N}\PY{p}{,}\PY{n}{d}\PY{p}{)}\PY{p}{)}
+            \PY{n}{L} \PY{o}{=} \PY{n}{LA}\PY{o}{.}\PY{n}{cholesky}\PY{p}{(}\PY{n}{Sigma}\PY{p}{,} \PY{n}{lower}\PY{o}{=}\PY{k+kc}{True}\PY{p}{)}
+            \PY{n}{X} \PY{o}{=} \PY{n}{L}\PY{o}{.}\PY{n}{dot}\PY{p}{(}\PY{n}{Z}\PY{o}{.}\PY{n}{T}\PY{p}{)}\PY{o}{.}\PY{n}{T} \PY{o}{+} \PY{n}{Mu}
+            \PY{k}{return} \PY{n}{X}
+        
+        \PY{k}{def} \PY{n+nf}{variance\PYZus{}along\PYZus{}axis}\PY{p}{(}\PY{n}{A}\PY{p}{,} \PY{n}{v}\PY{p}{)}\PY{p}{:}
+            \PY{n}{mean\PYZus{}point} \PY{o}{=} \PY{n}{np}\PY{o}{.}\PY{n}{mean}\PY{p}{(}\PY{n}{A}\PY{p}{,} \PY{l+m+mi}{0}\PY{p}{,} \PY{n}{keepdims}\PY{o}{=}\PY{k+kc}{True}\PY{p}{)}
+            \PY{n}{A\PYZus{}norm} \PY{o}{=} \PY{n}{A} \PY{o}{\PYZhy{}} \PY{n}{mean\PYZus{}point}
+            \PY{n}{P} \PY{o}{=} \PY{n}{v}\PY{o}{.}\PY{n}{dot}\PY{p}{(}\PY{n}{v}\PY{o}{.}\PY{n}{T}\PY{p}{)} \PY{o}{/} \PY{p}{(}\PY{n}{v}\PY{o}{.}\PY{n}{T}\PY{o}{.}\PY{n}{dot}\PY{p}{(}\PY{n}{v}\PY{p}{)}\PY{p}{)}
+            \PY{n}{PA} \PY{o}{=} \PY{p}{(}\PY{n}{P}\PY{o}{.}\PY{n}{dot}\PY{p}{(}\PY{n}{A\PYZus{}norm}\PY{o}{.}\PY{n}{T}\PY{p}{)}\PY{p}{)}\PY{o}{.}\PY{n}{T}
+            \PY{n}{var} \PY{o}{=} \PY{n}{np}\PY{o}{.}\PY{n}{mean}\PY{p}{(}\PY{n}{np}\PY{o}{.}\PY{n}{sum}\PY{p}{(}\PY{n}{PA}\PY{o}{*}\PY{o}{*}\PY{l+m+mi}{2}\PY{p}{,} \PY{n}{axis}\PY{o}{=}\PY{l+m+mi}{1}\PY{p}{)}\PY{p}{)}
+            \PY{k}{return} \PY{n}{var}
+        
+        \PY{k}{def} \PY{n+nf}{PCA}\PY{p}{(}\PY{n}{A}\PY{p}{,} \PY{n}{n\PYZus{}components}\PY{p}{,} \PY{n}{out}\PY{o}{=}\PY{k+kc}{False}\PY{p}{)}\PY{p}{:}
+            \PY{n}{mean\PYZus{}point} \PY{o}{=} \PY{n}{np}\PY{o}{.}\PY{n}{mean}\PY{p}{(}\PY{n}{A}\PY{p}{,} \PY{l+m+mi}{0}\PY{p}{,} \PY{n}{keepdims}\PY{o}{=}\PY{k+kc}{True}\PY{p}{)}
+            \PY{n}{A0} \PY{o}{=} \PY{n}{A} \PY{o}{\PYZhy{}} \PY{n}{mean\PYZus{}point}
+            \PY{n}{C} \PY{o}{=} \PY{n}{A0}\PY{o}{.}\PY{n}{T}\PY{o}{.}\PY{n}{dot}\PY{p}{(}\PY{n}{A0}\PY{p}{)}
+            \PY{k}{if} \PY{n}{out}\PY{p}{:}
+                \PY{n+nb}{print}\PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Covariance matrix:}\PY{l+s+se}{\PYZbs{}n}\PY{l+s+si}{\PYZob{}\PYZcb{}}\PY{l+s+s1}{\PYZsq{}}\PY{o}{.}\PY{n}{format}\PY{p}{(}\PY{n}{C}\PY{p}{)}\PY{p}{)}
+            \PY{n}{l}\PY{p}{,} \PY{n}{v} \PY{o}{=} \PY{n}{LA}\PY{o}{.}\PY{n}{eig}\PY{p}{(}\PY{n}{C}\PY{p}{)}
+            \PY{n}{l} \PY{o}{=} \PY{n}{l}\PY{o}{.}\PY{n}{real}
+            \PY{n}{ids} \PY{o}{=} \PY{n}{np}\PY{o}{.}\PY{n}{argsort}\PY{p}{(}\PY{o}{\PYZhy{}}\PY{n}{l}\PY{p}{)}
+            \PY{n}{lambdas}\PY{p}{,} \PY{n}{principal\PYZus{}components} \PY{o}{=} \PY{n}{l}\PY{p}{[}\PY{n}{ids}\PY{p}{]}\PY{p}{,} \PY{n}{v}\PY{p}{[}\PY{p}{:}\PY{p}{,}\PY{n}{ids}\PY{p}{]}
+            \PY{k}{if} \PY{n}{out}\PY{p}{:}
+                \PY{n+nb}{print}\PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+se}{\PYZbs{}n}\PY{l+s+s1}{Eigenvalues \PYZam{} eigenvectors:}\PY{l+s+s1}{\PYZsq{}}\PY{o}{.}\PY{n}{format}\PY{p}{(}\PY{n}{n\PYZus{}components}\PY{p}{)}\PY{p}{)}
+                \PY{k}{for} \PY{n}{i}\PY{p}{,} \PY{p}{(}\PY{n}{l}\PY{p}{,} \PY{n}{v}\PY{p}{)} \PY{o+ow}{in} \PY{n+nb}{enumerate}\PY{p}{(}\PY{n+nb}{list}\PY{p}{(}\PY{n+nb}{zip}\PY{p}{(}\PY{n}{lambdas}\PY{p}{,} \PY{n}{principal\PYZus{}components}\PY{p}{)}\PY{p}{)}\PY{p}{)}\PY{p}{:}
+                    \PY{n+nb}{print}\PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{l\PYZus{}}\PY{l+s+si}{\PYZob{}\PYZcb{}}\PY{l+s+s1}{ = }\PY{l+s+si}{\PYZob{}:.2f\PYZcb{}}\PY{l+s+se}{\PYZbs{}t}\PY{l+s+s1}{v\PYZus{}}\PY{l+s+si}{\PYZob{}\PYZcb{}}\PY{l+s+s1}{ = }\PY{l+s+si}{\PYZob{}\PYZcb{}}\PY{l+s+s1}{\PYZsq{}}\PY{o}{.}\PY{n}{format}\PY{p}{(}\PY{n}{i}\PY{p}{,} \PY{n}{l}\PY{p}{,} \PY{n}{i}\PY{p}{,} \PY{n}{v}\PY{o}{.}\PY{n}{flatten}\PY{p}{(}\PY{p}{)}\PY{p}{)}\PY{p}{)}
+            \PY{k}{return} \PY{n}{principal\PYZus{}components}\PY{p}{[}\PY{p}{:}\PY{p}{,}\PY{p}{:}\PY{n}{n\PYZus{}components}\PY{p}{]}
+        
+        \PY{k}{def} \PY{n+nf}{visualize\PYZus{}set}\PY{p}{(}\PY{n}{Sigma}\PY{p}{)}\PY{p}{:}
+            \PY{n+nb}{print}\PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Visualization of the projections of some points }\PY{l+s+se}{\PYZbs{}n}\PY{l+s+se}{\PYZbs{}}
+        \PY{l+s+s1}{of the set }\PY{l+s+s1}{\PYZob{}}\PY{l+s+s1}{x | (L\PYZca{}T x)\PYZca{}T L\PYZca{}T x = 1\PYZcb{}.}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}
+            \PY{n+nb}{print}\PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Different colors correspond to different (2x2) parts of L:}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}
+            \PY{n}{LT} \PY{o}{=} \PY{n}{LA}\PY{o}{.}\PY{n}{cholesky}\PY{p}{(}\PY{n}{Sigma}\PY{p}{,} \PY{n}{lower}\PY{o}{=}\PY{k+kc}{True}\PY{p}{)}\PY{o}{.}\PY{n}{T}
+            \PY{n}{LTinv} \PY{o}{=} \PY{n}{LA}\PY{o}{.}\PY{n}{inv}\PY{p}{(}\PY{n}{LT}\PY{p}{)}
+            \PY{n}{N} \PY{o}{=} \PY{l+m+mi}{1000}
+            \PY{n}{xs} \PY{o}{=} \PY{p}{(}\PY{n}{np}\PY{o}{.}\PY{n}{random}\PY{o}{.}\PY{n}{rand}\PY{p}{(}\PY{n}{N}\PY{o}{/}\PY{o}{/}\PY{l+m+mi}{2}\PY{p}{,}\PY{l+m+mi}{1}\PY{p}{)} \PY{o}{\PYZhy{}} \PY{o}{.}\PY{l+m+mi}{5}\PY{p}{)} \PY{o}{*} \PY{l+m+mi}{2}
+            \PY{n}{xs} \PY{o}{=} \PY{n}{np}\PY{o}{.}\PY{n}{vstack}\PY{p}{(}\PY{p}{(}\PY{n}{xs}\PY{p}{,} \PY{p}{(}\PY{l+m+mi}{1}\PY{o}{\PYZhy{}}\PY{n}{np}\PY{o}{.}\PY{n}{random}\PY{o}{.}\PY{n}{rand}\PY{p}{(}\PY{n}{N}\PY{o}{/}\PY{o}{/}\PY{l+m+mi}{2}\PY{p}{,}\PY{l+m+mi}{1}\PY{p}{)} \PY{o}{\PYZhy{}} \PY{o}{.}\PY{l+m+mi}{5}\PY{p}{)} \PY{o}{*} \PY{l+m+mi}{2}\PY{p}{)}\PY{p}{)}
+            \PY{n}{ys} \PY{o}{=} \PY{n}{np}\PY{o}{.}\PY{n}{sign}\PY{p}{(}\PY{p}{(}\PY{n}{np}\PY{o}{.}\PY{n}{random}\PY{o}{.}\PY{n}{rand}\PY{p}{(}\PY{n}{N}\PY{p}{,}\PY{l+m+mi}{1}\PY{p}{)} \PY{o}{\PYZhy{}} \PY{o}{.}\PY{l+m+mi}{5}\PY{p}{)} \PY{o}{*} \PY{l+m+mi}{2}\PY{p}{)} \PY{o}{*} \PY{n}{np}\PY{o}{.}\PY{n}{sqrt}\PY{p}{(}\PY{l+m+mi}{1} \PY{o}{\PYZhy{}} \PY{n}{xs}\PY{o}{*}\PY{o}{*}\PY{l+m+mi}{2}\PY{p}{)}
+            \PY{n}{Y} \PY{o}{=} \PY{n}{np}\PY{o}{.}\PY{n}{hstack}\PY{p}{(}\PY{p}{(}\PY{n}{xs}\PY{p}{,}\PY{n}{ys}\PY{p}{)}\PY{p}{)}
+            \PY{n}{lmax}\PY{p}{,} \PY{n}{lmin} \PY{o}{=} \PY{l+m+mi}{0}\PY{p}{,} \PY{l+m+mi}{0}
+            \PY{k}{for} \PY{n}{i} \PY{o+ow}{in} \PY{n+nb}{range}\PY{p}{(}\PY{n}{LT}\PY{o}{.}\PY{n}{shape}\PY{p}{[}\PY{l+m+mi}{0}\PY{p}{]}\PY{o}{\PYZhy{}}\PY{l+m+mi}{1}\PY{p}{)}\PY{p}{:}
+                \PY{n}{X} \PY{o}{=} \PY{p}{(}\PY{n}{LTinv}\PY{p}{[}\PY{n}{i}\PY{p}{:}\PY{n}{i}\PY{o}{+}\PY{l+m+mi}{2}\PY{p}{,}\PY{n}{i}\PY{p}{:}\PY{n}{i}\PY{o}{+}\PY{l+m+mi}{2}\PY{p}{]}\PY{o}{.}\PY{n}{dot}\PY{p}{(}\PY{n}{Y}\PY{o}{.}\PY{n}{T}\PY{p}{)}\PY{p}{)}\PY{o}{.}\PY{n}{T}
+                \PY{n}{visualize2D}\PY{p}{(}\PY{n}{X}\PY{p}{)}
+                \PY{n}{lmax}\PY{p}{,} \PY{n}{lmin} \PY{o}{=} \PY{n+nb}{max}\PY{p}{(}\PY{n}{np}\PY{o}{.}\PY{n}{max}\PY{p}{(}\PY{n}{X}\PY{p}{)}\PY{p}{,} \PY{n}{lmax}\PY{p}{)}\PY{p}{,} \PY{n+nb}{min}\PY{p}{(}\PY{n}{np}\PY{o}{.}\PY{n}{min}\PY{p}{(}\PY{n}{X}\PY{p}{)}\PY{p}{,} \PY{n}{lmin}\PY{p}{)}
+                \PY{n}{plt}\PY{o}{.}\PY{n}{xlim}\PY{p}{(}\PY{n}{lmin}\PY{p}{,}\PY{n}{lmax}\PY{p}{)}
+                \PY{n}{plt}\PY{o}{.}\PY{n}{ylim}\PY{p}{(}\PY{n}{lmin}\PY{p}{,}\PY{n}{lmax}\PY{p}{)}
+            
+        \PY{k}{def} \PY{n+nf}{visualize2D}\PY{p}{(}\PY{n}{A}\PY{p}{,} \PY{n}{cmap}\PY{o}{=}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{blue}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}\PY{p}{:}
+            \PY{n}{A} \PY{o}{=} \PY{n}{A}\PY{o}{.}\PY{n}{reshape}\PY{p}{(}\PY{p}{(}\PY{o}{\PYZhy{}}\PY{l+m+mi}{1}\PY{p}{,}\PY{l+m+mi}{2}\PY{p}{)}\PY{p}{)}
+            \PY{n}{plt}\PY{o}{.}\PY{n}{scatter}\PY{p}{(}\PY{n}{A}\PY{p}{[}\PY{p}{:}\PY{p}{,}\PY{l+m+mi}{0}\PY{p}{]}\PY{p}{,} \PY{n}{A}\PY{p}{[}\PY{p}{:}\PY{p}{,}\PY{l+m+mi}{1}\PY{p}{]}\PY{p}{)}
+            \PY{n}{lmax}\PY{p}{,} \PY{n}{lmin} \PY{o}{=} \PY{n}{np}\PY{o}{.}\PY{n}{max}\PY{p}{(}\PY{n}{A}\PY{p}{)}\PY{p}{,} \PY{n}{np}\PY{o}{.}\PY{n}{min}\PY{p}{(}\PY{n}{A}\PY{p}{)}
+            \PY{n}{plt}\PY{o}{.}\PY{n}{xlim}\PY{p}{(}\PY{n}{lmin}\PY{p}{,}\PY{n}{lmax}\PY{p}{)}
+            \PY{n}{plt}\PY{o}{.}\PY{n}{ylim}\PY{p}{(}\PY{n}{lmin}\PY{p}{,}\PY{n}{lmax}\PY{p}{)}
+\end{Verbatim}
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}2}]:} \PY{n}{mpl}\PY{o}{.}\PY{n}{rcParams}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{figure.figsize}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]} \PY{o}{=} \PY{p}{(}\PY{l+m+mi}{5}\PY{p}{,}\PY{l+m+mi}{5}\PY{p}{)}
+        \PY{n}{N} \PY{o}{=} \PY{l+m+mi}{100}
+        \PY{n}{d} \PY{o}{=} \PY{l+m+mi}{10}
+        \PY{n}{Mu} \PY{o}{=} \PY{n}{np}\PY{o}{.}\PY{n}{zeros}\PY{p}{(}\PY{n}{d}\PY{p}{)}
+        \PY{n}{u} \PY{o}{=} \PY{n}{np}\PY{o}{.}\PY{n}{array}\PY{p}{(}\PY{p}{[}\PY{p}{(}\PY{o}{\PYZhy{}}\PY{l+m+mi}{1}\PY{p}{)}\PY{o}{*}\PY{o}{*}\PY{n}{i}\PY{o}{*}\PY{p}{(}\PY{n}{i}\PY{o}{+}\PY{l+m+mi}{1}\PY{p}{)} \PY{k}{for} \PY{n}{i} \PY{o+ow}{in} \PY{n+nb}{range}\PY{p}{(}\PY{l+m+mi}{10}\PY{p}{)}\PY{p}{]}\PY{p}{)}\PY{o}{.}\PY{n}{reshape}\PY{p}{(}\PY{o}{\PYZhy{}}\PY{l+m+mi}{1}\PY{p}{,}\PY{l+m+mi}{1}\PY{p}{)}
+        \PY{n}{Sigma} \PY{o}{=} \PY{n}{np}\PY{o}{.}\PY{n}{eye}\PY{p}{(}\PY{n}{d}\PY{p}{)}\PY{o}{+}\PY{n}{u}\PY{o}{.}\PY{n}{dot}\PY{p}{(}\PY{n}{u}\PY{o}{.}\PY{n}{T}\PY{p}{)}
+        \PY{n}{visualize\PYZus{}set}\PY{p}{(}\PY{n}{Sigma}\PY{p}{)}
+        \PY{n}{plt}\PY{o}{.}\PY{n}{show}\PY{p}{(}\PY{p}{)}
+        \PY{n}{A} \PY{o}{=} \PY{n}{sample\PYZus{}mvn\PYZus{}from1D}\PY{p}{(}\PY{n}{Mu}\PY{p}{,} \PY{n}{Sigma}\PY{p}{,} \PY{n}{N}\PY{p}{)}
+        \PY{n}{n\PYZus{}components} \PY{o}{=} \PY{l+m+mi}{5}
+        \PY{n}{total\PYZus{}variance} \PY{o}{=} \PY{n}{np}\PY{o}{.}\PY{n}{sum}\PY{p}{(}\PY{n}{np}\PY{o}{.}\PY{n}{var}\PY{p}{(}\PY{n}{A}\PY{p}{,} \PY{l+m+mi}{0}\PY{p}{)}\PY{p}{)}
+        \PY{n}{pc} \PY{o}{=} \PY{n}{PCA}\PY{p}{(}\PY{n}{A}\PY{p}{,} \PY{n}{n\PYZus{}components}\PY{p}{,} \PY{n}{out}\PY{o}{=}\PY{k+kc}{True}\PY{p}{)}
+        \PY{n+nb}{print}\PY{p}{(}\PY{p}{)}
+        \PY{k}{for} \PY{n}{i} \PY{o+ow}{in} \PY{n+nb}{range}\PY{p}{(}\PY{n}{n\PYZus{}components}\PY{p}{)}\PY{p}{:}
+            \PY{n}{v} \PY{o}{=} \PY{n}{pc}\PY{p}{[}\PY{p}{:}\PY{p}{,}\PY{n}{i}\PY{p}{]}\PY{o}{.}\PY{n}{reshape}\PY{p}{(}\PY{o}{\PYZhy{}}\PY{l+m+mi}{1}\PY{p}{,}\PY{l+m+mi}{1}\PY{p}{)}
+            \PY{n}{variance} \PY{o}{=} \PY{n}{variance\PYZus{}along\PYZus{}axis}\PY{p}{(}\PY{n}{A}\PY{p}{,} \PY{n}{v}\PY{p}{)}
+            \PY{n}{fraction} \PY{o}{=} \PY{n}{variance} \PY{o}{/} \PY{n}{total\PYZus{}variance} \PY{o}{*} \PY{l+m+mi}{100}
+            \PY{n+nb}{print}\PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+si}{\PYZob{}\PYZcb{}}\PY{l+s+s1}{ principal component:}\PY{l+s+s1}{\PYZsq{}}\PY{o}{.}\PY{n}{format}\PY{p}{(}\PY{n}{i}\PY{o}{+}\PY{l+m+mi}{1}\PY{p}{,} \PY{n}{v}\PY{o}{.}\PY{n}{flatten}\PY{p}{(}\PY{p}{)}\PY{p}{)}\PY{p}{)}
+            \PY{n+nb}{print}\PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+se}{\PYZbs{}t}\PY{l+s+s1}{Variance along the component: }\PY{l+s+si}{\PYZob{}:.2f\PYZcb{}}\PY{l+s+s1}{\PYZsq{}}\PY{o}{.}\PY{n}{format}\PY{p}{(}\PY{n}{variance}\PY{p}{)}\PY{p}{)}
+            \PY{n+nb}{print}\PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+se}{\PYZbs{}t}\PY{l+s+s1}{The fraction of the total variance: }\PY{l+s+si}{\PYZob{}:.2f\PYZcb{}}\PY{l+s+s1}{ / }\PY{l+s+si}{\PYZob{}:.2f\PYZcb{}}\PY{l+s+s1}{ = }\PY{l+s+si}{\PYZob{}:.2f\PYZcb{}}\PY{l+s+s1}{\PYZpc{}}\PY{l+s+s1}{\PYZsq{}}\PY{o}{.}\PY{n}{format}\PY{p}{(}\PY{n}{variance}\PY{p}{,} \PY{n}{total\PYZus{}variance}\PY{p}{,} \PY{n}{fraction}\PY{p}{)}\PY{p}{)}
+\end{Verbatim}
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+Visualization of the projections of some points 
+of the set \{x | (L\^{}T x)\^{}T L\^{}T x = 1\}.
+Different colors correspond to different (2x2) parts of L:
+
+    \end{Verbatim}
+
+    \begin{center}
+    \adjustimage{max size={0.5\linewidth}{0.9\paperheight}}{12output_1_1.png}
+    \end{center}
+    { \hspace*{\fill} \\}
+    
+    \begin{Verbatim}[commandchars=\\\{\}]
+Covariance matrix:
+[[  214.78971657  -201.24955179   300.72160209  -385.72372796
+    529.6520468   -611.37256151   705.68227067  -785.75569745
+    868.94607174  -991.48615739]
+ [ -201.24955179   537.03948453  -657.00300317   820.12962187
+  -1089.48325768  1274.24170173 -1454.40059324  1647.7134575
+  -1849.45677325  2036.21055661]
+ [  300.72160209  -657.00300317  1076.20879342 -1180.01687008
+   1598.14637295 -1870.08046825  2176.96746085 -2470.6720384
+   2749.01159692 -3057.06573498]
+ [ -385.72372796   820.12962187 -1180.01687008  1607.81048663
+  -2000.03664061  2361.37559348 -2731.42892245  3069.48603077
+  -3451.32196591  3853.66346444]
+ [  529.6520468  -1089.48325768  1598.14637295 -2000.03664061
+   2767.26495399 -3141.47549752  3655.56988208 -4090.77292491
+   4620.36946533 -5128.81104216]
+ [ -611.37256151  1274.24170173 -1870.08046825  2361.37559348
+  -3141.47549752  3791.3181555  -4296.12885672  4837.60632513
+  -5445.56903835  6042.94906325]
+ [  705.68227067 -1454.40059324  2176.96746085 -2731.42892245
+   3655.56988208 -4296.12885672  5057.15912953 -5602.80979281
+   6303.60656621 -6994.7646079 ]
+ [ -785.75569745  1647.7134575  -2470.6720384   3069.48603077
+  -4090.77292491  4837.60632513 -5602.80979281  6400.591782
+  -7063.53973294  7869.54292829]
+ [  868.94607174 -1849.45677325  2749.01159692 -3451.32196591
+   4620.36946533 -5445.56903835  6303.60656621 -7063.53973294
+   8075.30042715 -8865.16181702]
+ [ -991.48615739  2036.21055661 -3057.06573498  3853.66346444
+  -5128.81104216  6042.94906325 -6994.7646079   7869.54292829
+  -8865.16181702  9968.56548489]]
+
+Eigenvalues \& eigenvectors:
+l\_0 = 38553.62	v\_0 = [ 0.05069188  0.10630869  0.25196444 -0.71117634  0.36112074 
+                         0.0940609  0.26835339 -0.32456015 -0.25349071 -0.18974959]
+l\_1 = 158.97	v\_1 = [-0.10576754  0.39091391 -0.58590637 -0.14809867  0.16127227 
+                         0.17173819 -0.23807858 -0.21036262 -0.12280814  0.5470481 ]
+l\_2 = 134.95	v\_2 = [ 0.15746259 -0.65532099 -0.25118828 -0.00585876  0.15823129 
+                        -0.44684209  0.07969758 -0.44932539  0.09009407  0.20387032]
+l\_3 = 134.29	v\_3 = [-0.19755108 -0.14206053 -0.41570398  0.09890565  0.60579719 
+                         0.16523503  0.33971232  0.39989432  0.16673445 -0.24655041]
+l\_4 = 121.58	v\_4 = [ 0.26361037 -0.05062176  0.38540734 -0.06938088  0.46176641 
+                        -0.21528201 -0.28926165  0.47068041 -0.06146408  0.453905  ]
+l\_5 = 107.77	v\_5 = [-0.31053846 -0.01581623 -0.154455   -0.0314059   0.1211     
+                        -0.39028824 -0.57065775  0.03795466 -0.41308429 -0.4623348 ]
+l\_6 = 89.88	v\_6 = [ 0.3596452  -0.018248   -0.00080067 -0.02997386  0.21191232 
+                         0.33795537 -0.53581496 -0.23252026  0.52900921 -0.29881183]
+l\_7 = 77.20	v\_7 = [-0.40447002  0.42244607  0.28522643  0.24999423  0.28817262 
+                        -0.38844971  0.09066107 -0.31512673  0.41344372  0.04117586]
+l\_8 = 63.05	v\_8 = [ 0.45525776  0.20228606  0.02466264  0.59015555  0.27238072 
+                         0.07480811  0.1359388  -0.26071837 -0.47121571 -0.12101123]
+l\_9 = 54.75	v\_9 = [-0.50625863 -0.40463804  0.32088023  0.21213012  0.14669942 
+                         0.51508598 -0.16257261 -0.21041461 -0.19363921  0.19228197]
+
+1 principal component:
+	Variance along the component: 385.54
+	The fraction of the total variance: 385.54 / 394.96 = 97.61\%
+2 principal component:
+	Variance along the component: 1.59
+	The fraction of the total variance: 1.59 / 394.96 = 0.40\%
+3 principal component:
+	Variance along the component: 1.35
+	The fraction of the total variance: 1.35 / 394.96 = 0.34\%
+4 principal component:
+	Variance along the component: 1.34
+	The fraction of the total variance: 1.34 / 394.96 = 0.34\%
+5 principal component:
+	Variance along the component: 1.22
+	The fraction of the total variance: 1.22 / 394.96 = 0.31\%
+
+    \end{Verbatim}
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}3}]:} \PY{n}{mpl}\PY{o}{.}\PY{n}{rcParams}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{figure.figsize}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]} \PY{o}{=} \PY{p}{(}\PY{l+m+mi}{5}\PY{p}{,}\PY{l+m+mi}{5}\PY{p}{)}
+        \PY{n}{N} \PY{o}{=} \PY{l+m+mi}{100}
+        \PY{n}{d} \PY{o}{=} \PY{l+m+mi}{10}
+        \PY{n}{Mu} \PY{o}{=} \PY{n}{np}\PY{o}{.}\PY{n}{zeros}\PY{p}{(}\PY{n}{d}\PY{p}{)}
+        \PY{n}{u} \PY{o}{=} \PY{n}{np}\PY{o}{.}\PY{n}{array}\PY{p}{(}\PY{p}{[}\PY{p}{(}\PY{o}{\PYZhy{}}\PY{l+m+mi}{1}\PY{p}{)}\PY{o}{*}\PY{o}{*}\PY{n}{i}\PY{o}{*}\PY{p}{(}\PY{n}{i}\PY{o}{+}\PY{l+m+mi}{1}\PY{p}{)} \PY{k}{for} \PY{n}{i} \PY{o+ow}{in} \PY{n+nb}{range}\PY{p}{(}\PY{l+m+mi}{10}\PY{p}{)}\PY{p}{]}\PY{p}{)}\PY{o}{.}\PY{n}{reshape}\PY{p}{(}\PY{o}{\PYZhy{}}\PY{l+m+mi}{1}\PY{p}{,}\PY{l+m+mi}{1}\PY{p}{)}
+        \PY{n}{Sigma} \PY{o}{=} \PY{n}{np}\PY{o}{.}\PY{n}{eye}\PY{p}{(}\PY{n}{d}\PY{p}{)}\PY{o}{+}\PY{n}{u}\PY{o}{.}\PY{n}{dot}\PY{p}{(}\PY{n}{u}\PY{o}{.}\PY{n}{T}\PY{p}{)} \PY{o}{/} \PY{l+m+mi}{100}
+        \PY{n}{visualize\PYZus{}set}\PY{p}{(}\PY{n}{Sigma}\PY{p}{)}
+        \PY{n}{plt}\PY{o}{.}\PY{n}{show}\PY{p}{(}\PY{p}{)}
+        \PY{n}{A} \PY{o}{=} \PY{n}{sample\PYZus{}mvn\PYZus{}from1D}\PY{p}{(}\PY{n}{Mu}\PY{p}{,} \PY{n}{Sigma}\PY{p}{,} \PY{n}{N}\PY{p}{)}
+        \PY{n}{n\PYZus{}components} \PY{o}{=} \PY{l+m+mi}{5}
+        \PY{n}{total\PYZus{}variance} \PY{o}{=} \PY{n}{np}\PY{o}{.}\PY{n}{sum}\PY{p}{(}\PY{n}{np}\PY{o}{.}\PY{n}{var}\PY{p}{(}\PY{n}{A}\PY{p}{,} \PY{l+m+mi}{0}\PY{p}{)}\PY{p}{)}
+        \PY{n}{pc} \PY{o}{=} \PY{n}{PCA}\PY{p}{(}\PY{n}{A}\PY{p}{,} \PY{n}{n\PYZus{}components}\PY{p}{,} \PY{n}{out}\PY{o}{=}\PY{k+kc}{False}\PY{p}{)}
+        \PY{n+nb}{print}\PY{p}{(}\PY{p}{)}
+        \PY{k}{for} \PY{n}{i} \PY{o+ow}{in} \PY{n+nb}{range}\PY{p}{(}\PY{n}{n\PYZus{}components}\PY{p}{)}\PY{p}{:}
+            \PY{n}{v} \PY{o}{=} \PY{n}{pc}\PY{p}{[}\PY{p}{:}\PY{p}{,}\PY{n}{i}\PY{p}{]}\PY{o}{.}\PY{n}{reshape}\PY{p}{(}\PY{o}{\PYZhy{}}\PY{l+m+mi}{1}\PY{p}{,}\PY{l+m+mi}{1}\PY{p}{)}
+            \PY{n}{variance} \PY{o}{=} \PY{n}{variance\PYZus{}along\PYZus{}axis}\PY{p}{(}\PY{n}{A}\PY{p}{,} \PY{n}{v}\PY{p}{)}
+            \PY{n}{fraction} \PY{o}{=} \PY{n}{variance} \PY{o}{/} \PY{n}{total\PYZus{}variance} \PY{o}{*} \PY{l+m+mi}{100}
+            \PY{n+nb}{print}\PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+si}{\PYZob{}\PYZcb{}}\PY{l+s+s1}{ principal component:}\PY{l+s+s1}{\PYZsq{}}\PY{o}{.}\PY{n}{format}\PY{p}{(}\PY{n}{i}\PY{o}{+}\PY{l+m+mi}{1}\PY{p}{,} \PY{n}{v}\PY{o}{.}\PY{n}{flatten}\PY{p}{(}\PY{p}{)}\PY{p}{)}\PY{p}{)}
+            \PY{n+nb}{print}\PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+se}{\PYZbs{}t}\PY{l+s+s1}{Variance along the component: }\PY{l+s+si}{\PYZob{}:.2f\PYZcb{}}\PY{l+s+s1}{\PYZsq{}}\PY{o}{.}\PY{n}{format}\PY{p}{(}\PY{n}{variance}\PY{p}{)}\PY{p}{)}
+            \PY{n+nb}{print}\PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+se}{\PYZbs{}t}\PY{l+s+s1}{The fraction of the total variance: }\PY{l+s+si}{\PYZob{}:.2f\PYZcb{}}\PY{l+s+s1}{ / }\PY{l+s+si}{\PYZob{}:.2f\PYZcb{}}\PY{l+s+s1}{ = }\PY{l+s+si}{\PYZob{}:.2f\PYZcb{}}\PY{l+s+s1}{\PYZpc{}}\PY{l+s+s1}{\PYZsq{}}\PY{o}{.}\PY{n}{format}\PY{p}{(}\PY{n}{variance}\PY{p}{,} \PY{n}{total\PYZus{}variance}\PY{p}{,} \PY{n}{fraction}\PY{p}{)}\PY{p}{)}
+\end{Verbatim}
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+Visualization of the projections of some points 
+of the set \{x | (L\^{}T x)\^{}T L\^{}T x = 1\}.
+Different colors correspond to different (2x2) parts of L:
+
+    \end{Verbatim}
+
+    \begin{center}
+    \adjustimage{max size={0.5\linewidth}{0.9\paperheight}}{12output_2_1.png}
+    \end{center}
+    { \hspace*{\fill} \\}
+    
+    \begin{Verbatim}[commandchars=\\\{\}]
+
+1 principal component:
+	Variance along the component: 4.32
+	The fraction of the total variance: 4.32 / 12.61 = 34.24\%
+2 principal component:
+	Variance along the component: 1.37
+	The fraction of the total variance: 1.37 / 12.61 = 10.84\%
+3 principal component:
+	Variance along the component: 1.17
+	The fraction of the total variance: 1.17 / 12.61 = 9.29\%
+4 principal component:
+	Variance along the component: 1.13
+	The fraction of the total variance: 1.13 / 12.61 = 8.92\%
+5 principal component:
+	Variance along the component: 0.97
+	The fraction of the total variance: 0.97 / 12.61 = 7.66\%
+
+    \end{Verbatim}
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}4}]:} \PY{n}{mpl}\PY{o}{.}\PY{n}{rcParams}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{figure.figsize}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]} \PY{o}{=} \PY{p}{(}\PY{l+m+mi}{5}\PY{p}{,}\PY{l+m+mi}{5}\PY{p}{)}
+        \PY{n}{N} \PY{o}{=} \PY{l+m+mi}{100}
+        \PY{n}{d} \PY{o}{=} \PY{l+m+mi}{10}
+        \PY{n}{Mu} \PY{o}{=} \PY{n}{np}\PY{o}{.}\PY{n}{zeros}\PY{p}{(}\PY{n}{d}\PY{p}{)}
+        \PY{n}{u} \PY{o}{=} \PY{n}{np}\PY{o}{.}\PY{n}{array}\PY{p}{(}\PY{p}{[}\PY{p}{(}\PY{o}{\PYZhy{}}\PY{l+m+mi}{1}\PY{p}{)}\PY{o}{*}\PY{o}{*}\PY{n}{i}\PY{o}{*}\PY{p}{(}\PY{n}{i}\PY{o}{+}\PY{l+m+mi}{1}\PY{p}{)} \PY{k}{for} \PY{n}{i} \PY{o+ow}{in} \PY{n+nb}{range}\PY{p}{(}\PY{l+m+mi}{10}\PY{p}{)}\PY{p}{]}\PY{p}{)}\PY{o}{.}\PY{n}{reshape}\PY{p}{(}\PY{o}{\PYZhy{}}\PY{l+m+mi}{1}\PY{p}{,}\PY{l+m+mi}{1}\PY{p}{)}
+        \PY{n}{Sigma} \PY{o}{=} \PY{n}{np}\PY{o}{.}\PY{n}{eye}\PY{p}{(}\PY{n}{d}\PY{p}{)}\PY{o}{+}\PY{n}{u}\PY{o}{.}\PY{n}{dot}\PY{p}{(}\PY{n}{u}\PY{o}{.}\PY{n}{T}\PY{p}{)} \PY{o}{*} \PY{l+m+mi}{100}
+        \PY{n}{visualize\PYZus{}set}\PY{p}{(}\PY{n}{Sigma}\PY{p}{)}
+        \PY{n}{plt}\PY{o}{.}\PY{n}{show}\PY{p}{(}\PY{p}{)}
+        \PY{n}{A} \PY{o}{=} \PY{n}{sample\PYZus{}mvn\PYZus{}from1D}\PY{p}{(}\PY{n}{Mu}\PY{p}{,} \PY{n}{Sigma}\PY{p}{,} \PY{n}{N}\PY{p}{)}
+        \PY{n}{n\PYZus{}components} \PY{o}{=} \PY{l+m+mi}{5}
+        \PY{n}{total\PYZus{}variance} \PY{o}{=} \PY{n}{np}\PY{o}{.}\PY{n}{sum}\PY{p}{(}\PY{n}{np}\PY{o}{.}\PY{n}{var}\PY{p}{(}\PY{n}{A}\PY{p}{,} \PY{l+m+mi}{0}\PY{p}{)}\PY{p}{)}
+        \PY{n}{pc} \PY{o}{=} \PY{n}{PCA}\PY{p}{(}\PY{n}{A}\PY{p}{,} \PY{n}{n\PYZus{}components}\PY{p}{,} \PY{n}{out}\PY{o}{=}\PY{k+kc}{False}\PY{p}{)}
+        \PY{n+nb}{print}\PY{p}{(}\PY{p}{)}
+        \PY{k}{for} \PY{n}{i} \PY{o+ow}{in} \PY{n+nb}{range}\PY{p}{(}\PY{n}{n\PYZus{}components}\PY{p}{)}\PY{p}{:}
+            \PY{n}{v} \PY{o}{=} \PY{n}{pc}\PY{p}{[}\PY{p}{:}\PY{p}{,}\PY{n}{i}\PY{p}{]}\PY{o}{.}\PY{n}{reshape}\PY{p}{(}\PY{o}{\PYZhy{}}\PY{l+m+mi}{1}\PY{p}{,}\PY{l+m+mi}{1}\PY{p}{)}
+            \PY{n}{variance} \PY{o}{=} \PY{n}{variance\PYZus{}along\PYZus{}axis}\PY{p}{(}\PY{n}{A}\PY{p}{,} \PY{n}{v}\PY{p}{)}
+            \PY{n}{fraction} \PY{o}{=} \PY{n}{variance} \PY{o}{/} \PY{n}{total\PYZus{}variance} \PY{o}{*} \PY{l+m+mi}{100}
+            \PY{n+nb}{print}\PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+si}{\PYZob{}\PYZcb{}}\PY{l+s+s1}{ principal component:}\PY{l+s+s1}{\PYZsq{}}\PY{o}{.}\PY{n}{format}\PY{p}{(}\PY{n}{i}\PY{o}{+}\PY{l+m+mi}{1}\PY{p}{,} \PY{n}{v}\PY{o}{.}\PY{n}{flatten}\PY{p}{(}\PY{p}{)}\PY{p}{)}\PY{p}{)}
+            \PY{n+nb}{print}\PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+se}{\PYZbs{}t}\PY{l+s+s1}{Variance along the component: }\PY{l+s+si}{\PYZob{}:.2f\PYZcb{}}\PY{l+s+s1}{\PYZsq{}}\PY{o}{.}\PY{n}{format}\PY{p}{(}\PY{n}{variance}\PY{p}{)}\PY{p}{)}
+            \PY{n+nb}{print}\PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+se}{\PYZbs{}t}\PY{l+s+s1}{The fraction of the total variance: }\PY{l+s+si}{\PYZob{}:.2f\PYZcb{}}\PY{l+s+s1}{ / }\PY{l+s+si}{\PYZob{}:.2f\PYZcb{}}\PY{l+s+s1}{ = }\PY{l+s+si}{\PYZob{}:.2f\PYZcb{}}\PY{l+s+s1}{\PYZpc{}}\PY{l+s+s1}{\PYZsq{}}\PY{o}{.}\PY{n}{format}\PY{p}{(}\PY{n}{variance}\PY{p}{,} \PY{n}{total\PYZus{}variance}\PY{p}{,} \PY{n}{fraction}\PY{p}{)}\PY{p}{)}
+\end{Verbatim}
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+Visualization of the projections of some points 
+of the set \{x | (L\^{}T x)\^{}T L\^{}T x = 1\}.
+Different colors correspond to different (2x2) parts of L:
+
+    \end{Verbatim}
+
+    \begin{center}
+    \adjustimage{max size={0.5\linewidth}{0.9\paperheight}}{12output_3_1.png}
+    \end{center}
+    { \hspace*{\fill} \\}
+    
+    \begin{Verbatim}[commandchars=\\\{\}]
+
+1 principal component:
+	Variance along the component: 38779.78
+	The fraction of the total variance: 38779.78 / 38788.46 = 99.98\%
+2 principal component:
+	Variance along the component: 1.44
+	The fraction of the total variance: 1.44 / 38788.46 = 0.00\%
+3 principal component:
+	Variance along the component: 1.32
+	The fraction of the total variance: 1.32 / 38788.46 = 0.00\%
+4 principal component:
+	Variance along the component: 1.22
+	The fraction of the total variance: 1.22 / 38788.46 = 0.00\%
+5 principal component:
+	Variance along the component: 1.00
+	The fraction of the total variance: 1.00 / 38788.46 = 0.00\%
+
+    \end{Verbatim}
+

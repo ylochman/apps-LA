@@ -1,0 +1,2173 @@
+
+\documentclass[12pt,a4]{article}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\usepackage{amsmath,amsthm}
+\usepackage{amsfonts}
+\usepackage{amssymb}
+\usepackage[normalem]{ulem}
+\usepackage{enumerate}
+\usepackage{graphicx}%
+\usepackage{datetime,verbatim}
+\usepackage{xcolor}
+
+%%%%%%%%%%%%%%%%%%%%%    page setup   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+
+\textheight=235truemm \textwidth=175truemm \hoffset=-15truemm
+\voffset=-15truemm
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\usepackage{fancyhdr}
+\pagestyle{fancy}
+\lhead{{\sf\scriptsize R.H.}}
+\rhead{{\sf\scriptsize Autumn~2018}}
+\chead{{\sf\scriptsize Linear Algebra: Homework~2 @  DS UCU%~\Versia
+}}
+\lfoot{}
+\rfoot{}
+\cfoot{\rm\thepage}
+%\pagestyle{myheadings}
+%%\markright{}
+%\markboth{}{}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+%%%%%%%%%%%%%%%   matrix extension  %%%%%%%%
+\makeatletter
+\renewcommand*\env@matrix[1][*\c@MaxMatrixCols c]{%
+	\hskip -\arraycolsep
+	\let\@ifnextchar\new@ifnextchar
+	\array{#1}}
+\makeatother
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\newenvironment{proofNoQED}[1]{\smallskip\noindent{\it Proof #1.}\ \rm}
+{\hfill \smallskip}
+\newcommand{\ProofNoQED}[1]{\smallskip\noindent{\it Proof} #1\ \hfill\smallskip}
+%\renewcommand{\qedsymbol}{\text{$\square$}}
+
+\newtheorem{problem}{Problem}
+\newtheorem{solution}{Solution to the problem}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%   Definitions       %%%%%%%
+
+
+\newcommand\rank{\operatorname{rank}}
+\newcommand{\trace}{\operatorname{tr}}
+\newcommand\grad{\operatorname{grad}}
+\newcommand\ls{\operatorname{ls}}
+
+\newcommand{\ov}{\overline}
+\newcommand{\wt}{\widetilde}
+
+\newcommand{\bN}{{\mathbb N}}
+\newcommand{\bR}{{\mathbb R}}
+\newcommand{\bZ}{{\mathbb Z}}
+
+\newcommand{\ba}{{\mathbf a}}
+\newcommand{\bb}{{\mathbf b}}
+\newcommand{\be}{{\mathbf e}}
+\newcommand{\bn}{{\mathbf n}}
+\newcommand{\bff}{{\mathbf f}}
+
+\newcommand{\bu}{{\mathbf u}}
+\newcommand{\bv}{{\mathbf v}}
+\newcommand{\bp}{{\mathbf p}}
+\newcommand{\bq}{{\mathbf q}}
+\newcommand{\br}{{\mathbf r}}
+\newcommand{\bx}{{\mathbf x}}
+\newcommand{\by}{{\mathbf y}}
+\newcommand{\bw}{{\mathbf w}}
+
+\newcommand{\cB}{{\mathcal B}}
+\newcommand{\cF}{{\mathcal F}}
+\newcommand{\cG}{{\mathcal G}}
+\newcommand{\cN}{{\mathcal N}}
+\newcommand{\cP}{{\mathcal P}}
+\newcommand{\cT}{{\mathcal T}}
+
+\newcommand{\sprod}[2]{\left \langle #1, #2 \right \rangle}
+\newcommand{\norm}[1]{\left\lVert#1\right\rVert}
+\newcommand{\abs}[1]{\left | #1 \right |}
+\newcommand{\vect}[1]{\overrightarrow{#1}}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+\begin{document}
+
+\begin{center}
+  \Large\bf{Linear Algebra\\
+    Home assignment 2: Orthogonality}
+\end{center}
+Solutions are by Yaroslava Lochman.
+
+%\vspace{.5cm}
+
+\begin{problem}[Parallel and orthogonal planes; 2pt]\rm	Determine whether the given planes are:
+		\begin{enumerate}[(a)]
+		\item parallel: \begin{enumerate}[(i)]
+			\item $4x-y+2z=5$ and $7x-3y+4z=8$;
+			\item $x-4y-3z-2=0$ and $3x-12y-9z-7=0$.
+		\end{enumerate}
+ 		\item perpendicular:
+		\begin{enumerate}[(i)]
+			\item $3x-y+z=0$ and $x+2z=-1$;
+			\item $x-2y+3z=4$ and $-2x+5y+4z=-1$.
+		\end{enumerate}
+	\end{enumerate}
+\end{problem}
+
+\begin{solution}[]\rm 
+\[
+Ax + By + Cz = D
+~\Rightarrow~
+n = (A,B,C)^\top \text{ -- the normal vector of the plane}
+\]
+The planes are parallel $~\Leftrightarrow~$ the normal vectors are parallel $~\Leftrightarrow~$ $\frac{A_1}{A_2}=\frac{B_1}{B_2}=\frac{C_1}{C_2}$.\\
+The planes are perpendicular $~\Leftrightarrow~$ the normal vectors are perpendicular $~\Leftrightarrow~$ $\sprod{n_1}{n_2} = 0$$~\Leftrightarrow~$ $A_1A_2+B_1B_2+C_1C_2 = 0$
+\begin{enumerate}[(a)]
+\item (parallel)
+\begin{enumerate}[(i)]
+\item 
+\[
+4x - y + 2z = 5
+~\Rightarrow~
+n_1 = (4, -1, 2)^\top
+\]
+\[
+7x - 3y + 4z = 8
+~\Rightarrow~
+n_2 = (7, -3, 4)^\top
+\]
+\[
+\frac{4}{7} \neq \frac{-1}{-3} \neq \frac{2}{4}
+\]
+Hence the planes are not parallel.
+\item
+\[
+x - 4y - 3z - 2 = 0
+~\Rightarrow~
+n_1 = (1, -4, -3)^\top
+\]
+\[
+3x - 12y - 9z - 7 = 0
+~\Rightarrow~
+n_2 = (3, -12, -9)^\top
+\]
+\[
+\frac{3}{1} = \frac{-12}{-4} = \frac{-9}{-3} = 3
+\]
+Hence the planes are parallel.
+\end{enumerate}
+\item (perpendicular)
+\begin{enumerate}[(i)]
+\item For $3x - y + z = 0$ and $x + 2z = -1$ we have
+\[
+\sprod{n_1}{n_2} = 3 + 0 + 2 = 5 \neq 0
+\]
+Hence the planes are not perpendicular.
+\item For $x - 2y + 3z = 4$ and $-2x + 5y + 4z = -1$ we have
+\[
+\sprod{n_1}{n_2} = -2 - 10 + 12 = 0
+\]
+Hence the planes are perpendicular.\\
+\end{enumerate}
+\end{enumerate}
+\end{solution}
+	
+\begin{problem}[Orthogonal complement; 3pt]\rm
+	\begin{enumerate}[(a)]
+		\item Let $W$ be the plane in $\bR^3$ given by the equation $x-2y-3z=0$. Find parametric equations for $W^\perp$.
+		\item Let $W$ be the line in $\bR^3$ with parametric equations $x=2t$, $y=-5t$, $z=4t$. Find an equation for $W^\perp$.
+		\item Let $W$ be the intersection of the two planes $x+y+z=0$ and $x-y+z=0$ in $\bR^3$. Find an equation for $W^\perp$.
+	\end{enumerate}
+\end{problem}
+
+
+\begin{solution}[]\rm .
+\begin{enumerate}[(a)]
+\item
+\[
+% W = \{(x,y,z)^\top | x-2y-3z=0 \} \Leftrightarrow \{(x,y,z)^\top | \sprod{(x,y,z)^\top}{(1,-2,-3)^\top}=0 \}
+W = \{ \begin{pmatrix} x & y & z \end{pmatrix}^\top \in \mathbb{R}^3 ~\vline~ x-2y-3z=0 \}
+\qquad
+\bn = \begin{pmatrix} 1 & -2 & -3 \end{pmatrix}^\top \text{ -- normal vector of the plane}
+\]
+\[
+\text{So ~} \bx \in W ~\Rightarrow~ \sprod{\bx}{\bn}=0
+\]
+\[
+\by \in W^\perp \Rightarrow \by ~\bot ~W ~\Rightarrow~ \sprod{\by}{\bx}=0 ~\forall \bx \in W ~\Rightarrow~ \by \parallel \bn
+\]
+So:
+\[
+W^\perp = \left\{\begin{pmatrix} x & y & z \end{pmatrix}^\top \in \mathbb{R}^3
+~\vline~
+\begin{matrix}
+x=t \quad\\
+y=-2t \\
+z=-3t \\
+\end{matrix}
+\quad t \in \mathbb{R}\right\} = \ls\{\bn\}
+\]
+The parametric equations for $W^\perp$ are $x=t$, $y=-2t$, $z=-3t$.
+\item
+\[
+W = \left\{\begin{pmatrix} x & y & z \end{pmatrix}^\top \in \mathbb{R}^3
+~\vline~
+\begin{matrix}
+x=2t ~\\
+y=-5t \\
+z=4t ~\\
+\end{matrix}
+\quad t \in \mathbb{R}\right\}
+\qquad
+\bv = \begin{pmatrix} 2 \\ -5 \\ 4 \end{pmatrix} \text{ -- direction vector of the line}
+\]
+\[
+\by \in W^\perp ~\Rightarrow~ \sprod{\by}{\bx}=0 ~\forall \bx \in W ~\Rightarrow~ \by \bot \bv \Rightarrow W^\perp \text{ is a plane with the normal vector } \bv
+\]
+So:
+\[
+W^\perp = \{ \begin{pmatrix} x & y & z \end{pmatrix}^\top \in \mathbb{R}^3 ~\vline~ 2x-5y+4z=0 \}
+\]
+The equation for $W^\perp$ is $2x-5y+4z=0$.
+\item
+% Let $W$ be the intersection of the two planes $x+y+z=0$ and $x-y+z=0$ in $\bR^3$. Find an equation for $W^\perp$.
+\[
+W = \left\{\begin{pmatrix} x & y & z \end{pmatrix}^\top \in \mathbb{R}^3
+~\vline~
+% \left \{
+\begin{matrix}
+x+y+z=0 \\
+x-y+z=0 \\
+\end{matrix}
+% \right.
+\right\}
+\]
+$\bn_1 = \begin{pmatrix} 1 & 1 & 1 \end{pmatrix}^\top$ -- normal vector of the $1^{st}$ plane.\\
+$\bn_2 = \begin{pmatrix} 1 & -1 & 1 \end{pmatrix}^\top$ -- normal vector of the $2^{nd}$ plane.
+\[
+W = \left\{\bx \in \mathbb{R}^3
+~\vline~
+\sprod{\bx}{\bn_1}=0 ~\wedge~
+\sprod{\bx}{\bn_2}=0 
+\right\} \text{ -- is a line}
+\]
+We have: $\bx ~\bot~ \bn_1 $, $ \bx ~\bot~ \bn_2$. Let $\by \in \ls\{\bn_1, \bn_2\} \Rightarrow \sprod{\by}{\bx}=\sprod{\alpha_1\bn_1 + \alpha_2\bn_2}{\bx} = \alpha_1 \cdot~ 0 + \alpha_2 \cdot~ 0 = 0$ 
+$~\Rightarrow~ \bx ~\bot~ \ls\{\bn_1, \bn_2\}$.
+Hence:
+\[
+W^\perp = \ls\{\bn_1, \bn_2\}
+\]
+To get an equation for the plane we need to compute its normal $\bn$ (which is concurrently a direction vector of the line $W$). We can do it using the cross product:
+\[
+\bn = \bn_1 \times \bn_2 = 
+\begin{vmatrix}
+e_1 & e_2 & e_3 \\
+1 & 1 & 1 \\
+1 & -1 & 1 \\
+\end{vmatrix}
+=
+\begin{pmatrix}
+2 \\
+0 \\
+-2 \\
+\end{pmatrix}
+\]
+So the equation for $W^\perp$ is $2x -2z = 0$.\\
+% and since 
+% $ \by \in W^\perp ~\Rightarrow~ \sprod{\by}{\bx}=0 ~\forall \bx \in W$
+\end{enumerate}
+\end{solution}
+
+
+\begin{problem}[Distance from a point; 4pt]\rm 
+	\begin{enumerate}[(a)]		
+		\item Find the distance from the point $P=(1,1,0)$ to the line $\frac{x-1}{2}=\frac{y-2}{1} = \frac{z+1}{2}$. 
+		\item Let $\pi$ be a plane given by the equation $ax + by + cz +d = 0$ and $P(x_0,y_0,z_0)$ be a point outside it. Prove that the distance from $P$ to $\pi$ is given by the formula
+		\[
+			\frac{|ax_0 + by_0 + cz_0 + d|}{\sqrt{a^2 + b^2 + c^2}}.
+		\] 
+		\small{\textsf{Hint: if $Q$ is the point on $\pi$ realizing the distance, then $\overrightarrow{PQ}$ is collinear to $\mathbf{n}=(a,b,c)$ (why?). Take now any point $Q'$ on $\pi$ and find a projection of $\overrightarrow{PQ'}$ onto direction~$\mathbf{n}$}}
+		\item Find the distance between the point~$P=(1,0,1)$ and the plane~$2x+2y-z=2$.
+	\end{enumerate}
+\end{problem}
+
+
+\begin{solution}[]\rm .
+\begin{enumerate}[(a)]		
+\item
+\[
+P = (1, 1, 0)
+\qquad
+l: \frac{x-1}{2}=\frac{y-2}{1} = \frac{z+1}{2}
+\qquad
+\bv = \begin{pmatrix} 2 & 1 & 2 \\ \end{pmatrix}^\top
+\text{ -- ~direction vector}
+\]
+Let
+$O = (1, 2, -1)$.
+% $O=\begin{pmatrix} 1 & 2 & -1\end{pmatrix}^\top$.
+This point lies on the line. Then $\vect{OP} =  \begin{pmatrix} 0 & -1 & 1 \\ \end{pmatrix}^\top$. Let $P'$ be the point on the line realizing distance. Hence the distance can be found as:
+\[
+\rho = \abs{\vect{PP'}} = \sqrt{\abs{\vect{OP}}^2 - \abs{\vect{OP'}}^2}
+\]
+$\abs{\vect{PP'}}$ is the projection of $\vect{OP}$ on the line:
+\[
+\abs{\vect{OP'}}^2 = 
+pr^2_\bv \vect{OP} = 
+\frac{\sprod{\vect{OP}}{\bv}^2}{\norm{\bv}^2} =
+\frac{(0-1+2)^2}{2^2 + 1^2 + 2^2} = \frac{1}{9}
+\]
+So:
+\[
+\abs{\vect{PP'}} = \sqrt{2 - \frac{1}{9}} = \frac{\sqrt{17}}{3}
+\]
+\item 
+\[
+P = (x_0, y_0, z_0)
+\qquad
+\pi:~ ax + by + cz + d = 0
+\qquad
+\bn = \begin{pmatrix} a & b & c\end{pmatrix}^\top
+\text{ -- ~normal vector}
+% P = \begin{pmatrix} x_0 & y_0 & z_0\end{pmatrix}^\top
+\]
+Let $Q$ be the point on $\pi$ realizing the distance. Since the distance is the shortest:
+\[
+\vect{PQ}~\bot~\vect{QQ'} \quad \forall Q' \in \pi \quad \text{or} \quad  \vect{PQ}~\bot~\pi 
+\]
+($Q \in \pi$ minimizes $\abs{PQ} \Leftrightarrow PQ~\bot~\pi$ -- had been concluded using the Pythagorean theorem).
+Therefore $\vect{PQ}$ is collinear to the normal $\bn$.
+So the distance $\rho=\abs{\vect{PQ}}$ is an absolute value (since the angle between vectors can be acute or obtuse) of the projection of $\vect{PQ'}$ onto $\bn$:
+\[
+Q' = \begin{pmatrix} x_q & y_q & z_q\end{pmatrix}^\top \in \pi
+~\Rightarrow~
+ax_q + by_q + cz_q + d = 0
+\]
+\[
+\vect{PQ'} = \begin{pmatrix} x_q-x_0 & y_q-y_0 & z_q-z_0\end{pmatrix}^\top
+\]
+\[
+\Rightarrow ~ \rho = \abs{pr_n \vect{PQ'}} =
+\frac{\abs{\sprod{\vect{PQ'}}{n}}}{\norm{n}} =
+\frac{\abs{\sprod{\begin{pmatrix} x_q-x_0 \\ y_q-y_0 \\ z_q-z_0\end{pmatrix}}{\begin{pmatrix} a \\ b \\ c\end{pmatrix}}}}{\sqrt{a^2+b^2+c^2}} =
+\frac{\abs{- d - a x_0 - b y_0 - c z_0}}{\sqrt{a^2+b^2+c^2}}
+\]
+So:
+\[
+\rho = \frac{|ax_0 + by_0 + cz_0 + d|}{\sqrt{a^2 + b^2 + c^2}}.
+\] 
+\item
+\[
+P=(1,0,1)
+\qquad
+\pi: ~2x+2y-z-2=0
+\]
+\[
+\rho = \frac{|ax_0 + by_0 + cz_0 + d|}{\sqrt{a^2 + b^2 + c^2}} = \frac{|2 +2 \cdot 0 -1 + -2|}{\sqrt{2^2 + 2^2 + (-1)^2}} = \frac{1}{\sqrt{9}} = \frac{1}{3}
+\] 
+\end{enumerate}
+\end{solution}
+
+
+\begin{problem}[Cross product; 4pt]\rm
+\begin{enumerate}[(a)]
+	\item For any two vectors $\bu  =(u_1,u_2,u_3)^\top$ and $\bv = (v_1,v_2,v_3)^\top$, their \textbf{\emph{vector product}}, or \textbf{\emph{cross product}} $\bu \times \bv$ is the vector $\bw = (w_1,w_2,w_3)^\top$ with entries
+	\[
+	w_1 = \begin{vmatrix}u_{2}&u_{3}\\v_{2}&v_{3}\end{vmatrix}, \qquad
+	w_2 = - \begin{vmatrix}u_{1}&u_{3}\\v_{1}&v_{3}\end{vmatrix},\qquad
+	w_3 = \begin{vmatrix}u_{1}&u_{2}\\v_{1}&v_{2}\end{vmatrix}.
+	\]
+	Prove that $\bw$ is orthogonal to both $\bu$ and $\bv$ in the sense that
+	$\bw^\top \bu = \bw^\top \bv = 0$.
+	
+	{\small{\textsf{Hint: these products are cofactor expansions of some $3\times 3$ matrices}}}
+	\item Assume that $\bu_1,\dots, \bu_{n-1}$ are linearly independent vectors in $\mathbb{R}^n$. Find a formula analogous to that in part (a) for a vector that is orthogonal to the subspace spanned by $\bu_1,\dots,\bu_{n-1}$.
+	\end{enumerate}
+\end{problem}
+
+\begin{solution}[]\rm .
+\begin{enumerate}[(a)]
+\item 
+\[
+\bw = \bu \times \bv =
+\begin{vmatrix}
+e_1 & e_2 & e_3 \\
+u_1 & u_2 & u_3 \\
+v_1 & v_2 & v_3 \\
+\end{vmatrix}
+\]
+\[
+\bw^\top \bu = 
+\begin{vmatrix}
+u_1 & u_2 & u_3 \\
+u_1 & u_2 & u_3 \\
+v_1 & v_2 & v_3 \\
+\end{vmatrix} = 0~\text{ since the $1^{st}$ and $2^{nd}$ rows are equal (therefore dependent)}
+\]
+The same with $\bv$:
+\[
+\bw^\top \bv = 
+\begin{vmatrix}
+v_1 & v_2 & v_3 \\
+u_1 & u_2 & u_3 \\
+v_1 & v_2 & v_3 \\
+\end{vmatrix} = 0~\text{ since the $1^{st}$ and $3^{rd}$ rows are equal (therefore dependent)}
+\]
+\item Let $\bu_i = (u_i^1, \cdots, u_i^n)^\top$. Then the answer is: 
+\[
+\bw = 
+\begin{vmatrix}
+e_1 & \cdots & e_n \\
+u_1^1 & \cdots & u_1^n \\
+\vdots & & \vdots \\
+u_{n-1}^1 & \cdots & u_{n-1}^n \\
+\end{vmatrix}
+\]
+One can see that $\bw$ is orthogonal to all $\bu_i$:
+\[
+\bw^\top \bu_i = 
+\begin{vmatrix}
+u_i^1 & \cdots & u_i^n \\
+u_1^1 & \cdots & u_1^n \\
+\vdots & & \vdots \\
+u_{n-1}^1 & \cdots & u_{n-1}^n \\
+\end{vmatrix} = 0
+\quad \forall i \in \ov{1,n} ~\text{ (because of the two equal rows)}
+\]
+Therefore it is orthogonal to $\ls\{\bu_1,\dots,\bu_{n-1}\}$:
+\[
+\forall \bx \in \ls\{\bu_1,\dots,\bu_{n-1}\} \quad \bw^\top\bx = \bw^\top \sum_{i=1}^{n-1}\alpha_i \bu_i = \sum_{i=1}^{n-1}\alpha_i \bw^\top \bu_i = 0
+\]\\
+\end{enumerate}
+\end{solution}
+
+
+
+\begin{problem}[Orthogonal matrices; 4pt]\rm
+	\begin{enumerate}[(a)]
+	\item 
+	If $Q_1$ and $Q_2$ are orthogonal matrices, show that $Q_1^{-1}$ and $Q_1Q_2$ are orthogonal as well.
+	\item
+	Prove that an orthogonal matrix that is also upper-triangular must be diagonal.
+	\end{enumerate}
+\end{problem}
+
+\begin{solution}[]\rm .
+\begin{enumerate}[(a)]
+\item 
+$Q_1$ and $Q_2$ are orthogonal $\Leftrightarrow$ $Q_1^\top = Q_1^{-1}$, $Q_2^\top = Q_2^{-1}$. So:
+\[
+1.~(Q_1^{-1})^\top = (Q_1^\top)^\top  = Q_1 = (Q_1^{-1})^{-1}
+\]
+Hence $Q_1^{-1}$ is orthogonal.
+\[
+2.~(Q_1Q_2)^\top = Q_2^\top Q_1^\top = Q_2^{-1} Q_1^{-1} = (Q_2Q_1)^{-1}
+\]
+Hence $Q_1Q_2$ is orthogonal.
+\item
+Let 
+% \[
+% Q = 
+% \begin{pmatrix}
+% Q_{11} & Q_{12} & \cdots & Q_{1n} \\
+% 0 & Q_{22} &\cdots & Q_{2n} \\
+% \vdots & \cdot & \ddots & \vdots \\
+% 0 & 0 & \cdots & Q_{nn} \\
+% \end{pmatrix}
+% \]
+% \[
+% Q^\top Q = I
+% \]
+% \[
+% \begin{pmatrix}
+% Q_{11} & 0 & \cdots & 0 \\
+% Q_{12} & Q_{22} &\cdots & 0 \\
+% \vdots & \cdot & \ddots & \vdots \\
+% Q_{1n} &  0 & \cdots & Q_{nn} \\
+% \end{pmatrix}
+% \begin{pmatrix}
+% Q_{11} & Q_{12} & \cdots & Q_{1n} \\
+% 0 & Q_{22} &\cdots & Q_{2n} \\
+% \vdots & \cdot & \ddots & \vdots \\
+% 0 & 0 & \cdots & Q_{nn} \\
+% \end{pmatrix}
+% =
+% \begin{pmatrix}
+% 1 & 0 & \cdots & 0 \\
+% 0 & 1 &\cdots & 0 \\
+% \vdots & \cdot & \ddots & \vdots \\
+% 0 & 0 & \cdots & 1 \\
+% \end{pmatrix}
+% \]
+$Q = 
+\begin{pmatrix}
+Q_1 & Q_2 & \cdots & Q_n \\
+\end{pmatrix}
+$ and $Q^\top Q = I$ : 
+\[
+\begin{pmatrix}
+Q_1^\top \\ Q_2^\top \\ \cdots \\ Q_n^\top \\
+\end{pmatrix}
+\begin{pmatrix}
+Q_1 & Q_2 & \cdots & Q_n \\
+\end{pmatrix} = I
+\]
+\[
+\Rightarrow
+\left\{\begin{matrix}
+Q_i^\top Q_i = 1 \qquad \qquad \forall i \in  \overline{1,n}\\[4pt]
+Q_i^\top Q_j = 0 \quad \forall i,j \in \overline{1,n} ~ i \neq j
+\end{matrix}\right.
+\]\\
+\[
+\Rightarrow Q_1^\top Q_1 = Q_{11}^2 = 1
+\quad \Rightarrow Q_{11} = \pm 1
+\quad \Rightarrow Q_1^\top Q_j = \pm Q_{1j} = 0
+~\forall j \neq 1
+\]\\
+\[
+\Rightarrow Q_2^\top Q_2 = Q_{12}^2 + Q_{22}^2 = 0 + Q_{22}^2 = 1
+\quad \Rightarrow Q_{22} = \pm 1
+\quad \Rightarrow Q_2^\top Q_j = \pm Q_{2j} = 0
+~\forall j \neq 2
+\]\\
+and so on. Hence $Q$ is diagonal and moreover:
+\[
+Q = 
+\begin{pmatrix}
+\pm 1 & 0 & \cdots & 0 \\
+0 & \pm 1 & \cdots & 0 \\
+\vdots & \vdots & \ddots & \vdots \\
+0 & 0 & \cdots & \pm 1
+\end{pmatrix}
+\]\\
+\end{enumerate}
+\end{solution}
+
+
+
+\begin{problem}[Projection matrices; 3pt]\rm For the vectors $\ba_1=(1,0,1)$, $\ba_2 = (0,1,2)$ and $\bb=(-1,2,1)$
+	\begin{enumerate}[(a)]
+		\item  find the matrix of the orthogonal projection $P_{W}$ onto the plane $W:=\operatorname{ls}\{\ba_1,\ba_2\}$;
+		\item  find the matrix of the orthogonal projection $P_{W^\perp}$ onto the line~$W^\perp$;
+		\item find the components of the vector~$\bb$ with respect to the decomposition $\bR^3 = W \oplus W^\perp$.
+	\end{enumerate}
+\end{problem}
+
+
+\begin{solution}[]\rm .
+\begin{enumerate}[(a)]
+\item
+% find the matrix of the orthogonal projection $P_{W}$ onto the plane $W:=\operatorname{ls}\{\ba_1,\ba_2\}$;
+\[
+A = 
+\begin{pmatrix}
+1 & 0 \\
+0 & 1 \\
+1 & 2 \\
+\end{pmatrix}
+\]
+\[
+P_W = A (A^\top A)^{-1} A^\top
+\]
+\[
+A^\top A =
+\begin{pmatrix}
+1 & 0 & 1\\
+0 & 1 & 2 \\
+\end{pmatrix}
+\begin{pmatrix}
+1 & 0 \\
+0 & 1 \\
+1 & 2 \\
+\end{pmatrix}
+=
+\begin{pmatrix}
+2 & 2 \\
+2 & 5 \\
+\end{pmatrix}
+\]
+\[
+(A^\top A)^{-1} = \frac{1}{6}
+\begin{pmatrix}
+5 & -2 \\
+-2 & 2 \\
+\end{pmatrix}
+\]
+\[
+P_W = \frac{1}{6}
+\begin{pmatrix}
+1 & 0 \\
+0 & 1 \\
+1 & 2 \\
+\end{pmatrix}
+\begin{pmatrix}
+5 & -2 \\
+-2 & 2 \\
+\end{pmatrix}
+\begin{pmatrix}
+1 & 0 & 1\\
+0 & 1 & 2 \\
+\end{pmatrix}
+= \frac{1}{6}
+\begin{pmatrix}
+1 & 0 \\
+0 & 1 \\
+1 & 2 \\
+\end{pmatrix}
+\begin{pmatrix}
+5 & -2 & 1\\
+-2 & 2 & 2 \\
+\end{pmatrix}
+= \frac{1}{6}
+\begin{pmatrix}
+5 & -2 & 1 \\
+-2 & 2 & 2 \\
+1 & 2 & 5 \\
+\end{pmatrix}
+\]
+\item 
+% find the matrix of the orthogonal projection $P_{W^\perp}$ onto the line~$W^\perp$;
+\[
+W^\perp = \ls\{\ba\}
+\]
+where:
+\[
+\ba = \ba_1\times\ba_2 = 
+\begin{pmatrix}
+i & j & k \\
+1 & 0 & 1\\
+0 & 1 & 2 \\
+\end{pmatrix} = -i -2j + k = (-1, -2, 1)^\top
+\]
+\[
+P_{W^\top} = \frac{\ba\ba^\top}{\ba^\top\ba} = \frac{1}{6}\begin{pmatrix}
+1 & 2 & -1 \\
+2 & 4 & -2\\
+-1 & -2 & 1 \\
+\end{pmatrix} 
+\]
+\item
+% find the components of the vector~$\bb$ with respect to the decomposition $\bR^3 = W \oplus W^\perp$.
+\[
+\bb = P_W\bb + P_{W^\top}\bb
+\] \\
+\[
+P_W\bb = \frac{1}{6}
+\begin{pmatrix}
+5 & -2 & 1 \\
+-2 & 2 & 2 \\
+1 & 2 & 5 \\
+\end{pmatrix}
+\begin{pmatrix}
+-1 \\ 2 \\ 1
+\end{pmatrix}
+ = \frac{1}{6}
+ \begin{pmatrix}
+-8 \\ 
+8 \\ 
+8 \\ 
+\end{pmatrix}
+ =
+ \begin{pmatrix}
+-4/3 \\ 
+ 4/3 \\ 
+ 4/3 \\ 
+\end{pmatrix}
+\]\\
+\[
+P_{W^\top}\bb = \frac{1}{6}
+\begin{pmatrix}
+1 & 2 & -1 \\
+2 & 4 & -2\\
+-1 & -2 & 1 \\
+\end{pmatrix}
+\begin{pmatrix}
+-1 \\ 2 \\ 1
+\end{pmatrix}
+= \frac{1}{6}
+\begin{pmatrix}
+ 2 \\ 
+ 4 \\ 
+-2 \\ 
+\end{pmatrix} = 
+\begin{pmatrix}
+ 1/3 \\ 
+ 2/3 \\ 
+-1/3 \\ 
+\end{pmatrix}
+\]
+Indeed:
+\[
+P_W\bb + P_{W^\top}\bb = 
+ \begin{pmatrix}
+-4/3 \\ 
+ 4/3 \\ 
+ 4/3 \\ 
+\end{pmatrix}
++
+\begin{pmatrix}
+ 1/3 \\ 
+ 2/3 \\ 
+-1/3 \\ 
+\end{pmatrix}
+=
+\begin{pmatrix}
+ -1 \\ 
+ 2 \\ 
+1 \\ 
+\end{pmatrix}
+= \bb 
+\]\\
+\end{enumerate}
+\end{solution}
+
+
+
+\begin{problem}[Least squares solution; 4pt]\rm
+	Is there any value of $s$ for which $x_1=1$ and $x_2=2$ is the least squares solution of the linear
+	system below?	Explain your reasoning. \\ [-10pt]
+	\begin{align*}
+	x_1 - \hphantom{4}x_2 & = 1,\\ 2x_1 + 3x_2 & = 1,\\ 4x_1 + 5x_2 & = s.
+	\end{align*}
+\vspace*{-10pt}
+\end{problem}
+
+\begin{solution}[]\rm 
+Let
+\[
+A = 
+\begin{pmatrix}
+1 & -1 \\
+2 & 3 \\
+4 & 5 \\
+\end{pmatrix} =
+\begin{pmatrix}
+\ba_1 & \ba_2 \\
+\end{pmatrix} \quad
+\bb = 
+\begin{pmatrix}
+1 \\ 1 \\ s \\
+\end{pmatrix}
+\]
+Let
+$
+\bx^* = 
+\begin{pmatrix}
+1 \\ 2 \\
+\end{pmatrix}
+$ be the least squares solution of the linear system $A\bx = \bb$. Therefore $\be = \bb-A\bx^*$ should be orthogonal to $C(A) \Leftrightarrow \sprod{\be}{\ba_i} = 0 \quad i = {1,2}$
+\[
+\be = \bb - A\bx^* = 
+\begin{pmatrix}
+1 \\ 1 \\ s \\
+\end{pmatrix}
+-
+\begin{pmatrix}
+1 & -1 \\
+2 & 3 \\
+4 & 5 \\
+\end{pmatrix}
+\begin{pmatrix}
+1 \\ 2 \\
+\end{pmatrix}
+=
+\begin{pmatrix}
+1 \\ 1 \\ s \\
+\end{pmatrix}
+-
+\begin{pmatrix}
+-1 \\
+8 \\
+14 \\
+\end{pmatrix}
+=
+\begin{pmatrix}
+2 \\ -7 \\ s-14 \\
+\end{pmatrix}
+\]
+\[
+\left\{\begin{matrix}
+\sprod{\be}{\ba_1} = 
+\sprod{
+\begin{pmatrix}
+2 \\ -7 \\ s-14 \\
+\end{pmatrix}
+}{
+\begin{pmatrix}
+1 \\ 2 \\ 4 \\
+\end{pmatrix}
+}
+= 2 - 14  + 4s - 48 = 4s - 60 = 0 \quad \Rightarrow \quad s = 15 \\
+\sprod{\be}{\ba_2} = 
+\sprod{
+\begin{pmatrix}
+2 \\ -7 \\ s-14 \\
+\end{pmatrix}
+}{
+\begin{pmatrix}
+-1 \\ 3 \\ 5 \\
+\end{pmatrix}
+}
+= -2 - 21  + 5s - 70 = 5s - 93 = 0 ~ \Rightarrow ~ s = 18.6
+\end{matrix}\right.
+\]
+\[
+\Rightarrow s \in \varnothing 
+\]
+Hence there is no value of s for which $\bx^*$ is the least squares solution of $A\bx=\bb$.\\
+\end{solution}
+
+
+\begin{problem}[Regression; 6pt]\rm
+	\begin{enumerate}[(a)]
+		\item  Find the least squares straight line fit to the four points $(0,1)$, $(2,0)$, $(3,1)$, and $(3,2)$.
+		\item  Find the quadratic polynomial that best fits the four points $(2,0)$, $(3,-10)$, $(5,-48)$, and $(6,-76)$.
+		\item  Find the cubic polynomial that best fits the five points $(-1,-14)$, $(0,-5)$, $(1,-4)$, $(2,1)$, and $(3,22)$.
+	\end{enumerate}
+	{\small{\textsf{Hint: the numbers are chosen so that $A^\top A$ can easily be inverted. If, however, this is not so, ask Python or anybody else for a help.}}}
+\end{problem}
+
+
+\begin{solution}[]\rm .
+\begin{enumerate}[(a)]
+\item
+\[
+A = 
+\begin{pmatrix}
+1 & 0\\
+1 & 2\\
+1 & 3\\
+1 & 3\\
+\end{pmatrix} \quad
+b = 
+\begin{pmatrix}
+1\\ 0\\ 1\\ 2\\
+\end{pmatrix}
+\]
+The first column of $A$ corresponds to the y-intercept, and the second -- to the 1-degree term.
+\[
+A^\top A = 
+\begin{pmatrix}
+ 4 &  8 \\
+ 8 &  22 \\
+\end{pmatrix} \qquad
+(A^\top A)^{-1} = \frac{1}{12}
+\begin{pmatrix}
+ 11 &  -4 \\
+ -4 &   2 \\
+\end{pmatrix} \qquad
+(A^\top A)^{-1} A^\top =  \frac{1}{12}
+\begin{pmatrix}
+11 &  3 & -1 & -1 \\
+-4 &  0 &  2 &  2 \\
+\end{pmatrix}
+\]
+\[
+x = (A^\top A)^{-1} A^\top b
+= \frac{1}{12}
+\begin{pmatrix} 
+8 \\ 2
+\end{pmatrix}
+=
+\begin{pmatrix} 
+2/3 \\ 1/6
+\end{pmatrix}
+\]
+So, the quadratic polynomial $y = \frac{1}{6}x + \frac{2}{3}$ best fits the points.
+\item
+\[
+A = 
+\begin{pmatrix}
+1 & 2 & 4\\
+1 & 3 & 9\\
+1 & 5 & 25\\
+1 & 6 & 36\\
+\end{pmatrix} \quad
+b = 
+\begin{pmatrix}
+0\\ -10\\ -48\\ -76\\
+\end{pmatrix}
+\]
+The first column of $A$ corresponds to the y-intercept, the second -- to the 1-degree term, the third -- to the 2-degree term.
+\[
+A^\top A = 
+\begin{pmatrix}
+ 4 &   16 &   74 \\
+16 &   74 &  376 \\
+74 &  376 & 2018 \\
+\end{pmatrix} \qquad
+(A^\top A)^{-1} = \frac{1}{90}
+\begin{pmatrix}
+ 1989 & -1116 & 135 \\ 
+-1116 &   649 & -80 \\ 
+  135 &   -80 &  10 \\
+\end{pmatrix}
+\]
+\[
+(A^\top A)^{-1} A^\top =  \frac{1}{90}
+\begin{pmatrix}
+ 297 & -144 & -216 &  153 \\
+-138 &  111 &  129 & -102 \\
+  15 &  -15 &  -15 &   15 \\
+\end{pmatrix}
+\]
+\[
+x = (A^\top A)^{-1} A^\top b
+= \frac{1}{90}
+\begin{pmatrix} 
+180 \\ 450 \\ -270
+\end{pmatrix}
+=
+\begin{pmatrix} 
+2 \\ 5 \\ -3
+\end{pmatrix}
+\]
+So, the quadratic polynomial $y = 3x^2 + 5x + 2$ best fits the points.
+\item
+\[
+A = 
+\begin{pmatrix}
+1 & -1 & 1 & -1\\
+1 & 0 & 0 & 0\\
+1 & 1 & 1 & 1\\
+1 & 2 & 4 & 8\\
+1 & 3 & 9 & 27\\
+\end{pmatrix} \quad
+b = 
+\begin{pmatrix}
+-14\\ -5\\ -4\\ 1\\ 22 \\
+\end{pmatrix}
+\]
+The first column of $A$ corresponds to the y-intercept, the second -- to the 1-degree term, the third -- to the 2-degree term, the fourth -- to the 3-degree term.
+\[
+A^\top A = 
+\begin{pmatrix}
+ 5 &  5 & 15 &  35 \\
+ 5 & 15 & 35 &  99 \\
+15 & 35 & 99 & 275 \\
+35 & 99 &275 & 795 \\
+\end{pmatrix} \quad
+(A^\top A)^{-1} = \frac{1}{2520}
+\begin{pmatrix}
+ 1944 &  -60 & -1440 &  420 \\
+  -60 & 1000 &  -150 &  -70 \\
+-1440 & -150 &  1755 & -525 \\
+  420 &  -70 &  -525 &  175 \\
+\end{pmatrix} \qquad
+\]
+\[
+(A^\top A)^{-1} A^\top =  \frac{1}{2520}
+\begin{pmatrix}
+ 144 &  1944 &  864 & -576 &  144 \\
+-1140 & -60 &  720 &  780 & -300 \\
+ 990 & -1440 & -360 & 1080 & -270 \\
+-210 &  420 &    0 & -420 &  210 \\
+\end{pmatrix}
+\]
+\[
+x = (A^\top A)^{-1} A^\top b
+= \frac{1}{2520}
+\begin{pmatrix} 
+-12600 \\ 7560 \\ -10080 \\ 5040 \\
+\end{pmatrix}
+=
+\begin{pmatrix} 
+-5 \\ 3 \\ -4 \\ 2 \\
+\end{pmatrix}
+\]
+So, the cubic polynomial $y = 2 x^3 - 4x^2 + 3x - 5$ best fits the points.\\
+\end{enumerate}
+\end{solution}
+
+
+
+\begin{problem}[Least square solution; 5pt]
+	\rm
+	Assume $\bu_1$ and $\bu_2$ are two orthogonal vectors in $\bR^n$ and set $\ba_1 = \bu_1$, $\ba_2 = \bu_1 + \varepsilon \bu_2$ for $\varepsilon>0$. Let also $A$ be the matrix with columns $\ba_1$ and $\ba_2$ and $\bb$ a vector linearly independenet of $\ba_1$ and $\ba_2$. In this problem, we discuss the least square solution to the system $A\bx = \bb$ as $\varepsilon\to0$. 
+	\begin{enumerate}[(a)]
+		\item Calculate the matrix $A^\top A$, its inverse, and then $\hat\bx = (A^\top A)^{-1}A^\top\bb$ explicitly. Show that $\hat\bx$ explodes as $\varepsilon\to0$.
+		\item Calculate the projection $A\hat{\bx}$ of $\bb$ onto $\operatorname{col}(A)$ and check that it does not depend on~$\varepsilon>0$. Explain the result.
+	\end{enumerate}
+\end{problem}
+
+\begin{solution}[]\rm .
+\begin{enumerate}[(a)]
+\item
+\[
+A = 
+\begin{pmatrix} 
+\ba_1 & \ba_2
+\end{pmatrix} =
+\begin{pmatrix} 
+\bu_1 & \bu_1+\varepsilon\bu_2
+\end{pmatrix}
+\qquad
+A^\top =
+\begin{pmatrix} 
+\ba_1^\top \\ \ba_2^\top
+\end{pmatrix} =
+\begin{pmatrix} 
+\bu_1^\top \\ \bu_1^\top+\varepsilon\bu_2^\top
+\end{pmatrix}
+\]
+\[
+A^\top A = 
+\begin{pmatrix} 
+\ba_1^\top \\ \ba_2^\top
+\end{pmatrix}
+\begin{pmatrix} 
+\ba_1 & \ba_2
+\end{pmatrix}
+=
+\begin{pmatrix} 
+\bu_1^\top \\ \bu_1^\top+\varepsilon\bu_2^\top
+\end{pmatrix}
+\begin{pmatrix} 
+\bu_1 & \bu_1+\varepsilon\bu_2
+\end{pmatrix}
+=
+\begin{pmatrix} 
+\bu_1^\top \bu_1 & \bu_1^\top (\bu_1+\varepsilon\bu_2) \\
+(\bu_1^\top+\varepsilon\bu_2^\top)\bu_1 & (\bu_1^\top+\varepsilon\bu_2^\top)(\bu_1+\varepsilon\bu_2) \\
+\end{pmatrix}
+=
+\]
+\[
+=
+\begin{pmatrix} 
+\bu_1^\top \bu_1 &
+\bu_1^\top \bu_1 + \varepsilon \bu_1^\top \bu_2\\
+\bu_1^\top \bu_1 + \varepsilon\bu_2^\top \bu_1 &
+\bu_1^\top \bu_1 + \varepsilon(\bu_2^\top \bu_1 + \bu_1^\top \bu_2) + \varepsilon^2 \bu_2^\top \bu_2\\
+\end{pmatrix}
+\]
+Since $\sprod{\bu_1}{\bu_2} = 0$:
+\[
+A^\top A =
+\begin{pmatrix} 
+\norm{\bu_1}^2 & \norm{\bu_1}^2 \\
+\norm{\bu_1}^2 & \norm{\bu_1}^2  + \varepsilon^2 \norm{\bu_2}^2\\
+\end{pmatrix}
+\]\\
+\[
+\det{A^\top A} = \norm{\bu_1}^2 (\norm{\bu_1}^2  + \varepsilon^2 \norm{\bu_2}^2) - \norm{\bu_1}^4 = \varepsilon^2 \norm{\bu_1}^2 \norm{\bu_2}^2
+\]\\
+\[
+(A^\top A)^{-1} =
+\frac{1}{\varepsilon^2 \norm{\bu_1}^2 \norm{\bu_2}^2}
+\begin{pmatrix} 
+\norm{\bu_1}^2  + \varepsilon^2 \norm{\bu_2}^2 &  -\norm{\bu_1}^2 \\
+-\norm{\bu_1}^2 & \norm{\bu_1}^2 \\
+\end{pmatrix}
+=
+\frac{1}{\varepsilon^2\norm{\bu_2}^2}
+\begin{pmatrix} 
+1 &  -1 \\
+-1 & 1 \\
+\end{pmatrix}
++
+\frac{1}{\norm{\bu_1}^2}
+\begin{pmatrix} 
+1 &  0 \\
+0 & 0 \\
+\end{pmatrix}
+\]\\
+\[
+(A^\top A)^{-1}A^\top 
+=
+\frac{1}{\varepsilon^2\norm{\bu_2}^2}
+\begin{pmatrix} 
+1 &  -1 \\
+-1 & 1 \\
+\end{pmatrix}
+\begin{pmatrix} 
+\bu_1^\top \\ \bu_1^\top+\varepsilon\bu_2^\top
+\end{pmatrix}
++
+\frac{1}{\norm{\bu_1}^2}
+\begin{pmatrix} 
+1 &  0 \\
+0 & 0 \\
+\end{pmatrix}
+\begin{pmatrix} 
+\bu_1^\top \\ \bu_1^\top+\varepsilon\bu_2^\top
+\end{pmatrix}
+=
+\]
+\[
+=
+\frac{1}{\varepsilon^2\norm{\bu_2}^2}
+\begin{pmatrix} 
+\bu_1^\top - \bu_1^\top - \varepsilon\bu_2^\top \\
+-\bu_1^\top + \bu_1^\top + \varepsilon\bu_2^\top \\
+\end{pmatrix}
++
+\frac{1}{\norm{\bu_1}^2}
+\begin{pmatrix} 
+\bu_1^\top \\ 0
+\end{pmatrix}
+=
+\frac{1}{\varepsilon\norm{\bu_2}^2}
+\begin{pmatrix} 
+ - \bu_2^\top \\
+ \bu_2^\top \\
+\end{pmatrix}
++
+\frac{1}{\norm{\bu_1}^2}
+\begin{pmatrix} 
+\bu_1^\top \\ 0
+\end{pmatrix}
+=
+\]
+\[
+=
+\frac{1}{\varepsilon\norm{\bu_2}^2}
+\begin{pmatrix} 
+ - 1 \\
+ 1 \\
+\end{pmatrix}
+\bu_2^\top
++
+\frac{1}{\norm{\bu_1}^2}
+\begin{pmatrix} 
+1 \\ 0
+\end{pmatrix}
+\bu_1^\top
+\]\\
+When $\bb$ is orthogonal to $\bu_2$, we have:
+\[
+\hat \bx =
+\frac{1}{\varepsilon\norm{\bu_2}^2}
+\begin{pmatrix} 
+ - 1 \\ 1 \\
+\end{pmatrix}
+\bu_2^\top \bb
++
+\frac{1}{\norm{\bu_1}^2}
+\begin{pmatrix} 
+1 \\ 0
+\end{pmatrix}
+\bu_1^\top \bb 
+=
+\frac{1}{\norm{\bu_1}^2}
+\begin{pmatrix} 
+1 \\ 0
+\end{pmatrix}
+\bu_1^\top \bb 
+\]
+that doesn't depend on $\varepsilon$. In other cases the component 
+$
+\frac{1}{\varepsilon\norm{\bu_2}^2}
+\begin{pmatrix} 
+ - 1 \\ 1 \\
+\end{pmatrix}
+\bu_2^\top \bb
+\to \infty$ as $\varepsilon\to0$ which leads to $\hat\bx$ exploding as $\varepsilon\to0$.
+% When $\varepsilon \to 0$, the first component 
+% \[
+% \hat\bx = (A^\top A)^{-1}A^\top\bb = 
+% \frac{1}{\varepsilon^2\norm{\bu_2}^2}
+% \begin{pmatrix} 
+% 1 &  -1 \\
+% -1 & 1 \\
+% \end{pmatrix}
+% \begin{pmatrix} 
+% \bu_1^\top \\ \bu_1^\top+\varepsilon\bu_2^\top
+% \end{pmatrix}
+% \bb
+% +
+% \frac{1}{\norm{\bu_1}^2}
+% \begin{pmatrix} 
+% 1 &  0 \\
+% 0 & 0 \\
+% \end{pmatrix}
+% \begin{pmatrix} 
+% \bu_1^\top \\ \bu_1^\top+\varepsilon\bu_2^\top
+% \end{pmatrix}
+% \bb
+% \]\\
+\item
+The projection matrix:
+\[
+P
+% A\hat\bx 
+% =
+% \frac{1}{\varepsilon\norm{\bu_2}^2}
+% \begin{pmatrix} 
+% \bu_1 & \bu_1+\varepsilon\bu_2
+% \end{pmatrix}
+% \begin{pmatrix} 
+%  - \bu_2^\top \\
+%  \bu_2^\top \\
+% \end{pmatrix}
+% +
+% \frac{1}{\norm{\bu_1}^2}
+% \begin{pmatrix} 
+% \bu_1 & \bu_1+\varepsilon\bu_2
+% \end{pmatrix}
+% \begin{pmatrix} 
+% \bu_1^\top \\ 0
+% \end{pmatrix}
+=
+\frac{1}{\varepsilon\norm{\bu_2}^2}
+\begin{pmatrix} 
+\bu_1 & \bu_1+\varepsilon\bu_2
+\end{pmatrix}
+\begin{pmatrix} 
+ - 1 \\
+ 1 \\
+\end{pmatrix}
+\bu_2^\top
++
+\frac{1}{\norm{\bu_1}^2}
+\begin{pmatrix} 
+\bu_1 & \bu_1+\varepsilon\bu_2
+\end{pmatrix}
+\begin{pmatrix} 
+1 \\ 0
+\end{pmatrix}
+\bu_1^\top
+=
+\]
+\[
+=
+\frac{1}{\varepsilon\norm{\bu_2}^2}
+\varepsilon\bu_2
+\bu_2^\top
++
+\frac{1}{\norm{\bu_1}^2}
+\bu_1
+\bu_1^\top
+=
+\frac{\bu_2\bu_2^\top}{\norm{\bu_2}^2}
++
+\frac{\bu_1\bu_1^\top}{\norm{\bu_1}^2}
+\]
+does not depend on $\varepsilon$ so neither does the projection $P\bb$.\\
+\end{enumerate}
+\end{solution}
+
+
+\begin{problem}[Gram--Schmidt; 3pt]\rm
+	Use the Gram--Schmidt process to transform the basis $\bu_1,\dots,\bu_k$ into
+	an orthonormal basis.
+	\begin{enumerate}[(a)]
+		\item $\bu_1=(1,3)$, $\bu_2=(2,-2)$;
+		\item $\bu_1=(1,0,1)$, $\bu_2 = (1,3,-2)$, $\bu_3=(0,2,1)$
+	\end{enumerate}
+\end{problem}
+
+\begin{solution}[]\rm .
+\begin{enumerate}[(a)]
+\item $\bu_1=(1,3)$, $\bu_2=(2,-2)$
+\[
+\bw_1 = \bu_1 =
+\begin{pmatrix} 
+1 \\ 3
+\end{pmatrix}
+\qquad
+\bw_2 = \bu_2 - \frac{\bw_1\bw_1^\top}{\bw_1^\top\bw_1}\bu_2
+\]
+\[
+\frac{\bw_1\bw_1^\top}{\bw_1^\top\bw_1} =
+\frac{1}{10} 
+\begin{pmatrix} 
+1 \\ 3
+\end{pmatrix}
+\begin{pmatrix} 
+1 & 3
+\end{pmatrix}
+=
+\frac{1}{10} 
+\begin{pmatrix} 
+1 & 3 \\
+3 & 9 \\
+\end{pmatrix}
+\]
+\[
+\bw_2 =
+\begin{pmatrix} 
+2 \\ -2
+\end{pmatrix}
+-
+\frac{1}{10} 
+\begin{pmatrix} 
+1 & 3 \\
+3 & 9 \\
+\end{pmatrix}
+\begin{pmatrix} 
+2 \\ -2
+\end{pmatrix} =
+\frac{1}{10} 
+\begin{pmatrix}
+20 -2 + 6 \\-20  - 6 + 18 
+\end{pmatrix} =
+\frac{1}{5} 
+\begin{pmatrix}
+12 \\ -4
+\end{pmatrix} 
+\]
+\[
+\hat \bw_1 = \frac{\bw_1}{\norm \bw_1} = 
+\frac{1}{\sqrt 10} 
+\begin{pmatrix} 
+1 \\ 3
+\end{pmatrix}
+\]
+\[
+\hat \bw_2 = \frac{\bw_2}{\norm \bw_2} = 
+\frac{1}{\sqrt {10}}
+\begin{pmatrix} 
+3 \\ -1
+\end{pmatrix}
+\]
+So the answer is $\hat \bw_1 =
+\begin{pmatrix}  1/\sqrt 10 \\ 3/\sqrt 10\end{pmatrix}$,
+$\hat \bw_2 = 
+\begin{pmatrix} 3/\sqrt 10 \\ -1/\sqrt 10 \end{pmatrix}$
+\item $\bu_1=(1,0,1)$, $\bu_2 = (1,3,-2)$, $\bu_3=(0,2,1)$
+\[
+\bw_1 = \bu_1 = \begin{pmatrix} 1 \\ 0 \\ 1 \end{pmatrix}
+\qquad
+\bw_2 = \bu_2 - \frac{\bw_1\bw_1^\top}{\bw_1^\top\bw_1}\bu_2
+\qquad
+\bw_3 = \bu_3 - \frac{\bw_1\bw_1^\top}{\bw_1^\top\bw_1}\bu_3 - \frac{\bw_2\bw_2^\top}{\bw_2^\top\bw_2}\bu_3
+\]
+\[
+\frac{\bw_1\bw_1^\top}{\bw_1^\top\bw_1} =
+\frac{1}{2}
+\begin{pmatrix} 
+ 1 \\ 0 \\ 1 
+\end{pmatrix}
+\begin{pmatrix}
+ 1 & 0 & 1
+\end{pmatrix}
+=
+\frac{1}{2}
+\begin{pmatrix} 
+ 1 & 0 & 1 \\
+ 0 & 0 & 0 \\
+ 1 & 0 & 1 \\
+\end{pmatrix}
+\]
+\[
+\bw_2 = 
+\begin{pmatrix} 
+ 1 \\ 3 \\ -2
+\end{pmatrix}
+ - 
+\frac{1}{2}
+\begin{pmatrix} 
+ 1 & 0 & 1 \\
+ 0 & 0 & 0 \\
+ 1 & 0 & 1 \\
+\end{pmatrix}
+\begin{pmatrix} 
+ 1 \\ 3 \\ -2
+\end{pmatrix}
+=
+\frac{1}{2}
+\begin{pmatrix} 
+ 2 - 1 + 2\\ 6 - 0 \\ -4 - 1 + 2
+\end{pmatrix}
+=
+\frac{1}{2}
+\begin{pmatrix} 
+ 3 \\ 6 \\ -3
+\end{pmatrix}
+\]
+\[
+\frac{\bw_2\bw_2^\top}{\bw_2^\top\bw_2} =
+\frac{1}{54}
+\begin{pmatrix} 
+ 3 \\ 6 \\ -3
+\end{pmatrix}
+\begin{pmatrix}
+ 3 & 6 & -3
+\end{pmatrix}
+=
+\frac{1}{54}
+\begin{pmatrix} 
+ 9 & 18 & -9 \\
+ 18 & 36 & -18 \\
+ -9 & -18 & 9 \\
+\end{pmatrix}
+=
+\frac{1}{6}
+\begin{pmatrix} 
+ 1 & 2 & -1 \\
+ 2 & 4 & -2 \\
+ -1 & -2 & 1 \\
+\end{pmatrix}
+\]
+\[
+\bw_3 = 
+\begin{pmatrix} 
+ 0 \\ 2 \\ 1
+\end{pmatrix}
+ - 
+\frac{1}{2}
+\begin{pmatrix} 
+ 1 & 0 & 1 \\
+ 0 & 0 & 0 \\
+ 1 & 0 & 1 \\
+\end{pmatrix}
+\begin{pmatrix} 
+ 0 \\ 2 \\ 1
+\end{pmatrix}
+-
+\frac{1}{6}
+\begin{pmatrix} 
+ 1 & 2 & -1 \\
+ 2 & 4 & -2 \\
+ -1 & -2 & 1 \\
+\end{pmatrix}
+\begin{pmatrix} 
+ 0 \\ 2 \\ 1
+\end{pmatrix}
+=
+\frac{1}{6}
+\begin{pmatrix} 
+ 0-3- 4 + 1 \\ 12-0- 8 + 2 \\ 6-3+ 4 - 1
+\end{pmatrix}
+=
+\begin{pmatrix} 
+ -1 \\ 1 \\ 1
+\end{pmatrix}
+\]
+\[
+\hat \bw_1 = \frac{\bw_1}{\norm \bw_1} = 
+\frac{1}{\sqrt 2}
+\begin{pmatrix}
+1 \\ 0 \\ 1
+\end{pmatrix}
+\]
+\[
+\hat \bw_2 = \frac{\bw_2}{\norm \bw_2} = 
+\frac{1}{3\sqrt 6}
+\begin{pmatrix} 
+ 3 \\ 6 \\ -3
+\end{pmatrix}
+\]
+\[
+\hat \bw_3 = \frac{\bw_3}{\norm \bw_3} = 
+\frac{1}{\sqrt 3}
+\begin{pmatrix} 
+ -1 \\ 1 \\ 1
+\end{pmatrix}
+\]
+So the answer is $\hat \bw_1 =
+\begin{pmatrix} 1/\sqrt 2 \\ 0 \\ 1/\sqrt 2 \end{pmatrix}$, 
+$\hat \bw_2 = 
+\begin{pmatrix}  1/\sqrt 6 \\ 2/\sqrt 6 \\ -1/\sqrt 6 \end{pmatrix}$,
+$\hat \bw_3 = 
+\begin{pmatrix}  -1/\sqrt 3 \\ 1/\sqrt 3 \\ 1/\sqrt 3 \end{pmatrix}$.\\
+\end{enumerate}
+\end{solution}
+
+
+\begin{problem}[QR; 5pt]\label{prb:QR}\rm
+	Find the $QR$-decomposition of the matrices below using the Gram--Schmidt algorithm:
+	\[
+	(a)~\begin{pmatrix}[rr] 1 & -1 \\ 2 & 3  \end{pmatrix}; 
+	\qquad
+	(b)~\begin{pmatrix}[rr] 1 & 2 \\ 0 & 1 \\ 1 & 4 \end{pmatrix}; 
+	\qquad
+	(c)~\begin{pmatrix}[rrr] 1 & 0 & 2 \\ 0 & 1 & 1 \\ 2 & 0 & 1 \end{pmatrix}
+	\]
+\end{problem}	
+
+\begin{solution}[]\rm .
+\begin{enumerate}[(a)]
+\item
+\[
+A = 
+\begin{pmatrix}
+1 & -1 \\
+2 & 3
+\end{pmatrix}
+\]
+\[
+q_1 = \begin{pmatrix} 1 \\ 2  \end{pmatrix}
+\qquad
+\frac{q_1 q_1^\top}{q_1^\top q_1} =
+\frac{1}{5}
+\begin{pmatrix} 1 & 2 \\ 2 & 4 \end{pmatrix}
+\]
+\[
+q_2 = \begin{pmatrix} -1 \\ 3  \end{pmatrix} - 
+\frac{1}{5}
+\begin{pmatrix} 1 & 2 \\ 2 & 4 \end{pmatrix}
+\begin{pmatrix} -1 \\ 3  \end{pmatrix}
+= \frac{1}{5}
+\begin{pmatrix} -5 + 1 - 6 \\ 15 + 2 - 12 \end{pmatrix}
+=
+\begin{pmatrix} -2 \\ 1 \end{pmatrix}
+\]
+\[
+\hat q_1 = \begin{pmatrix} 1/\sqrt5 \\ 2/\sqrt5  \end{pmatrix}
+\qquad
+\hat q_2 = \begin{pmatrix} -2/\sqrt5 \\ 1/\sqrt5 \end{pmatrix}
+% \]
+% \[
+\qquad
+Q =
+\begin{pmatrix}
+1/\sqrt5 & -2/\sqrt5 \\
+2/\sqrt5 & 1/\sqrt5
+\end{pmatrix}
+\]
+\[
+R =
+\begin{pmatrix}
+\hat q_1^\top a_1 & \hat q_1^\top a_2 \\
+0 & \hat q_2^\top a_2 \\
+\end{pmatrix}
+=
+\begin{pmatrix}
+5/\sqrt 5 & 5/\sqrt 5 \\
+0 & 5/\sqrt 5 \\
+\end{pmatrix}
+\]
+\[
+\Rightarrow A = 
+\begin{pmatrix}
+1 & -1 \\
+2 & 3
+\end{pmatrix}
+=
+\begin{pmatrix}
+1/\sqrt5 & -2/\sqrt5 \\
+2/\sqrt5 & 1/\sqrt5
+\end{pmatrix}
+\begin{pmatrix}
+\sqrt 5 & \sqrt 5 \\
+0 & \sqrt 5 \\
+\end{pmatrix}
+\]
+\item
+\[
+A =
+\begin{pmatrix}
+1 & 2 \\
+0 & 1 \\
+1 & 4 \end{pmatrix}
+\]
+\[
+q_1 = \begin{pmatrix} 1 \\ 0 \\ 1  \end{pmatrix}
+\qquad
+\frac{q_1 q_1^\top}{q_1^\top q_1} =
+\frac{1}{2}
+\begin{pmatrix} 1 & 0 & 1 \\ 0 & 0 & 0 \\ 1 & 0 & 1 \end{pmatrix}
+\]
+\[
+q_2 = \begin{pmatrix} 2 \\ 1 \\ 4  \end{pmatrix} -
+\frac{1}{2}
+\begin{pmatrix} 1 & 0 & 1 \\ 0 & 0 & 0 \\ 1 & 0 & 1 \end{pmatrix}
+\begin{pmatrix} 2 \\ 1 \\ 4  \end{pmatrix}
+=
+\frac{1}{2}
+\begin{pmatrix} 4 - 2 - 4 \\ 2 - 0 \\ 8 - 2 - 4 \end{pmatrix}
+=
+\begin{pmatrix} - 1 \\ 1 \\ 1 \end{pmatrix}
+\]
+\[
+\hat q_1 = \begin{pmatrix} 1/\sqrt 2 \\ 0 \\ 1/\sqrt 2  \end{pmatrix}
+\qquad
+\hat q_2 = \begin{pmatrix} - 1/\sqrt 3 \\ 1/\sqrt 3 \\ 1/\sqrt 3 \end{pmatrix}
+% \]
+% \[
+\qquad
+Q =
+\begin{pmatrix}
+1/\sqrt 2 &  - 1/\sqrt 3 \\
+0  & 1/\sqrt 3 \\
+1/\sqrt 2 & 1/\sqrt 3
+\end{pmatrix}
+\]
+\[
+R =
+\begin{pmatrix}
+\hat q_1^\top a_1 & \hat q_1^\top a_2 \\
+0 & \hat q_2^\top a_2 \\
+\end{pmatrix}
+=
+\begin{pmatrix}
+2/\sqrt 2 & 6/\sqrt 2 \\
+0 & 3/\sqrt 3 \\
+\end{pmatrix}
+\]
+\[
+\Rightarrow A = 
+\begin{pmatrix}
+1 & 2 \\
+0 & 1 \\
+1 & 4 \end{pmatrix}
+=
+\begin{pmatrix}
+1/\sqrt 2 &  - 1/\sqrt 3 \\
+0  & 1/\sqrt 3 \\
+1/\sqrt 2 & 1/\sqrt 3
+\end{pmatrix}
+\begin{pmatrix}
+\sqrt 2 & 3\sqrt 2 \\
+0 & \sqrt 3 \\
+\end{pmatrix}
+\]
+\item
+\[
+A =
+\begin{pmatrix}
+1 & 0 & 2 \\
+0 & 1 & 1 \\
+2 & 0 & 1
+\end{pmatrix}
+\]
+\[
+q_1 = \begin{pmatrix} 1 \\ 0 \\ 2  \end{pmatrix}
+\qquad
+\frac{q_1 q_1^\top}{q_1^\top q_1} =
+\frac{1}{5}
+\begin{pmatrix} 1 & 0 & 2 \\ 0 & 0 & 0 \\ 2 & 0 & 4 \end{pmatrix}
+\]
+\[
+q_2 = \begin{pmatrix} 0 \\ 1 \\ 0  \end{pmatrix} -
+\frac{1}{5}
+\begin{pmatrix} 1 & 0 & 2 \\ 0 & 0 & 0 \\ 2 & 0 & 4 \end{pmatrix}
+\begin{pmatrix} 0 \\ 1 \\ 0  \end{pmatrix}
+=
+\begin{pmatrix} 0 \\ 1 \\ 0  \end{pmatrix}
+\qquad
+\frac{q_2 q_2^\top}{q_2^\top q_2} =
+\begin{pmatrix} 0 & 0 & 0 \\ 0 & 1 & 0 \\ 0 & 0 & 0 \end{pmatrix}
+\]
+\[
+q_3 = \begin{pmatrix} 2 \\ 1 \\ 1  \end{pmatrix} -
+-
+\frac{1}{5}
+\begin{pmatrix} 1 & 0 & 2 \\ 0 & 0 & 0 \\ 2 & 0 & 4 \end{pmatrix}
+\begin{pmatrix} 2 \\ 1 \\ 1  \end{pmatrix}
+-
+\begin{pmatrix} 0 & 0 & 0 \\ 0 & 1 & 0 \\ 0 & 0 & 0 \end{pmatrix}
+\begin{pmatrix} 2 \\ 1 \\ 1  \end{pmatrix}
+=
+\frac{1}{5}
+\begin{pmatrix} 10 - 2 - 2 \\ 5 - 5 - 0 \\ 5 - 4 - 4 \end{pmatrix}
+=
+\frac{1}{5}
+\begin{pmatrix} 6 \\ 0 \\ -3 \end{pmatrix}
+\]
+\[
+\hat q_1 =
+\begin{pmatrix} 1/\sqrt 5 \\ 0 \\ 2/\sqrt 5  \end{pmatrix}
+\qquad
+\hat q_2 =
+\begin{pmatrix} 0 \\ 1 \\ 0  \end{pmatrix}
+\qquad
+\hat q_3 =
+\begin{pmatrix} 2/\sqrt 5 \\ 0 \\ -1/\sqrt 5  \end{pmatrix}
+% \]
+% \[
+\qquad
+Q = 
+\begin{pmatrix}
+1/\sqrt 5 & 0 & 2/\sqrt 5\\
+0 & 1 & 0 \\
+2/\sqrt 5 & 0 & -1/\sqrt 5
+\end{pmatrix}
+\]
+\[
+R =
+\begin{pmatrix}
+\hat q_1^\top a_1 & \hat q_1^\top a_2 & \hat q_1^\top a_3 \\
+0 & \hat q_2^\top a_2 & \hat q_2^\top a_3\\
+0 & \hat 0 & \hat q_3^\top a_3\\
+\end{pmatrix}
+=
+\begin{pmatrix}
+5/\sqrt 5 & 0 & 4/\sqrt 5\\
+0 & 1 & 1\\
+0 & 0 & 3/\sqrt 5\\
+\end{pmatrix}
+\]
+\[
+\Rightarrow A = 
+\begin{pmatrix}
+1 & 0 & 2 \\
+0 & 1 & 1 \\
+2 & 0 & 1
+\end{pmatrix}
+=
+\begin{pmatrix}
+1/\sqrt 5 & 0 & 2/\sqrt 5\\
+0 & 1 & 0 \\
+2/\sqrt 5 & 0 & -1/\sqrt 5
+\end{pmatrix}
+\begin{pmatrix}
+\sqrt 5 & 0 & 4/\sqrt 5\\
+0 & 1 & 1\\
+0 & 0 & 3/\sqrt 5\\
+\end{pmatrix}\\
+\]
+\end{enumerate}
+\end{solution}
+
+
+\begin{problem}[Householder reflection and QR; 7 pts]\rm
+	\begin{enumerate}[(a)]
+		\item Find the unit vector $\bu\in \bR^2$ such that the \emph{Householder reflection} $Q_{\bu}:=I - 2\bu\bu^\top$ maps the vector~$(1,2)^\top$ onto a vector collinear to $(1,0)^\top$
+		\item explain how $Q_{\bu}$ helps to derive the $QR$ factorization of the matrix (a) of Problem~\ref{prb:QR}.
+		\item Find the $QR$-factorization of matrices in (b) and (c) of Problem~\ref{prb:QR} using the Householder reflections approach.
+	\end{enumerate}
+\end{problem}
+
+
+\begin{solution}[]\rm .
+\begin{enumerate}[(a)]
+\item
+% Find the unit vector $\bu\in \bR^2$ such that the \emph{Householder reflection} $Q_{\bu}:=I - 2\bu\bu^\top$ maps the vector~$(1,2)^\top$ onto a vector collinear to $(1,0)^\top$
+\[
+\bx =  \begin{pmatrix} 1 \\ 2 \end{pmatrix}
+\quad 
+Q_{\bu}\bx = \norm{\bx} \begin{pmatrix} 1 \\ 0 \end{pmatrix}
+\quad
+Q_{\bu} = I -  2\bu\bu^\top
+\quad
+(\norm{\bu} = 1)
+\]
+To get $\bu$ we need to subtract $\begin{pmatrix} 1 \\ 0 \end{pmatrix}$ from $\bx$ and normalize the vector:
+\[
+\hat \bu =
+\begin{pmatrix} 1 \\ 2 \end{pmatrix}
+-
+\sqrt 5 \begin{pmatrix} 1 \\ 0 \end{pmatrix}
+=
+\begin{pmatrix} 1 - \sqrt 5 \\ 2 \end{pmatrix}
+\qquad 
+\bu = \frac{\hat \bu}{\norm{\hat \bu}} =
+\frac{1}{\sqrt{10 - 2 \sqrt 5}}
+\begin{pmatrix} 1 - \sqrt 5 \\ 2 \end{pmatrix}
+\]
+\[
+\bu\bu^\top =
+\frac{1}{10 - 2 \sqrt 5}
+\begin{pmatrix} 1 - \sqrt 5 \\ 2 \end{pmatrix}
+\begin{pmatrix} 1 - \sqrt 5 & 2 \end{pmatrix}
+=
+\frac{1}{10 - 2 \sqrt 5}
+\begin{pmatrix}
+6 - 2\sqrt 5 & 2 - 2\sqrt 5 \\
+2 - 2\sqrt 5  & 4\\
+\end{pmatrix} =
+\]
+\[
+=
+\frac{1}{5 - \sqrt 5}
+\begin{pmatrix}
+3 - \sqrt 5 & 1 - \sqrt 5 \\
+1 - \sqrt 5  & 2\\
+\end{pmatrix}
+=\frac{5 + \sqrt 5}{20}
+\begin{pmatrix}
+3 - \sqrt 5 & 1 - \sqrt 5 \\
+1 - \sqrt 5  & 2\\
+\end{pmatrix}
+=\frac{1}{10}
+\begin{pmatrix}
+5 - \sqrt 5 & - 2\sqrt 5 \\
+- 2\sqrt 5  & 5 + \sqrt 5\\
+\end{pmatrix}
+\]
+\[
+\Rightarrow~
+Q_{\bu} =
+\begin{pmatrix}
+1 & 0 \\
+0 & 1 \\
+\end{pmatrix}
+-
+\frac{1}{5}
+\begin{pmatrix}
+5 - \sqrt 5 & - 2\sqrt 5 \\
+- 2\sqrt 5  & 5 + \sqrt 5\\
+\end{pmatrix}
+=
+\frac{1}{5}
+\begin{pmatrix}
+\sqrt 5 & 2 \sqrt 5 \\
+2\sqrt 5  & - \sqrt 5\\
+\end{pmatrix}
+=
+\frac{\sqrt 5}{5}
+\begin{pmatrix}
+1 & 2 \\
+2  & - 1\\
+\end{pmatrix}
+\]
+And we can check:
+\[
+Q_{\bu} \bx = 
+\frac{\sqrt 5}{5}
+\begin{pmatrix}
+1 & 2 \\
+2  & - 1\\
+\end{pmatrix}
+\begin{pmatrix} 1 \\ 2 \end{pmatrix}
+= 
+\sqrt 5 \begin{pmatrix} 1 \\ 0\\ \end{pmatrix}
+~ \parallel ~
+\begin{pmatrix} 1 \\ 0 \end{pmatrix}
+\qquad 
+\norm{Q_{\bu} \bx } = \sqrt 5 = \norm{\bx }
+\]
+So the answer is:
+\[
+\bu = \frac{1}{\sqrt{10 - 2 \sqrt 5}}
+\begin{pmatrix} 1 - \sqrt 5 \\ 2 \end{pmatrix}
+\]
+\item
+\[
+A = 
+\begin{pmatrix}
+1 & -1 \\
+2 & 3
+\end{pmatrix}
+\]
+Since $\bx = \ba_1$, $Q_\bu$ is thus the result of the first iteration of QR factorization using the Householder reflections and:
+\[
+Q_{\bu}A =
+\begin{pmatrix} \sqrt 5 & \sqrt 5 \\ 0 & - \sqrt 5 \end{pmatrix}
+\]
+give us the first row $\begin{pmatrix} \sqrt 5 & \sqrt 5 \end{pmatrix}$ of the $R$ matrix . 
+\item $QR$-factorization of Problem~\ref{prb:QR} (b), (c) using the Householder reflections approach: \\
+11. (b)
+\[
+A =
+\begin{pmatrix}
+1 & 2 \\
+0 & 1 \\
+1 & 4 \end{pmatrix}
+\qquad
+\ba_1 = \begin{pmatrix} 1 \\ 0  \\ 1  \end{pmatrix}
+\]
+\[
+\hat \bu_1 = \ba_1 - \norm{\ba_1} \be_1 = 
+\begin{pmatrix} 1 \\ 0  \\ 1  \end{pmatrix}
+-
+\sqrt 2
+\begin{pmatrix} 1 \\ 0  \\ 0  \end{pmatrix}
+=
+\begin{pmatrix} 1 - \sqrt 2 \\ 0  \\ 1  \end{pmatrix}
+\qquad
+\bu_1 =
+\frac{1}{\sqrt{4 - 2\sqrt 2}}
+\begin{pmatrix} 1 - \sqrt 2 \\ 0  \\ 1  \end{pmatrix}
+\]
+\[
+\bu_1\bu_1^\top = 
+\frac{1}{4 - 2\sqrt 2}
+\begin{pmatrix} 1 - \sqrt 2 \\ 0  \\ 1  \end{pmatrix}
+\begin{pmatrix} 1 - \sqrt 2 & 0  & 1  \end{pmatrix}
+=
+\frac{1}{4 - 2\sqrt 2}
+\begin{pmatrix}
+3 - 2\sqrt 2 & 0 & 1 - \sqrt 2\\
+0 & 0 & 0 \\
+1 - \sqrt 2 & 0  & 1 
+\end{pmatrix} =
+\]\[
+=
+\frac{4 + 2\sqrt 2}{8}
+\begin{pmatrix}
+3 - 2\sqrt 2 & 0 & 1 - \sqrt 2\\
+0 & 0 & 0 \\
+1 - \sqrt 2 & 0  & 1 
+\end{pmatrix}
+=
+\frac{1}{4}
+\begin{pmatrix}
+2 - \sqrt 2 & 0 & - \sqrt 2\\
+0 & 0 & 0 \\
+- \sqrt 2 & 0  & 2 + \sqrt 2
+\end{pmatrix}
+\]
+\[
+\Rightarrow ~
+Q_{\bu_1} =
+\frac{1}{2}
+\begin{pmatrix}
+\sqrt 2 & 0 & \sqrt 2\\
+0 & 2 & 0 \\
+\sqrt 2 & 0  & -\sqrt 2
+\end{pmatrix}
+\]
+\[
+Q_{\bu_1} A = 
+\frac{1}{2}
+\begin{pmatrix}
+\sqrt 2 & 0 & \sqrt 2\\
+0 & 2 & 0 \\
+\sqrt 2 & 0  & -\sqrt 2
+\end{pmatrix}
+\begin{pmatrix}
+1 & 2 \\
+0 & 1 \\
+1 & 4 \end{pmatrix}
+=
+\begin{pmatrix}
+\sqrt 2 & 3\sqrt 2\\
+0 & 1 \\
+0 & -\sqrt 2
+\end{pmatrix}
+\]\\
+\[
+\ba_2 = \begin{pmatrix} 1 \\ -\sqrt 2  \end{pmatrix} (\in \mathbb{R}^2)
+\]
+\[
+\hat \bu_2 = \ba_2 - \norm{\ba_2} \be_1 = 
+\begin{pmatrix} 1 \\ -\sqrt 2  \end{pmatrix}
+-
+\sqrt 3
+\begin{pmatrix} 1 \\ 0  \end{pmatrix}
+=
+\begin{pmatrix} 1 - \sqrt 3 \\ - \sqrt 2  \end{pmatrix}
+\qquad
+\bu_2 =
+\frac{1}{\sqrt{6 - 2\sqrt 3}}
+\begin{pmatrix} 1 - \sqrt 3 \\ - \sqrt 2  \end{pmatrix}
+\]
+\[
+\bu_2\bu_2^\top = 
+\frac{1}{6 - 2\sqrt 3}
+\begin{pmatrix} 1 - \sqrt 3 \\ - \sqrt 2  \end{pmatrix}
+\begin{pmatrix} 1 - \sqrt 3 & - \sqrt 2  \end{pmatrix}
+=
+\frac{1}{6 - 2\sqrt 3}
+\begin{pmatrix}
+4 - 2\sqrt 3 & - \sqrt 2 (1 - \sqrt 3) \\
+ - \sqrt 2 (1 - \sqrt 3) & 2\\
+\end{pmatrix}
+ =
+\]\[
+=
+\frac{3 + \sqrt 3}{12}
+\begin{pmatrix}
+4 - 2\sqrt 3 & - \sqrt 2 (1 - \sqrt 3) \\
+ - \sqrt 2 (1 - \sqrt 3) & 2\\
+\end{pmatrix}
+ =
+\frac{1}{6}
+\begin{pmatrix}
+3 - \sqrt 3 & \sqrt 6 \\
+ \sqrt 6  & 3 + \sqrt 3\\
+\end{pmatrix}
+\]
+\[
+\Rightarrow ~
+\hat Q_{\bu_2} =
+\frac{1}{3}
+\begin{pmatrix}
+\sqrt 3 & - \sqrt 6 \\
+ -\sqrt 6 & - \sqrt 3\\
+\end{pmatrix}
+~\Rightarrow ~
+Q_{\bu_2} =
+\frac{1}{3}
+\begin{pmatrix}
+3 & 0 & 0 \\
+0 & \sqrt 3 & - \sqrt 6 \\
+0 &  -\sqrt 6 & - \sqrt 3\\
+\end{pmatrix}
+\]
+\[
+Q_{\bu_2} Q_{\bu_1} A = 
+\frac{1}{3}
+\begin{pmatrix}
+3 & 0 & 0 \\
+0 & \sqrt 3 & - \sqrt 6 \\
+0 &  -\sqrt 6 & - \sqrt 3\\
+\end{pmatrix}
+\begin{pmatrix}
+\sqrt 2 & 3\sqrt 2\\
+0 & 1 \\
+0 & -\sqrt 2
+\end{pmatrix}
+=
+\begin{pmatrix}
+\sqrt 2 & 3\sqrt 2 \\
+0 & \sqrt 3 \\
+0 & 0 \\
+\end{pmatrix}
+\]
+So the full QR factorization is:
+\[
+R = 
+\begin{pmatrix}
+\sqrt 2 & 3\sqrt 2 \\
+0 & \sqrt 3 \\
+0 & 0 \\
+\end{pmatrix}
+\qquad
+Q = Q_{\bu_1} Q_{\bu_2} = 
+\frac{1}{6}
+\begin{pmatrix}
+\sqrt 2 & 0 & \sqrt 2\\
+0 & 2 & 0 \\
+\sqrt 2 & 0  & -\sqrt 2
+\end{pmatrix}
+\begin{pmatrix}
+3 & 0 & 0 \\
+0 & \sqrt 3 & - \sqrt 6 \\
+0 &  -\sqrt 6 & - \sqrt 3\\
+\end{pmatrix}
+=
+\]
+\[
+=
+\begin{pmatrix} 
+1/\sqrt 2 & -1/\sqrt 3 & - 1/ \sqrt 6 \\
+0 & 1/\sqrt 3 & - 2/ \sqrt 6 \\
+1/\sqrt 2 & 1/\sqrt 3  & 1/\sqrt 6 \\
+\end{pmatrix}
+\]
+And the reduced QR factorization is:
+\[
+Q =
+\begin{pmatrix} 
+1/\sqrt 2 & -1/\sqrt 3\\
+0 & 1/\sqrt 3 \\
+1/\sqrt 2 & 1/\sqrt 3 \\
+\end{pmatrix}
+\qquad
+R = 
+\begin{pmatrix}
+\sqrt 2 & 3\sqrt 2 \\
+0 & \sqrt 3 \\
+\end{pmatrix}
+\]
+that matches the result of GS approach.\\
+11. (c)
+\[
+A =
+\begin{pmatrix}
+1 & 0 & 2 \\
+0 & 1 & 1 \\
+2 & 0 & 1
+\end{pmatrix}
+\quad
+\ba_1 = \begin{pmatrix} 1 \\ 0  \\ 2  \end{pmatrix}
+\]
+\[
+\hat \bu_1 = \ba_1 - \norm{\ba_1} \be_1 = 
+\begin{pmatrix} 1 \\ 0  \\ 2  \end{pmatrix}
+-
+\sqrt 5
+\begin{pmatrix} 1 \\ 0  \\ 0  \end{pmatrix}
+=
+\begin{pmatrix} 1 - \sqrt 5 \\ 0  \\ 2  \end{pmatrix}
+\qquad
+\bu_1 =
+\frac{1}{\sqrt{10 - 2\sqrt 5}}
+\begin{pmatrix} 1 - \sqrt 5 \\ 0  \\ 2  \end{pmatrix}
+\]
+\[
+\bu_1\bu_1^\top = 
+\frac{1}{10 - 2\sqrt 5}
+\begin{pmatrix} 1 - \sqrt 5 \\ 0  \\ 2  \end{pmatrix}
+\begin{pmatrix} 1 - \sqrt 5 & 0  & 2  \end{pmatrix}
+=
+\frac{1}{5 - \sqrt 5}
+\begin{pmatrix}
+3 - \sqrt 5 & 0 & 1 - \sqrt 5\\
+0 & 0 & 0 \\
+1 - \sqrt 5 & 0 & 2
+\end{pmatrix} =
+\]\[
+=
+\frac{5 + \sqrt 5}{20}
+\begin{pmatrix}
+3 - \sqrt 5 & 0 & 1 - \sqrt 5\\
+0 & 0 & 0 \\
+1 - \sqrt 5 & 0 & 2
+\end{pmatrix} =
+\frac{1}{10}
+\begin{pmatrix}
+5 - \sqrt 5 & 0 & - 2\sqrt 5\\
+0 & 0 & 0 \\
+- 2\sqrt 5 & 0 & 5 + \sqrt 5
+\end{pmatrix}
+\]
+\[
+\Rightarrow ~
+Q_{\bu_1} =
+\frac{1}{5}
+\begin{pmatrix}
+\sqrt 5 & 0 & 2\sqrt 5\\
+0 & 5 & 0 \\
+2\sqrt 5 & 0 & - \sqrt 5
+\end{pmatrix}
+\]
+\[
+Q_{\bu_1}A =
+\frac{1}{5}
+\begin{pmatrix}
+\sqrt 5 & 0 & 2\sqrt 5\\
+0 & 5 & 0 \\
+2\sqrt 5 & 0 & - \sqrt 5
+\end{pmatrix}
+\begin{pmatrix}
+1 & 0 & 2 \\
+0 & 1 & 1 \\
+2 & 0 & 1
+\end{pmatrix}
+=
+\begin{pmatrix}
+\sqrt 5 & 0 & \frac{4}{5}\sqrt 5\\
+0 & 1 & 1 \\
+0 & 0 & \frac{3}{5}\sqrt 5
+\end{pmatrix}
+\]
+\[
+\ba_2 = \begin{pmatrix} 1 \\ 0  \end{pmatrix} = \be_1 (\in \mathbb{R}^2)
+~\Rightarrow~
+Q_{\bu_2} = I
+\]
+\[
+Q_{\bu_2}Q_{\bu_1}A =
+\begin{pmatrix}
+\sqrt 5 & 0 & 4/\sqrt 5\\
+0 & 1 & 1 \\
+0 & 0 & 3/\sqrt 5
+\end{pmatrix}
+\]
+\[
+~\Rightarrow~
+R =
+\begin{pmatrix}
+\sqrt 5 & 0 & 4/\sqrt 5\\
+0 & 1 & 1 \\
+0 & 0 & 3/\sqrt 5
+\end{pmatrix}
+\qquad
+Q = Q_{\bu_1} Q_{\bu_2} = Q_{\bu_1} = 
+\begin{pmatrix}
+1/\sqrt 5 & 0 & 2/\sqrt 5\\
+0 & 1 & 0 \\
+2/\sqrt 5 & 0 & - 1/\sqrt 5
+\end{pmatrix}
+\]
+that matches the result of GS approach.\\
+\end{enumerate}
+\end{solution}
+
+\end{document}
+

@@ -1,0 +1,3019 @@
+
+\documentclass[12pt,a4]{article}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\usepackage{amsmath,amsthm}
+\usepackage{amsfonts}
+\usepackage{amssymb}
+\usepackage[normalem]{ulem}
+\usepackage{enumerate}
+\usepackage{graphicx}
+\usepackage{datetime,verbatim}
+\usepackage{xcolor}
+\usepackage[makeroom]{cancel}
+
+%%%%%%%%%%%%%%%%%%%%%    page setup   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+
+\textheight=235truemm \textwidth=175truemm \hoffset=-15truemm
+\voffset=-15truemm
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\usepackage{fancyhdr}
+\pagestyle{fancy}
+\lhead{{\sf\scriptsize R.H.}}
+\rhead{{\sf\scriptsize Autumn~2018}}
+\chead{{\sf\scriptsize Linear Algebra: Homework~3 @ CSDS UCU
+}}
+\lfoot{}
+\rfoot{}
+\cfoot{\rm\thepage}
+%\pagestyle{myheadings}
+%%\markright{}
+%\markboth{}{}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+%%%%%%%%%%%%%%%   matrix extension  %%%%%%%%
+\makeatletter
+\renewcommand*\env@matrix[1][*\c@MaxMatrixCols c]{%
+	\hskip -\arraycolsep
+	\let\@ifnextchar\new@ifnextchar
+	\array{#1}}
+\makeatother
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\newenvironment{proofNoQED}[1]{\smallskip\noindent{\it Proof #1.}\ \rm}
+{\hfill \smallskip}
+\newcommand{\ProofNoQED}[1]{\smallskip\noindent{\it Proof} #1\ \hfill\smallskip}
+%\renewcommand{\qedsymbol}{\text{$\square$}}
+
+\newtheorem{problem}{Problem}
+\newtheorem{solution}{Solution to the problem}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%   Definitions       %%%%%%%
+
+
+\newcommand\rank{\operatorname{rank}}
+\newcommand\grad{\operatorname{grad}}
+\newcommand\trace{\operatorname{tr}}
+\newcommand\ls{\operatorname{ls}}
+\DeclareMathOperator{\sgn}{sgn}
+\newcommand{\sprod}[2]{\left \langle #1, #2 \right \rangle}
+\newcommand{\norm}[1]{\left\lVert#1\right\rVert}
+\newcommand{\abs}[1]{\left | #1 \right |}
+\newcommand{\vect}[1]{\overrightarrow{#1}}
+
+
+\newcommand{\ov}{\overline}
+\newcommand{\wt}{\widetilde}
+
+\newcommand{\bN}{{\mathbb N}}
+\newcommand{\bR}{{\mathbb R}}
+\newcommand{\bZ}{{\mathbb Z}}
+\newcommand{\bU}{{\mathbb U}}
+\newcommand{\bW}{{\mathbb W}}
+\newcommand{\bV}{{\mathbb V}}
+
+\newcommand{\ba}{{\mathbf a}}
+\newcommand{\bb}{{\mathbf b}}
+\newcommand{\bff}{{\mathbf f}}
+
+\newcommand{\bu}{{\mathbf u}}
+\newcommand{\bv}{{\mathbf v}}
+\newcommand{\bp}{{\mathbf p}}
+\newcommand{\bq}{{\mathbf q}}
+\newcommand{\br}{{\mathbf r}}
+\newcommand{\bx}{{\mathbf x}}
+\newcommand{\by}{{\mathbf y}}
+\newcommand{\bw}{{\mathbf w}}
+
+\newcommand{\cB}{{\mathcal B}}
+\newcommand{\cF}{{\mathcal F}}
+\newcommand{\cG}{{\mathcal G}}
+\newcommand{\cN}{{\mathcal N}}
+\newcommand{\cP}{{\mathcal P}}
+\newcommand{\cT}{{\mathcal T}}
+
+\newcommand{\one}{{\mathbf 1}}
+
+\renewcommand{\Im}{{\mathcal C}}
+\newcommand{\Ker}{{\mathcal N}}
+
+\newcommand{\answer}[1]{\textbf{Answer:} #1}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+\begin{document}
+
+\begin{center}
+  \Large\bf{Linear Algebra\\
+    Homework 3: Eigenvalues and eigenvectors}
+\end{center}
+Solutions are by Yaroslava Lochman.
+
+%\vspace{.5cm}
+
+\begin{problem}[Oblique projectors; 5pt]\rm	Assume that $\mathbb{R}^n$ is represented as the \emph{direct} (but not necessarily \emph{orthogonal}) sum $M_1 \dotplus M_2$ of two its subspaces $M_1$ and $M_2$. In particular, every $\bx \in \mathbb{R}^n$ can be represented in a unique way as $\bx = \bx_1 + \bx_2$ with some $\bx_j \in M_j$, and the mapping $P_j: \bx \mapsto \bx_j$ is called the \emph{(oblique) projector onto $M_j$ parallel to $M_{3-j}$}. It is easy to show that $P_j$ satisfy the following properties: $P_1 + P_2 = I_n$, $P_j^2 = P_j$ and $P_1P_2 = P_2 P_1 = 0$. 	
+		\begin{enumerate}[(a)]
+		\item Show that any matrix $P$ satisfying the relation $P^2 = P$ is a projector onto some subspace $L$ parallel to $M$, and identify these $L$ and $M$.
+		\item Show that the projector $P$ is an orthogonal projector if and only if the matrix $P$ is symmetric.
+		\item Assume that two transformations $P_1$ and $P_2$ of $\mathbb{R}^n$ satisfy the following conditions: $P_1 + P_2 = I_n$ and $P_1P_2 = 0$. Prove that $P_1$ and $P_2$ are projectors and that $P_2P_1 = 0$.
+		\end{enumerate}	
+ \end{problem}
+
+\textcolor{black}{
+\begin{solution}[]\rm .
+\begin{enumerate}[(a)]
+	\item $P^2 = P$. Let $P:\bR^n \to \bR^m$. Since $P$ should be able to be applied to $Px ~ \Rightarrow ~ m = n$.
+% $\dim ImP + \dim KerP = dim \bR^n = n$.
+\[
+\forall z \in \bR^n:  ~ z = Pz ~+ ~(z - Pz)
+\qquad
+\left \{ \begin{matrix}[l]
+Pz \in ImP\\
+P(z - Pz) = Pz - P^2 z = 0 ~ \Rightarrow ~ z - Pz \in KerP
+\end{matrix}\right. 
+\]
+So $\bR^n = ImP + KerP$. Let's show that $ImP \cap KerP = \{0\}$ and hence $\bR^n = ImP \dotplus KerP$.
+\[
+\forall y  \in ImP \cap KerP:
+\left \{ \begin{matrix}[l]
+Py = 0 \\[10pt]
+\exists x \in \bR^n:
+y = Px
+~ \Rightarrow ~
+Py = P^2x = Px = y
+\end{matrix}\right. 
+~ \Rightarrow ~ y = Py = 0
+\]
+Let's show now that
+$\forall z \in \bR ~\exists!x \in KerP, ~\exists! y \in ImP: z = x + y$.
+Let it be false, meaning $\exists x_1, x_2 \in KerP, ~ y_1, y_2 \in ImP$ s.t. :
+\[
+\left \{ \begin{matrix}[l]
+z = x_1 + y_1 \\
+z = x_2 + y_2
+\end{matrix}\right. 
+~ \Rightarrow ~
+x_1 - x_2 (\in KerP) = y_1-y_2 (\in ImP)
+\]
+\[
+~ \Rightarrow ~
+\left \{ \begin{matrix}[l]
+x_1 - x_2 \in ImP \cap KerP = \{0\} \\[10pt]
+y_1 - y_2 \in ImP \cap KerP = \{0\}
+\end{matrix}\right. 
+~ \Rightarrow ~
+\left \{ \begin{matrix}[l]
+x_1 = x_2 \\[10pt]
+y_1 = y_2
+\end{matrix}\right. 
+\]
+So we have:
+\[
+\bR^n = ImP \dotplus KerP = \text{ (in other words) } = \mathcal{C}(P) \dotplus \mathcal{N}(P)
+\]
+	\item Let $P$ now be also a symmetric matrix: $P = P^\top$. Let's show that $\Im(P) \perp \Ker(P)$. From the second fundamental theorem of L:
+\[
+\Im(P) \perp \Ker(P^\top)
+\]
+Since $P = P^\top ~\Rightarrow~ \Ker(P) = \Ker(P)^\top ~\Rightarrow~ \Im(P) \perp \Ker(P)$
+\[
+~\Rightarrow~ \bR^n = \Im(P) \oplus  \Ker(P)
+\]
+\item $P_1:\bR^n \to \bR^n$, ~$P_2:\bR^n \to \bR^n$.
+% Let's show that $P_1$, $P_2$ are projectors and $P_2P_1 = 0$.
+\[
+\left \{ \begin{matrix}[l]
+P_1 + P_2 = I_n \\[5pt]
+P_1P_2 = 0_n
+\end{matrix}\right. 
+~\Rightarrow~ 
+\left \{ \begin{matrix}[l]
+P_1 = P_1(P_1 + P_2) = P_1^2 + P_1P_2 = P_1^2
+~\Rightarrow~ 
+P_1 \text{ is a projector.} \\[5pt]
+P_2 = (P_1 + P_2)P_2 = P_1P_2 + P_2^2 = P_2^2
+~\Rightarrow~ 
+P_2 \text{ is a projector.}
+\end{matrix}\right. 
+\]
+\[
+P_1 = (P_1 + P_2)P_1 = P_1^2 + P_2P_1 = P_1 + P_2P_1 \Rightarrow P_2P_1 = 0_n
+\]
+\end{enumerate}
+\end{solution}
+}
+
+
+\begin{problem}[Projectors; 5pt]\label{prb:12.8}\rm
+\begin{enumerate}[(a)]
+	\item Find a matrix of oblique projector in $\bR^3$ onto the subspace $U =\ls \{(1,0,1)^\top\}$ parallel to the subspace $W = \ls\{(1,1,0)^\top, (0,1,1)^\top\}$.
+	\item Find a projection matrix of $\bR^3$ onto the subspace $U =\ls \{(1,2,1)^\top,(1,0,-1)^\top \}$ parallel to the subspace $W = \ls\{(1,0,1)^\top\}$.
+	\item
+	Is it possible to fill in the missing entries in the matrix
+	\[
+	A = \begin{pmatrix}[rrr]
+	1 & \ast & \hphantom{-}0 \\ 0 & \tfrac12 & \ast\\
+	\ast & \hphantom{-}\ast & \ast
+	\end{pmatrix}
+	\]
+	to get a matrix of an orthogonal projection in $\bR^3$? If so, find the subspace $U$ of $\bR^3$ such that $A$ is an orthogonal projection onto~$U$.
+\end{enumerate}
+
+	{\small \textsf{Hint:
+		Do you see why only one of (a) or (b) needs to be worked out in detail?}}
+\end{problem}
+
+\textcolor{black}{
+\begin{solution}[]\rm Let's find a general form of the matrix of the projector.\\
+Let
+$u_1 \dots u_k$ be linearly independent in $\bR^n$,
+$U =\ls\{u_1 \dots u_k\}$,
+$\bU = \begin{pmatrix}[ccc] u_1 & \dots & u_k \end{pmatrix}$, \\
+$w_1 \dots w_{n-k}$ -- linearly independent in $\bR^n$,
+$W =\ls\{w_1 \dots w_{n-k}\}$,
+$\bW = \begin{pmatrix}[ccc] w_1 & \dots & w_{n-k} \end{pmatrix}$ s.t.:
+\[
+\bR^n = U \dotplus W
+\]
+Let's find a matrix of oblique projector in $\bR^n$ onto $U$ parallel to $W$.
+\[
+\forall b \in \bR^n: p = Pb \in U
+~ \Rightarrow ~
+\exists x: p = \bU x
+\]
+\[
+(b - \bU x) \text{ should be parallel to } W
+~ \Rightarrow ~
+(b - \bU x) \perp W^\perp
+\]
+Let $V$ be $W^\perp$,
+$\dim(V) = n - \dim(W) = n - n + k = k$, so:\\[5pt]
+$V =\ls\{v_1 \dots v_k\}$,
+$\bV = \begin{pmatrix}[ccc] v_1 & \dots & v_k \end{pmatrix}$,
+$\bV^\top\bW = \mathbf{0_{k\times(n-k)}} $
+\[
+~ \Rightarrow ~
+\bV^\top(b - \bU x) = \mathbf{0_k}
+~ \Rightarrow ~
+\bV^\top\bU x = \bV^\top b
+\]
+$\bV^\top\bU$ is $k\times k$ non-singular since $\Ker(\bV^\top\bU) = \{0\}$:
+\[
+\bV^\top\bU x = 0 
+~ \Rightarrow ~
+\bU x \in W
+\quad
+\text{but}
+\quad
+W \cap U = 0 
+\]
+So there will be no linear combination of columns of $\bU$ that lies in W
+$~ \Rightarrow ~ x = 0$\\
+\[
+~ \Rightarrow ~
+x = (\bV^\top\bU)^{-1}\bV^\top b
+~ \Rightarrow ~
+p = \bU x = \bU (\bV^\top\bU)^{-1}\bV^\top b = Pb
+~ \Rightarrow ~
+P = \bU (\bV^\top\bU)^{-1}\bV^\top
+\]
+	\begin{enumerate}[(a)]
+	\item 
+$U =\ls \{(1,0,1)^\top\}$, $W = \ls\{(1,1,0)^\top, (0,1,1)^\top\}$.
+Let's first check that $\bR^n = U \dotplus W$:
+\[
+\det 
+\begin{pmatrix}[ccc]
+1 & 1 & 0 \\
+0 & 1 & 1 \\
+1 & 0 & 1 \\
+\end{pmatrix}
+= 1 ~ \Rightarrow ~ 
+ \text{ the system of columns is linearly independent.}
+ \]
+ \[
+ ~ \Rightarrow ~ 
+\bR^n = 
+\ls \left \{
+\begin{pmatrix}1\\0\\1\end{pmatrix}, 
+\begin{pmatrix}1\\1\\0\end{pmatrix},
+\begin{pmatrix}0\\1\\1\end{pmatrix}
+\right \} = U \dotplus W
+\]
+So
+\[
+\bU =
+\begin{pmatrix}[r]
+1 \\
+0 \\
+1 \\
+\end{pmatrix}
+\quad
+\bW =
+\begin{pmatrix}[rr]
+1 & 0 \\
+1 & 1 \\
+0 & 1 \\
+\end{pmatrix}
+\quad
+\bV = 
+\begin{pmatrix}[r]
+1 \\ -1 \\ 1
+\end{pmatrix}
+\text{, since: }
+\]
+\[
+V = W^\perp = \ls \left \{
+\begin{vmatrix}[ccc]
+e_1 & e_2 & e_3\\
+1 & 1 & 0\\
+0 & 1 & 1 \\
+\end{vmatrix}\right\} =
+\ls \left\{( 1, -1, 1)^\top\right\}
+\]
+\[
+\bV^\top\bU = 
+\begin{pmatrix}[rrr] 1 & -1 & 1 \end{pmatrix}
+\begin{pmatrix}[r] 1 \\ 0 \\ 1 \\ \end{pmatrix}
+= 2
+~ \Rightarrow ~
+P = \bU (\bV^\top\bU)^{-1}\bV^\top = \frac12
+\begin{pmatrix}[r] 1 \\ 0 \\ 1 \\ \end{pmatrix}
+\begin{pmatrix}[rrr] 1 & -1 & 1 \end{pmatrix} = \frac12
+\begin{pmatrix}[rrr]
+1 & -1 & 1 \\
+0 & 0 & 0 \\
+1 & -1 & 1
+\end{pmatrix}
+\]
+\answer{$P = \frac12
+\begin{pmatrix}[rrr]
+1 & -1 & 1 \\
+0 & 0 & 0 \\
+1 & -1 & 1
+\end{pmatrix}$}
+	\item
+$U =\ls \{(1,2,1)^\top, (1,0,-1)^\top\}$, $W = \ls\{(1,0,1)^\top\}$.
+Let's first check that $\bR^n = U \dotplus W$:
+\[
+\det 
+\begin{pmatrix}[ccc]
+1 & 1 & 1 \\
+2 & 0 & 0 \\
+1 & -1 & 1 \\
+\end{pmatrix}
+= - 4  ~ \Rightarrow ~ 
+ \text{ the system of columns is linearly independent.}
+ \]
+ \[
+ ~ \Rightarrow ~ 
+\bR^n = 
+\ls \left \{
+\begin{pmatrix}1\\2\\1\end{pmatrix}, 
+\begin{pmatrix}1\\0\\-1\end{pmatrix},
+\begin{pmatrix}1\\-1\\1\end{pmatrix}
+\right \} = U \dotplus W
+\]
+So
+\[
+\bU =
+\begin{pmatrix}[rr]
+1 & 1 \\
+2 & 0 \\
+1 & -1 \\
+\end{pmatrix}
+\quad
+\bW =
+\begin{pmatrix}[r]
+1 \\ 0 \\ 1 \\
+\end{pmatrix}
+\quad
+\bV = 
+\begin{pmatrix}[rr]
+0 & -1 \\
+1 & 0 \\
+0 & 1 \\
+\end{pmatrix}
+\text{, since: }
+\]
+\[
+v_1 \perp w_1
+~\Rightarrow~
+v_1 \text{ can be } (0, 1, 0)^\top
+\]
+\[
+v_2 \in \{w_1, v_1\}^\perp 
+~\Rightarrow~ 
+v_2 \text{ can be }
+\begin{vmatrix}[ccc]
+e_1 & e_2 & e_3\\
+1 & 0 & 1\\
+0 & 1 & 0 \\
+\end{vmatrix} =
+( -1, 0, 1)^\top
+~\Rightarrow~ 
+V = 
+\ls \left \{
+\begin{pmatrix}[r]
+0\\ 1\\ 0\\
+\end{pmatrix},
+\begin{pmatrix}[r]
+-1 \\ 0 \\ 1 \\
+\end{pmatrix}
+\right\}
+\]
+\[
+\bV^\top\bU = 
+\begin{pmatrix}[rrr]
+0 & 1 & 0 \\
+-1 & 0 & 1\\
+\end{pmatrix}
+\begin{pmatrix}[rr]
+1 & 1 \\
+2 & 0 \\
+1 & -1 \\
+\end{pmatrix}
+= 
+\begin{pmatrix}[rr]
+2 & 0 \\
+0 & -2 \\
+\end{pmatrix}
+\qquad
+(\bV^\top\bU)^{-1} = \frac12
+\begin{pmatrix}[rr]
+1 & 0 \\
+0 & -1 \\
+\end{pmatrix}
+\]
+\[
+~ \Rightarrow ~
+P = \bU (\bV^\top\bU)^{-1}\bV^\top = \frac12
+\begin{pmatrix}[rr]
+1 & 1 \\
+2 & 0 \\
+1 & -1 \\
+\end{pmatrix}
+\begin{pmatrix}[rr]
+1 & 0 \\
+0 & -1 \\
+\end{pmatrix}
+\begin{pmatrix}[rrr]
+0 & 1 & 0 \\
+-1 & 0 & 1\\
+\end{pmatrix} =
+% \frac12
+% \begin{pmatrix}[rr]
+% 1 & -1 \\
+% 2 & 0 \\
+% 1 & 1 \\
+% \end{pmatrix}
+% \begin{pmatrix}[rrr]
+% 0 & 1 & 0 \\
+% -1 & 0 & 1\\
+% \end{pmatrix} = 
+\frac12
+\begin{pmatrix}[rrr]
+1 & 1 & -1 \\
+0 & 2 & 0 \\
+-1 & 1 & 1\\
+\end{pmatrix}
+\]
+In fact if $P_{(a)}$ is a projector from task (a), and $P_{(b)}$ -- from task (b), then $P_{(b)} = I - P_{(a)}$, since $U_{(a)} = W_{(b)}$. Let's check:
+\[
+I - P_{(a)} = 
+\frac12 \left (
+\begin{pmatrix}[rrr]
+2 & 0 & 0 \\
+0 & 2 & 0 \\
+0 & 0 & 2\\
+\end{pmatrix}
+-
+\begin{pmatrix}[rrr]
+1 & -1 & 1 \\
+0 & 0 & 0  \\
+1 & -1 & 1 \\
+\end{pmatrix}
+\right )
+=
+\frac12
+\begin{pmatrix}[rrr]
+1 & 1 & -1 \\
+0 & 2 & 0 \\
+-1 & 1 & 1\\
+\end{pmatrix}
+=
+P_{(b)}
+\]
+\answer{$P =
+\frac12
+\begin{pmatrix}[rrr]
+1 & 1 & -1 \\
+0 & 2 & 0 \\
+-1 & 1 & 1\\
+\end{pmatrix}
+$}
+	\item
+\[
+A = 
+\begin{pmatrix}
+1 & x_2 & 0 \\
+0 & \frac{1}{2} & x_4 \\
+x_1 & x_3 & x_5 \\
+\end{pmatrix}
+ =
+ \left | \text{A should be symmetric} \right |
+ =
+\begin{pmatrix}
+1 & 0 & 0 \\
+0 & \frac{1}{2} & x_3 \\
+0 & x_3 & x_5 \\
+\end{pmatrix}
+\]
+\[
+A ^2 = 
+\begin{pmatrix}
+1 & 0 & 0 \\
+0 & \frac14 + x_3^2 & \frac12 x_3 + x_3 x_5 \\
+0 & \frac12 x_3 + x_3 x_5 & x_3^2 + x_5 ^ 2 \\
+\end{pmatrix}
+=
+\begin{pmatrix}
+1 & x_2 & 0 \\
+0 & \frac{1}{2} & x_4 \\
+x_1 & x_3 & x_5 \\
+\end{pmatrix}
+= A
+\]
+\[
+\left \{ \begin{matrix}[l]
+\frac14 + x_3^2 = \frac12 \\[2pt]
+x_3 (x_5 - \frac12) = 0 \\[2pt]
+x_5^2 - x_5 + x_3^2 = 0
+\end{matrix} \right.
+~ \Rightarrow ~
+\left \{ \begin{matrix}[l]
+x_5 = \frac12 \\[2pt]
+x_3 = \frac12
+\end{matrix} \right.
+~ \Rightarrow ~
+A = 
+\begin{pmatrix}
+1 & 0 & 0 \\[2pt]
+0 & \frac12 & \frac12 \\[2pt]
+0 & \frac12 & \frac12 \\[2pt]
+\end{pmatrix}
+\]
+\[
+U = \Im(A) = \ls \left \{
+\begin{pmatrix}
+1 \\ 0 \\ 0 \\
+\end{pmatrix},
+\begin{pmatrix}
+0 \\ \frac12 \\ \frac12 \\
+\end{pmatrix},
+\begin{pmatrix}
+0 \\ \frac12 \\ \frac12 \\
+\end{pmatrix}
+\right \}
+\]
+\end{enumerate}
+\end{solution}
+}
+
+
+
+\begin{problem}[Eigenvalues; 3 pt]\rm Find all the eigenvalues of the following matrices by \textbf{inspection}:
+	\begin{gather*}
+	\mathrm{(a)} \ \begin{pmatrix}
+	1/2 & 1 \\ 1/2 & 0
+	\end{pmatrix}, \qquad
+	\mathrm{(b)} \ \begin{pmatrix}
+	\hphantom{-}1 & -1 \\ -1 & \hphantom{-}1
+	\end{pmatrix}, \qquad
+	\mathrm{(c)} \ \begin{pmatrix}
+	3 & 2 \\ 1 & 2
+	\end{pmatrix}, \qquad
+	\mathrm{(d)} \ \begin{pmatrix}
+	0 & 1 & 2 \\
+	1 & 0 & 2 \\
+	1 & 1 & 1
+	\end{pmatrix},
+	\qquad
+	\mathrm{(e)} \ \begin{pmatrix}
+	0 & 0 & 2 \\
+	0 & 5 & 0 \\
+	1 & 0 & 1
+	\end{pmatrix}.
+	\end{gather*}
+	{\small \textsf{Hint:
+			Look for constant row/column sums, diagonal entries with zeros in the corresponding row or column otherwise, use eigenvalue sum/product rules, try subtracting $\lambda I$ for ``tempting'' candidates for~$\lambda$ etc}}
+\end{problem}
+
+\textcolor{black}{
+\begin{solution}[]\rm .
+\begin{enumerate}[(a)]
+\item
+$A = 
+\begin{pmatrix}
+1/2 & 1\\
+1/2 & 0
+\end{pmatrix}
+\qquad
+A - I = 
+\begin{pmatrix}
+-1/2 & 1\\
+1/2 & -1
+\end{pmatrix}
+\quad
+\det (A - I) = 0
+~ \Rightarrow ~
+\lambda_1 = 1
+$
+\[
+\lambda_2 = \trace A - \lambda_1 = 1/2 - 1 = - 1/2
+\]
+\answer{$\lambda_1 = 1,~\lambda_2=-1/2$}
+\item $A=
+\begin{pmatrix}
+1 & -1 \\
+-1 & 1
+\end{pmatrix}
+\quad
+\det A = 0
+~ \Rightarrow ~
+\lambda_1 = 0
+$\\
+\[
+\lambda_2 = \trace A - \lambda_1 = 2
+\]
+\answer{$\lambda_1 = 0,~\lambda_2=2$}
+\item $A = 
+\begin{pmatrix}
+3 & 2 \\
+1 & 2
+\end{pmatrix}
+\qquad
+A - I = 
+\begin{pmatrix}
+2 & 2 \\
+1 & 1
+\end{pmatrix}
+\quad
+\det (A - I) = 0
+~ \Rightarrow ~ 
+\lambda_1 = 1
+$
+\[
+\lambda_2 = \trace A - \lambda_1 = 5 - 1 = 4
+\]
+\answer{$\lambda_1 = 1,~\lambda_2=4$}
+\item $A = 
+\begin{pmatrix}
+0 & 1 & 2 \\
+1 & 0 & 2 \\
+1 & 1 & 1
+\end{pmatrix}
+\qquad
+A + I = 
+\begin{pmatrix}
+1 & 1 & 2 \\
+1 & 1 & 2 \\
+1 & 1 & 2
+\end{pmatrix}
+\quad
+\det (A + I) = 0
+~ \Rightarrow ~ 
+\lambda_1 = -1
+$
+\[
+\rank (A + I) = 1
+~ \Rightarrow ~ \dim N(A+I) = 3-1=2
+~ \Rightarrow ~ \lambda_2 = \lambda_1 = -1
+\]
+\[
+\Rightarrow \lambda_3 = \trace A + 1 + 1 = 3 \\
+\]
+\answer{$\lambda_1 = \lambda_2 = -1,~\lambda_3=3$}
+\item $A = 
+\begin{pmatrix}
+0 & 0 & 2 \\
+0 & 5 & 0 \\
+1 & 0 & 1
+\end{pmatrix}
+\qquad
+A - 5 I= 
+\begin{pmatrix}
+-5 & 0 & 2 \\
+0 & 0 & 0 \\
+1 & 0 & -4
+\end{pmatrix}
+\quad
+\det (A - 5 I) = 0
+~ \Rightarrow ~
+\lambda_1 = 5
+$
+\[
+\left \{ \begin{matrix}[l]
+5 + \lambda_2 + \lambda_3 = \trace A = 6 \\
+5 \lambda_2 \cdot \lambda_3 = \det A = -5 \\
+\end{matrix} \right.
+\Rightarrow ~
+\left \{ \begin{matrix}[l]
+\lambda_2 + \lambda_3 = 1\\
+\lambda_3 = -\frac{1}{\lambda_2} \\
+\end{matrix} \right.
+\Rightarrow ~
+\left |
+\lambda - \frac{1}{\lambda} = 1,
+\quad
+ \lambda^2 - \lambda - 1 = 0 \right |
+\Rightarrow ~
+\lambda_{2,3} = \frac{1 \pm \sqrt{5}}{2}
+\]
+\answer{$\lambda_1 = 5, \quad \lambda_2 = \frac{1 + \sqrt{5}}{2}, \quad \lambda_3 = \frac{1 - \sqrt{5}}{2}$}
+\end{enumerate}
+\end{solution}
+}
+
+\begin{problem}[Eigenvalues and eigenvectors; 4 pt]\rm
+	For the matrix $A$ in each part below, find the eigenvalues and eigenvectors of $A$, $A^2$, $A^{100}$, $A^{-1}$ and $e^{tA}$:
+	\[
+	\mathrm{(a)} \quad
+	\begin{pmatrix}[rr]  3 & 2 \\ 1 & 2  \end{pmatrix},
+	\qquad
+	\mathrm{(b)} \quad
+	\begin{pmatrix}[rrr]  4 & \hphantom{-}0 & -1 \\ 0 & -1 & 4 \\ 0 & 2 & 1 \end{pmatrix}
+	\]
+\end{problem}
+
+\textcolor{black}{
+\begin{solution}[]\rm Let $A$ be $k \times k$ matrix.
+Let $\lambda_i$ and $\bv_i$ be the eigenvalue and corresponding eigenvector of $A$; ~ $\lambda^{(n)}_i$ and $v^{(n)}_i$ -- the eigenvalue and corresponding eigenvector of $A^n$; ~ $\hat \lambda_i$ and $\hat \bv_i$ -- the eigenvalue and corresponding eigenvector of $e^{tA}$, ~ $i=\overline{1,k}$. \\[2pt]
+In case when $A = PDP^{-1}$ where
+$P = \begin{pmatrix} \bv_1 & \dots & \bv_n \end{pmatrix}$ 
+and
+$D = diag\{\lambda_1, \dots ,\lambda_n\}$
+we have:
+\[
+A^n = PD\bcancel{P}^{-1}\bcancel{P}D\bcancel{P}^{-1}\cdots\bcancel{P}DP^{-1} = PD^nP^{-1}
+~ \Rightarrow ~
+\left \{ \begin{matrix}[l]
+\lambda^{(n)}_i = \lambda_i^n \\
+\bv^{(n)}_i = \bv_i
+\end{matrix} \right.
+\quad i=\overline{1,k}
+\]
+And since $e^x = \sum_{n=1}^\infty \frac{x^n}{n!}$ :
+\[
+e^{tA} = \sum_{n=1}^\infty \frac{t^n A^n}{n!}
+= \sum_{n=1}^\infty \frac{t^nPD^nP^{-1}}{n!}
+= P \sum_{n=1}^\infty \frac{t^nD^n}{n!} P^{-1}
+= P e^{tD} P^{-1}
+~ \Rightarrow ~
+\left \{ \begin{matrix}[l]
+\hat \lambda_i = e^{t\lambda_i} \\
+\hat \bv_i = \bv_i
+\end{matrix} \right.
+\quad i=\overline{1,k}
+\]
+\begin{enumerate}[(a)]
+\item $A = 
+\begin{pmatrix}
+3 & 2 \\
+1 & 2
+\end{pmatrix}
+\qquad
+A - I = 
+\begin{pmatrix}
+2 & 2 \\
+1 & 1
+\end{pmatrix}
+\quad
+\det (A - I) = 0
+~ \Rightarrow ~
+\lambda_1 = 1
+$
+\[
+(A - \lambda_1 I) \bv_1 =
+\begin{pmatrix}
+2 & 2 \\
+1 & 1
+\end{pmatrix}
+\bv_1 = 0
+~ \Rightarrow ~
+\bv_1 = \begin{pmatrix} 1 \\ -1 \end{pmatrix}
+\]
+\[
+\lambda_2 = \trace A - \lambda_1 = 5 - 1 = 4
+\qquad
+(A - \lambda_2 I) \bv_2 =
+\begin{pmatrix}
+-1 & 2 \\
+1 & -2
+\end{pmatrix}
+\bv_2 = 0
+~ \Rightarrow ~
+\bv_2 = \begin{pmatrix} 2 \\ 1 \end{pmatrix}
+\]
+\[
+P = \begin{pmatrix} \bv_1 & \bv_2 \end{pmatrix}
+ = \begin{pmatrix}
+ 1 & 2 \\
+ -1 & 1
+ \end{pmatrix}
+\qquad 
+\left|~\text{self-check: }\det P = 3 \neq 0 ~\right|
+\qquad 
+D = diag\{\lambda_1, \lambda_2\}
+\]
+So $A = PDP^{-1}$, and we can easily calculate eigenvalues and eigenvectors (using the conclusions above):\\[6pt]
+\answer{$
+\lambda_1 = 1 \quad \lambda_2 = 4
+\\[6pt]\hspace*{19mm}
+\lambda^{(2)}_1 = 1 \quad \lambda^{(2)}_2 = 4^2 = 16
+\\[6pt]\hspace*{19mm}
+\lambda^{(100)}_1 = 1 \quad \lambda^{(100)}_2 = 4^{100}
+\\[6pt]\hspace*{19mm}
+\lambda^{(-1)}_1 = 1 \quad \lambda^{(-1)}_2 = 4^{-1} = 1/4
+\\[6pt]\hspace*{19mm}
+\hat \lambda_1 = e^{t} \quad \hat \lambda_2 = e^{4t}
+\\[6pt]\hspace*{19mm}
+\left \{ \bv_1, \bv_2 \right\} =
+\left \{ \bv^{(2)}_1, \bv^{(2)}_2 \right\} =
+\left \{ \bv^{(100)}_1, \bv^{(100)}_2 \right\} =
+\left \{ \bv^{(-1)}_1, \bv^{(-1)}_2 \right\} =
+\left \{ \hat \bv_1, \hat \bv_2 \right\} = 
+\left \{ \begin{pmatrix} 1 \\ -1 \end{pmatrix}, 
+\begin{pmatrix} 2 \\ 1 \end{pmatrix} \right\} \\
+$}
+\item
+$A = 
+\begin{pmatrix}
+4 & 0 & -1 \\
+0 & -1 & 4 \\
+0 & 2 & 1 \\
+\end{pmatrix}
+\qquad
+A - 4I = 
+\begin{pmatrix}
+0 & 0 & -1 \\
+0 & -5 & 4 \\
+0 & 2 & -3 \\
+\end{pmatrix}
+\quad
+\det (A - 4I) = 0
+~ \Rightarrow ~
+\lambda_1 = 4
+$
+\[
+(A - 4 I) \bv_1 =
+\begin{pmatrix}
+0 & 0 & -1 \\
+0 & -5 & 4 \\
+0 & 2 & -3 \\
+\end{pmatrix}
+\bv_1 = 0
+~ \Rightarrow ~
+\bv_1 = \begin{pmatrix} 1 \\ 0 \\ 0\end{pmatrix}
+\]
+\[
+A + 3I = 
+\begin{pmatrix}
+7 & 0 & -1 \\
+0 & 2 & 4 \\
+0 & 2 & 4 \\
+\end{pmatrix}
+\quad
+\det (A + 3I) = 0
+~ \Rightarrow ~
+\lambda_2 = -3
+\]
+\[
+(A + 3 I) \bv_2 =
+\begin{pmatrix}
+7 & 0 & -1 \\
+0 & 2 & 4 \\
+0 & 2 & 4 \\
+\end{pmatrix}
+\bv_2 = 0
+~ \Rightarrow ~
+\bv_2 = \begin{pmatrix} 1 \\ -14 \\ 7 \end{pmatrix}
+\]
+\[
+\lambda_3 = \trace A - 4 + 3 = 3
+\qquad
+(A - 3 I) \bv_3 =
+\begin{pmatrix}
+1 & 0 & -1 \\
+0 & -4 & 4 \\
+0 & 2 & -2 \\
+\end{pmatrix}
+\bv_3 = 0
+~ \Rightarrow ~
+\bv_3 = \begin{pmatrix} 1 \\ 1 \\ 1 \end{pmatrix}
+\]
+\[
+P = \begin{pmatrix} \bv_1 & \bv_2 & \bv_3\end{pmatrix}
+ = \begin{pmatrix}
+ 1 & 1 & 1 \\
+ 0 & -14 & 1 \\
+ 0 & 7 & 1 \\
+ \end{pmatrix}
+\quad 
+\left|~\text{self-check: }\det P = -21 \neq 0 ~\right|
+\qquad 
+D = diag\{\lambda_1, \lambda_2, \lambda_3\}
+\]
+So $A = PDP^{-1}$, and we can easily calculate eigenvalues and eigenvectors (using the conclusions above):\\[6pt]
+\answer{$
+\lambda_1 = 4 \quad
+\lambda_2 = -3 \quad
+\lambda_3 = 3 \quad
+\\[6pt] \hspace*{19mm}
+\lambda^{(2)}_1 = 16 \quad
+\lambda^{(2)}_2 = 9 \quad
+\lambda^{(2)}_3 = 9 \quad
+\\[6pt] \hspace*{19mm}
+\lambda^{(100)}_1 = 4^{100} \quad
+\lambda^{(100)}_2 = 3^{100} \quad
+\lambda^{(100)}_3 = 3^{100} \quad
+\\[6pt] \hspace*{19mm}
+\lambda^{(-1)}_1 = 1/4 \quad
+\lambda^{(-1)}_2 = -1/4 \quad
+\lambda^{(100)}_3 = 1/3 \quad
+\\[10pt] \hspace*{19mm}
+\hat \lambda = e^{4t} \quad
+\hat \lambda = e^{-4t} \quad
+\hat \lambda = e^{3t} \quad
+\\[10pt] \hspace*{19mm}
+\left \{\bv_1, \bv_2, \bv_3\right \} = 
+\left \{v^{(2)}_1, v^{(2)}_2, v^{(2)}_3\right \} = 
+\left \{ v^{(100)}_1, v^{(100)}_2, v^{(100)}_3  \right \} = 
+\\[10pt] \hspace*{19mm}
+=
+\left \{ v^{(-1)}_1, v^{(-1)}_2, v^{(-1)}_3  \right \} = 
+\left \{ \hat \bv_1, \hat \bv_2, \hat \bv_3 \right \} = 
+\left \{
+\begin{pmatrix} 1 \\ 0 \\ 0\end{pmatrix},
+\begin{pmatrix} 1 \\ -14 \\ 7 \end{pmatrix},
+\begin{pmatrix} 1 \\ 1 \\ 1 \end{pmatrix}
+\right \}
+\\
+$}
+\end{enumerate}
+\end{solution}
+}
+
+
+\begin{problem}[Difference equation; 4 pt]\rm
+A \emph{generalized Fibonacci} sequence $g_n$ is defined through the relations $g_0 = 0$, $g_1 = 1$, $g_2=2$ and $g_{n+3} = 3g_{n+2} - g_{n+1} - g_n$ for $n\in\mathbb{Z}_+$. Find the formula for the $n^{\mathrm{th}}$ generalized Fibonacci number $g_n$. To this end,
+\begin{enumerate}[(a)]
+	\item represent the difference equation in the form $\bx_{n+1} = A\bx_n$ for a suitable $3 \times 3$ matrix $A$,
+	 find its eigenvalues and eigenvectors and then diagonalize $A$;
+	\item find a general solution $\bx_n$ and then the one satisfying the initial condition $\bx_0 = (0,1,2)^\top$.
+\end{enumerate}
+\end{problem}
+
+\textcolor{black}{
+\begin{solution}[]\rm .
+\begin{enumerate}[(a)]
+	\item
+\[
+\bx_n =
+\begin{pmatrix}
+g_n \\ g_{n+1} \\ g_{n+2}
+\end{pmatrix}
+~ \Rightarrow ~
+\bx_0 = 
+\begin{pmatrix}
+0 \\ 1 \\ 2
+\end{pmatrix}
+\quad
+\bx_{n+1}
+\begin{pmatrix}
+g_{n+1} \\ g_{n+2} \\ g_{n+3}
+\end{pmatrix}
+=
+\begin{pmatrix}
+g_{n+1} \\ g_{n+2} \\ 3g_{n+2} - g_{n+1} - g_n
+\end{pmatrix}
+=
+\begin{pmatrix}
+0 & 1 & 0 \\
+0 & 0 & 1 \\
+-1 & -1 & 3 \\
+\end{pmatrix}
+\bx_n
+\]\\[5pt]
+\[
+A =
+\begin{pmatrix}
+0 & 1 & 0 \\
+0 & 0 & 1 \\
+-1 & -1 & 3 \\
+\end{pmatrix}
+\qquad
+x_{n+1} = Ax_{n}
+\]\\[5pt]
+\[
+\left | A - \lambda I \right | = 
+\begin{vmatrix}
+-\lambda & 1 & 0 \\
+0 & -\lambda & 1 \\
+-1 & -1 & 3-\lambda \\
+\end{vmatrix}
+=
+\lambda^2(3-\lambda) - 1 - \lambda
+=
+-\lambda^3 + 3\lambda^2 - \lambda - 1 = 0
+\]\\[5pt]
+\[
+\lambda^3 - 3\lambda^2 + \lambda + 1 = 0
+\qquad
+(\lambda - 1)(\lambda^2 - 2\lambda - 1) = 0
+\quad
+~\Rightarrow~
+\lambda_1 = 1, ~
+\lambda_{2,3} = 1 \pm \sqrt2
+\]\\[5pt]
+\[
+(A-\lambda_1)\bv = 0
+\qquad\qquad\qquad
+\begin{pmatrix}
+-1 & 1 & 0 \\
+0 & -1 & 1 \\
+-1 & -1 & 2 \\
+\end{pmatrix}
+\bv_1
+= 0
+\qquad\qquad
+~\Rightarrow~
+\bv_1 = \begin{pmatrix}
+1 \\ 1 \\ 1\\
+\end{pmatrix}
+\qquad\quad
+\]\\
+\[
+(A-\lambda_2)\bv = 0
+\qquad
+\begin{pmatrix}
+-1-\sqrt2 & 1 & 0 \\
+0 & -1-\sqrt2 & 1 \\
+-1 & -1 & 2-\sqrt2 \\
+\end{pmatrix}
+\bv_2
+= 0
+~\Rightarrow~
+\bv_2 = \begin{pmatrix}
+1 \\ 1+\sqrt2 \\ 3+2\sqrt2\\
+\end{pmatrix}
+\]\\
+\[
+(A-\lambda_3)\bv = 0
+\qquad
+\begin{pmatrix}
+-1+\sqrt2 & 1 & 0 \\
+0 & -1+\sqrt2 & 1 \\
+-1 & -1 & 2+\sqrt2 \\
+\end{pmatrix}
+\bv_3
+= 0
+~\Rightarrow~
+\bv_2 = \begin{pmatrix}
+1 \\ 1-\sqrt2 \\ 3-2\sqrt2\\
+\end{pmatrix}
+\]\\
+\[
+D = 
+\begin{pmatrix}
+1 & 0 & 0 \\
+0 & 1+\sqrt2 & 0\\
+0 & 0 & 1-\sqrt2\\
+\end{pmatrix}
+\quad
+P = 
+\begin{pmatrix}
+1 & 1 & 1\\
+1 & 1+\sqrt2 & 1-\sqrt2\\
+1 & 3+2\sqrt2 & 3-2\sqrt2\\
+\end{pmatrix}
+\]
+\[
+\det P = 
+(1+\sqrt2)(3-2\sqrt2)+1-\sqrt2+3+2\sqrt2-1-\sqrt2-(1-\sqrt2)(3+2\sqrt2)-3+2\sqrt2=
+\]
+\[
+=
+3-2\sqrt2 + 3\sqrt2-4-3-2\sqrt2+3\sqrt2+4+2\sqrt2
+=
+4\sqrt2
+\]
+\[
+P^{-1} = \frac1{4\sqrt2}
+\begin{pmatrix}
+2\sqrt2 & 4\sqrt2 & -2\sqrt2\\
+-2+\sqrt2 & 2-2\sqrt2 & \sqrt2\\
+2+\sqrt2 & -2-2\sqrt2 & \sqrt2\\
+\end{pmatrix} =
+\frac14
+\begin{pmatrix}
+2 & 4 & -2\\
+1-\sqrt2 & -2+\sqrt2 & 1\\
+1+\sqrt2 & -2-\sqrt2 & 1\\
+\end{pmatrix}
+\]
+So:
+\[
+A = PDP^{-1} =
+\begin{pmatrix}
+1 & 1 & 1\\
+1 & 1+\sqrt2 & 1-\sqrt2\\
+1 & 3+2\sqrt2 & 3-2\sqrt2\\
+\end{pmatrix}
+\begin{pmatrix}
+1 & 0 & 0 \\
+0 & 1+\sqrt2 & 0\\
+0 & 0 & 1-\sqrt2\\
+\end{pmatrix}
+\begin{pmatrix}
+\frac12 & 1 & -\frac12\\
+\frac{1-\sqrt2}4 & \frac{-2+\sqrt2}4 & \frac14\\
+\frac{1+\sqrt2}4 & \frac{-2-\sqrt2}4 & \frac14\\
+\end{pmatrix}
+\]
+	\item
+\[
+\bx_n = PD^nP^{-1}x_0 = PD^nc_0 =
+\begin{pmatrix}
+\bv_1 & \bv_2 & \bv_3
+\end{pmatrix}
+\begin{pmatrix}
+\lambda_1^n & 0 & 0 \\
+0 & \lambda_2^n & 0\\
+0 & 0 & \lambda_3^n\\
+\end{pmatrix}
+c_0
+=
+c_0^{(1)} \lambda_1^n \bv_1 +
+c_0^{(2)} \lambda_2^n \bv_2 +
+c_0^{(3)} \lambda_3^n \bv_3
+=
+\]
+\[
+=
+c_0^{(1)} 
+\begin{pmatrix}
+1 \\ 1 \\ 1\\
+\end{pmatrix} +
+c_0^{(2)} (1+\sqrt2)^n
+\begin{pmatrix}
+1 \\ 1+\sqrt2 \\ 3+2\sqrt2\\
+\end{pmatrix} +
+c_0^{(3)} (1-\sqrt2)^n 
+\begin{pmatrix}
+1 \\ 1-\sqrt2 \\ 3-2\sqrt2\\
+\end{pmatrix}
+\]\\
+\[
+c_0 = P^{-1}x_0 = 
+\frac14
+\begin{pmatrix}
+2 & 4 & -2\\
+1-\sqrt2 & -2+\sqrt2 & 1\\
+1+\sqrt2 & -2-\sqrt2 & 1\\
+\end{pmatrix}
+\begin{pmatrix}
+0 \\ 1 \\ 2
+\end{pmatrix}
+=
+\frac{\sqrt2}4
+\begin{pmatrix}
+0\\ 1\\ 1\\
+\end{pmatrix}
+\]\\
+\[
+~\Rightarrow~
+\bx_n = PD^nc_0 =
+\frac{\sqrt2}4
+(\lambda_2^n \bv_2 + \lambda_3^n \bv_3) =
+\frac{\sqrt2}4
+\left(
+(1+\sqrt2)^n 
+\begin{pmatrix}
+1 \\ 1+\sqrt2 \\ 3+2\sqrt2\\
+\end{pmatrix}
++ 
+(1-\sqrt2)^n 
+\begin{pmatrix}
+1 \\ 1-\sqrt2 \\ 3-2\sqrt2\\
+\end{pmatrix}
+\right)
+\]
+\[
+\text{Also : }
+\bx_n=
+\frac{\sqrt2}4
+\lambda_2^n \left(\bv_2 + \left(\frac{\lambda_3}{\lambda_2}\right)^n \bv_3\right)
+~\underset{n\to\infty}{\sim}~
+\frac{\sqrt2}4 \lambda_2^n \bv_2
+\quad \text{ since } \lambda_2 > \lambda_3
+\]\\
+\end{enumerate}
+\end{solution}
+}
+
+\begin{problem}[Jordan form; 4 pt]\rm
+	For each of the following matrices~$A$, find $P$ so that $P^{-1}AP$ is in the Jordan form (ie, either diagonal or a Jordan block), and write this Jordan form:
+	\[
+	\mathrm{(a)} \ \begin{pmatrix}
+	3 & 2 \\ 1 & 2
+	\end{pmatrix}, \qquad
+	\mathrm{(b)} \ \begin{pmatrix}
+	3 & \hphantom{-}2 \\ 1 & -1
+	\end{pmatrix}, \qquad
+	\mathrm{(c)} \ \begin{pmatrix}
+	1 & 3 \\ 2 & 2
+	\end{pmatrix}, \qquad
+	\mathrm{(d)} \ \begin{pmatrix}
+	-5 & \hphantom{-}2 \\ -\tfrac12 & -3
+	\end{pmatrix}.
+	\]
+	
+	{\small \textsf{Hint:
+			You do not have to calculate $P^{-1}AP$; you can just write it out!}}
+\end{problem}
+
+\textcolor{black}{
+\begin{solution}[]\rm .
+\begin{enumerate}[(a)]
+	\item
+\[
+A = 
+\begin{pmatrix}
+3 & 2 \\ 1 & 2
+\end{pmatrix}
+\qquad
+\lambda_1 = 1
+% , ~
+% \bv_1 = (1, -1)^\top
+\quad
+\lambda_2 = 5-1=4
+% , ~
+% \bv_2 = (2, 1)^\top
+\qquad
+J =
+\begin{pmatrix}
+1 & 0 \\ 0 & 4
+\end{pmatrix}
+\]
+	\item
+\[
+A = 
+\begin{pmatrix}
+3 & 2 \\ 1 & -1
+\end{pmatrix}
+\qquad
+\left \{ \begin{matrix}
+\lambda_1 + \lambda_2 = 2 \\
+\lambda_1 \cdot \lambda_2 = -5
+\end{matrix} \right .
+\qquad
+\left \{ \begin{matrix}
+\lambda_2 = 2 - \lambda_1\\
+\lambda_1^2-2\lambda_1 -5 = 0
+\end{matrix} \right .
+\]
+\[
+~\Rightarrow~
+\lambda_{1,2} = 1 \pm \sqrt{6}
+\qquad
+J =
+\begin{pmatrix}
+1 + \sqrt6 & 0 \\ 0 & 1 - \sqrt6
+\end{pmatrix}
+\]
+	\item
+\[
+A =
+\begin{pmatrix}
+1 & 3 \\ 2 & 2
+\end{pmatrix}
+\qquad
+\lambda_1 = 4
+\quad
+\lambda_2 = 3-4=-1
+\qquad
+J =
+\begin{pmatrix}
+4 & 0 \\ 0 & -1
+\end{pmatrix}
+\]
+	\item
+\[
+A =
+\begin{pmatrix}
+-5 & 2 \\ -\frac12 & -3
+\end{pmatrix}
+\qquad
+\left \{ \begin{matrix}
+\lambda_1 + \lambda_2 = -8 \\
+\lambda_1 \cdot \lambda_2 = 16
+\end{matrix} \right .
+\qquad
+\lambda_1 = \lambda_2 = -4
+\qquad
+J =
+\begin{pmatrix}
+-4 & 1 \\ 0 & -4
+\end{pmatrix}
+\]\\
+\end{enumerate}
+\end{solution}
+}
+
+
+\begin{problem}[Eigenvalues and eigenvectors; 2pt]\rm 
+		What are the eigenvalues and eigenvectors of the
+		linear transformation~$A$ defined on $\mathbb{C}^3$ via
+ 	$A(x_1,x_2,x_3) =  (x_3,x_1,x_2)$?
+\end{problem}
+
+\textcolor{black}{
+\begin{solution}[]\rm .
+\[
+\begin{pmatrix}
+0 & 0 & 1 \\
+1 & 0 & 0 \\
+0 & 1 & 0 \\
+\end{pmatrix}
+\begin{pmatrix}
+x_1 \\ x_2 \\ x_3
+\end{pmatrix}
+=
+\begin{pmatrix}
+x_3 \\ x_1 \\ x_2
+\end{pmatrix}
+\qquad
+A = 
+\begin{pmatrix}
+0 & 0 & 1 \\
+1 & 0 & 0 \\
+0 & 1 & 0 \\
+\end{pmatrix}
+\]
+\[
+\det (A - \lambda) = 
+\begin{vmatrix}
+-\lambda & 0 & 1 \\
+1 & -\lambda & 0 \\
+0 & 1 & -\lambda \\
+\end{vmatrix} = -\lambda^3 + 1 = 0
+\]
+\[
+\lambda^3 - 1 = (\lambda - 1)(\lambda^2 + \lambda + 1)
+\qquad
+~\Rightarrow~
+\lambda_1 = 1
+\quad
+\lambda_{2,3} = \frac{-1 \pm i\sqrt3}2
+\]
+\[
+\begin{pmatrix}
+-1 & 0 & 1 \\
+1 & -1 & 0 \\
+0 & 1 & -1 \\
+\end{pmatrix}
+\bv = 0
+~\Rightarrow~
+\bv_1 =
+\begin{pmatrix}
+1 \\ 1 \\ 1
+\end{pmatrix}
+\]
+\[
+\begin{pmatrix}
+\frac{1 - i\sqrt3}2 & 0 & 1 \\
+1 & \frac{1 - i\sqrt3}2 & 0 \\
+0 & 1 & \frac{1 - i\sqrt3}2 \\
+\end{pmatrix}
+\bv = 0
+~\Rightarrow~
+\bv_2 = 
+\begin{pmatrix}
+1 \\
+-\frac2{1 - i\sqrt3} \\
+\frac{- 1 + i\sqrt3}2
+\end{pmatrix}
+=
+\begin{pmatrix}
+1 \\
+\frac{- 1 - i\sqrt3}2 \\
+\frac{- 1 + i\sqrt3}2
+\end{pmatrix}
+\]
+\[
+\begin{pmatrix}
+\frac{1 + i\sqrt3}2 & 0 & 1 \\
+1 & \frac{1 + i\sqrt3}2 & 0 \\
+0 & 1 & \frac{1 + i\sqrt3}2 \\
+\end{pmatrix}
+\bv = 0
+~\Rightarrow~
+\bv_3 = 
+\begin{pmatrix}
+1 \\
+-\frac2{1 + i\sqrt3} \\
+\frac{- 1 - i\sqrt3}2
+\end{pmatrix}
+=
+\begin{pmatrix}
+1 \\
+\frac{- 1 + i\sqrt3}2 \\
+\frac{- 1 - i\sqrt3}2
+\end{pmatrix}
+\]
+\answer{
+$
+\lambda_1 = 1, ~
+\lambda_2 = \frac{-1 + i\sqrt3}2, ~
+\lambda_3 = \frac{-1 - i\sqrt3}2
+\quad
+\left \{\bv_1, \bv_2, \bv_3 \right \} 
+=
+\left \{
+\begin{pmatrix}
+1 \\ 1 \\ 1
+\end{pmatrix},
+\begin{pmatrix}
+1 \\
+\frac{- 1 - i\sqrt3}2 \\
+\frac{- 1 + i\sqrt3}2
+\end{pmatrix},
+\begin{pmatrix}
+1 \\
+\frac{- 1 + i\sqrt3}2 \\
+\frac{- 1 - i\sqrt3}2
+\end{pmatrix} \right \}
+$
+}
+\end{solution}
+}
+
+\begin{problem}[Eigenvalues and eigenvectors; 2pt]\rm 
+	Let $\mathbf{a}$ be a non-zero vector in $\bR^3$ and $A$ a linear transformation of $\mathbb{R}^3$ given by $A\bx = \bx \times a$, where ``$\times$'' denotes the cross-product (i.e., vector product). Find the eigenvalues and eigenvectors of~$A$.
+	
+		{\small{\textsf{Hint: do not use coordinates; use the geometric meaning of the cross product instead}}}
+\end{problem}
+
+\textcolor{black}{
+\begin{solution}[]\rm Let's show that $\Ker(A) = \ls \{a\}$, $\Im(A) =\ls \{a\}^\perp$
+% \[
+% \forall x ~ Ax=x \times a \in \ls\{x,a\}^\perp
+% \]
+\[
+A\bx = 0
+~ \Leftrightarrow ~
+\bx \times a = 0
+~ \Leftrightarrow ~
+\bx \parallel a
+~ \Rightarrow ~
+\Ker(A) =  \ls \{a\}
+\]
+\[
+\left \{ \begin{matrix}[l]
+\forall \by \in \Im(A) ~ \exists \bx: \bx \times a = \by 
+~ \Rightarrow ~
+\by \perp a
+~ \Rightarrow ~
+\by \in ls\{a\}^\perp 
+~ \Rightarrow ~
+\Im(A) \subset ls\{a\}^\perp
+\\
+\dim \Im(A) = 3 - \dim \Ker(A) = 3 - 1 = 2
+\end{matrix} \right.
+~ \Rightarrow ~
+\Im(A) = ls\{a\}^\perp
+\]
+\[
+\rank A = \dim \Im(A) = 2
+~ \Rightarrow ~
+\det A = 0
+~ \Rightarrow ~
+\lambda = 0
+\quad
+\bv \in \Ker(A) \Rightarrow \bv = a
+\]
+Indeed if we look at the equation
+$ \bv \times a = \lambda \bv $ we see that the result of the cross-product  with $\bv$ (which should be orthogonal to $\bv$ in case $\bv$ is not parallel to $a$, otherwise zero) is parallel to $\bv$, so the only possible solution is $\lambda = 0$ and $\bv = a$.\\
+\answer{
+For this linear transformation $\lambda = 0$ is the only real one eigenvalue with corresponding eigenvector $\bv = a$.
+}
+% Indeed if we look from the:
+% \[
+% \]
+% \[
+% \norm{Ax} = \norm{x}\norm{a}\sin\alpha
+% \]
+\end{solution}
+}
+
+
+\begin{problem}[Eigenvalues and eigenvectors; 4pt]\rm
+	\begin{enumerate}[(a)]
+		\item Assume that $\bu$ and $\bv$ are two non-zero (column) vectors of $\mathbb{R}^n$. Find eigenvalues and eigenvectors of the matrix $A:= \bu\bv^\top$.
+		\item Assume that $a$ and $b$ are two non-equal numbers. Find eigenvalues and eigenvectors of the $n\times n$ matrix
+		\[
+			\begin{pmatrix}[ccccc]
+				a & b & b & \dots & b\\ b & a & b & \dots & b \\ b & b & a & \dots & b \\
+				\vdots & \vdots & \vdots & \ddots & \vdots \\ b & b & b & \dots & a
+			\end{pmatrix}
+		\]
+	\end{enumerate}
+
+{\small{\textsf{Hint: think geometrically! What does the matrix $A$ do? In (b), what happens if $a=b$?}}}
+\end{problem}
+
+\textcolor{black}{
+\begin{solution}[]\rm .
+\begin{enumerate}[(a)]
+\item
+\[
+A = \bu \bv^\top
+\]
+\[
+\forall \bx \in \bR^n: ~
+A\bx = \bu \bv^\top \bx = (\bv^\top \bx) \bu \in \ls \{\bu\} 
+~ \Rightarrow ~
+\Im(A) = \ls \{\bu\} 
+\]
+\[
+A\bx = 0
+~ \Leftrightarrow ~
+(\bv^\top \bx) \bu = 0
+~ \Leftrightarrow ~
+\bv^\top \bx = 0 
+~ \Leftrightarrow ~
+\bx \in \ls\{\bv\}^\perp
+~ \Rightarrow ~
+\Ker(A) = \ls\{\bv\}^\perp
+\]
+\[
+\dim \Ker(A) = n - 1 
+\]
+\[
+\rank A = \dim \Im(A) = 1
+~ \Rightarrow ~
+\det A = 0
+\text{ and }
+\lambda_1 = \dots = \lambda_{n-1} = 0
+\]
+\[
+\{\bv_1 \dots \bv_{n-1}\} ~\text{ should be the basis of } \ls\{\bv\}^\perp ~\text{ since } A\bx = 0 ~\forall \bx \in \ls\{\bv\}^\perp
+\]
+\[
+\lambda_n = \trace (\bu\bv^\top) - 0 = \bv^\top\bu
+\qquad
+A \bv_n = (\bv^\top \bv_n) \bu = (\bv^\top\bu) \bv_n
+~ \Rightarrow ~
+\bv_n = \bu
+\]
+\answer{$
+\lambda_1 = \dots = \lambda_{n-1} = 0,
+\quad
+\{\bv_1 \dots \bv_{n-1}\} =$ basis $\bv^\perp
+\qquad
+\lambda_n = \bv^\top\bu,
+\quad
+\bv_n = \bu
+$}\\[5pt]
+Also one can notice that $A = \bu\bv^\top = \bv^\top\bu \frac{\bu\bv^\top}{\bv^\top\bu} = \bv^\top\bu ~P $, where $P = \frac{\bu\bv^\top}{\bv^\top\bu}$ is an oblique projector onto $\bu$ parallel to $\bv^\perp$. So $A$ also projects every $\bx$ onto $\bu$ and the multiplies it by $\bv^\top\bu$
+\\
+	\item Let $\one = (1 \dots 1)^\top$.
+\[
+A = 
+\begin{pmatrix}[ccccc]
+a & b & b & \dots & b\\
+b & a & b & \dots & b \\
+b & b & a & \dots & b \\
+\vdots & \vdots & \vdots & \ddots & \vdots \\
+b & b & b & \dots & a
+\end{pmatrix}
+=
+b
+\begin{pmatrix}[ccc]
+1 & \dots & 1\\
+\vdots & \ddots & \vdots \\
+1 & \dots & 1
+\end{pmatrix}
++
+(a-b) I
+=
+b ~\one \one^\top + (a-b) I
+\]
+If $a=b$: $ A = b ~\one \one^\top = nb ~\frac{\one \one^\top}n = nb P_{\one}$ and we have a case similar to (a):
+$\lambda_1 = \dots = \lambda_{n-1} = 0, ~
+\{\bv_1 \dots \bv_{n-1}\} =$ basis $\one^\perp
+\quad
+\lambda_n = nb,~
+\bv_n = \one
+$.~
+Moreover $P_{\one}$ is orthogonal projector onto $\one$.\\
+Now $A = (a-b)I + nbP_{\one}$ 
+\[
+A\bx = (a-b)\bx + nbP_{\one}\bx = (a-b)\bx + nb k \one
+\]
+\[
+A\bv = \lambda\bv
+\qquad
+(a-b)\bv + nb P_{\one} \bv = \lambda\bv
+\]
+\[
+~\Rightarrow~
+\left \{ \begin{matrix}
+P_{\one} \bv = 0\\
+\bv \parallel \one
+\end{matrix} \right .
+~\Rightarrow~
+\left [ \begin{matrix}[l]
+\left \{ \begin{matrix}[l]
+\bv \perp \one \\
+(a-b)\bv = \lambda\bv \\ 
+\end{matrix} \right . \\[10pt]
+\left \{ \begin{matrix}[l]
+\bv \parallel \one \\
+(a-b)\bv + nb\bv = \lambda\bv \\ 
+\end{matrix} \right .
+\end{matrix} \right .
+~\Rightarrow~
+\left \{ \begin{matrix}[l]
+\bv_1, \cdots, \bv_{n-1} \text{ -- basis of } \one^\perp \\
+\lambda_1 = \cdots =\lambda_{n-1} = a-b \\ 
+\bv_n = \one \\
+\lambda_n = a + (n-1)b \\ 
+\end{matrix} \right .
+\]
+\answer{$
+\lambda_1 = \dots = \lambda_{n-1} = a-b,
+\quad
+\{\bv_1 \dots \bv_{n-1}\} =$ basis $\one^\perp
+\qquad
+\lambda_n = a + (n-1)b,
+\quad
+\bv_n = \one
+$}
+\end{enumerate}
+\end{solution}
+}
+
+
+
+\begin{problem}[Commuting matrices; 4pt]\rm
+	\begin{enumerate}[(a)]
+		\item Assume that $n\times n$ matrices $A$ and $B$ commute, i.e., $AB=BA$,  and that $\bv$ is an eigenvector of~$A$ corresponding to an eigenvalue~$\lambda$. Is it true that $\bv$ is also an eigenvector for~$B$? Justify your answer (ie., prove the claim or disprove it by example; in the latter case suggest extra conditions under which $\bv$ is an eigenvector of $B$)
+		\item Assume that $A$ commutes with $B$ and $B$ commutes with $C$. Is it true that $A$ and $C$ must commute?
+	\end{enumerate}
+\end{problem}
+
+\textcolor{black}{
+\begin{solution}[]\rm .
+\begin{enumerate}[(a)]
+\item
+% Let's consider an example:
+% \[
+% A = 
+% \begin{pmatrix}
+% 5 & 1 \\
+% 0 & 5
+% \end{pmatrix}
+% \quad
+% B =
+% \begin{pmatrix}
+% 9 & 2 \\
+% 0 & 9
+% \end{pmatrix}
+% \qquad
+% AB  = BA =
+% \begin{pmatrix}
+% 45 & 19 \\
+% 0 & 45
+% \end{pmatrix}
+% \]
+% \[
+% \lambda^A_1 = \lambda^A_2 = 5
+% \qquad
+% \begin{pmatrix}
+% 0 & 1 \\
+% 0 & 0
+% \end{pmatrix}\bv = 0
+% \quad
+% \bv_1 =  \begin{pmatrix} 1 \\ 0 \end{pmatrix}
+% \qquad
+% \begin{pmatrix}
+% 0 & 1 \\
+% 0 & 0
+% \end{pmatrix}\bv = \bv_1
+% \quad
+% \bv_2 = \begin{pmatrix} 1 \\ 1 \end{pmatrix}
+% \]
+% \[
+% \lambda^B_1 = \lambda^B_2 = 9
+% \qquad
+% \begin{pmatrix}
+% 0 & 2 \\
+% 0 & 0
+% \end{pmatrix}\bv = 0
+% \quad
+% \bv_1 =  \begin{pmatrix} 1 \\ 0 \end{pmatrix}
+% \qquad
+% \begin{pmatrix}
+% 0 & 2 \\
+% 0 & 0
+% \end{pmatrix}\bv = \bv_1
+% \quad
+% \bv_2 = \begin{pmatrix} 1 \\ 1/2 \end{pmatrix}
+% \]
+% \[
+% \lambda_1 = \cdots \lambda_n = 1
+% \qquad
+% \{\bv_1,...,\bv_n\} = \text{basis} \bR^n
+% \]
+\[
+AB = BA
+\quad
+A\bv = \lambda\bv
+\]
+If $B\bv = 0 ~\Rightarrow~ \bv$ is an eigenvector of $B$ corresponding to $0$ eigenvalue.\\
+If not, then:
+\[
+AB\bv = BA\bv = B\lambda\bv =  \lambda (B\bv) = A(B\bv)
+\]
+and $B\bv$ is an eigenvector of $A$ corresponding to $\lambda$. If \textbf{$\lambda$ is distinct} then the corresponding eigenspace has $\dim = 1 ~\Rightarrow~ B\bv = \mu \bv ~\Rightarrow~  \bv$ is an eigenvector of $B$ (with eigenvalue $\mu$).\\[5pt]
+So if A is diagonalisable then eigenvecors for $A$ are also eigenvectors for $B$.
+% If $A$ has exactly 2 eigenvalues equal to $\lambda$, then since (similarly) $B^2\bv$ is also an eigenvector of $A$ corresponding to $\lambda ~\Rightarrow~ B^2\bv = \alpha_1\bv+\alpha_2B\bv$.
+ % $B^2\bv = 0 ~\Rightarrow~ B\bv$ is an eigenvector of $B$ corresponding to $0$ eigenvalue. \\
+% If not, then:
+% \[
+% \qquad
+% AB^2\bv = BAB\bv = B\lambda B\bv =  \lambda (B^\bv) = A(B^2\bv)
+% \]
+% And so on...
+% \[
+% \left [ \begin{matrix}[l]
+% B^k\bv = 0 \\
+% A(B^k\bv) = \lambda (B^k\bv)
+% \end{matrix}\right.
+% \]
+% $~\Rightarrow~\forall k ~ B^k\bv$ is an eigenvector of $A$ corresponding to an eigenvalue $\lambda$.\\[5pt]
+% Since there can't be  more than $n$ eigenvalues:
+% $\forall k\geq n ~ B^k\bv \in \ls\{\bv, B\bv, \cdots, B^{n-1}\bv\}$
+% \[
+% B^n\bv = \left(\sum_{i=0}^{n-1} \alpha_i B^i\right)\bv
+% \]
+% Let $\bv$ be the eigenvector of $B$:
+% \[
+% B\bv = \mu \bv
+% ~\Rightarrow~
+% AB\bv = BA\bv = \lambda \mu \bv 
+% \]
+% Let's assume the condition is true: $\forall \bv$ -- eigenvecor of A: $\bv$ is an eigenvector of B.
+% \[
+% ~\Rightarrow~
+% P = (\bv_1, \cdots, \bv_n):~
+% A = PJ_{A}P^{-1}
+% \quad
+% B = PJ_{B}P^{-1}
+% \]
+% \item
+\end{enumerate}
+\end{solution}
+}
+
+
+\begin{problem}[Symmetric matrices; 5pt]\rm
+Find a matrix $P$ that orthogonally diagonalizes $A$, and determine $P^{-1}AP$:
+\[
+\begin{matrix}
+(a) \\ {}
+\end{matrix}\quad \begin{pmatrix}[rr]
+5 & -2 \\ -2 & 2
+\end{pmatrix}; \qquad
+\begin{matrix}
+(b) \\ {}
+\end{matrix}\quad\begin{pmatrix}[rrr]
+-2 & 0 & -36 \\ 0 & \hphantom{-}3 & 0 \\ -36 & 0 & -23
+\end{pmatrix};  \qquad
+\begin{matrix}
+(c) \\ {}
+\end{matrix}\quad\begin{pmatrix}[rrr]
+\hphantom{-}1 & -4 & 2 \\ -4 & 1 & -2 \\ 2 & -2 & -2
+\end{pmatrix}
+\]
+\end{problem}
+
+\textcolor{black}{
+\begin{solution}[]\rm .
+\begin{enumerate}[(a)]
+	\item
+\[
+A = 
+\begin{pmatrix}[rr]
+5 & -2 \\ -2 & 2
+\end{pmatrix}
+\qquad
+\lambda_1 = 1 ~
+\lambda_2 = 7 - 1 = 6
+\]
+\[
+\begin{pmatrix}[rr]
+4 & -2 \\
+-2 & 1
+\end{pmatrix}
+\bv = 0
+~\Rightarrow~
+\bv_1 =
+\begin{pmatrix}
+1 \\ 2
+\end{pmatrix}
+\qquad
+\hat \bv_1 = \frac{\bv_1}{\norm{\bv_1}} = \frac1{\sqrt5}
+\begin{pmatrix}
+1 \\ 2
+\end{pmatrix}
+\]
+\[
+\begin{pmatrix}[rr]
+-1 & -2 \\
+-2 & -4
+\end{pmatrix}
+\bv = 0
+~\Rightarrow~
+\bv_2 =
+\begin{pmatrix}
+2 \\ -1
+\end{pmatrix}
+\qquad
+\hat \bv_2 = \frac{\bv_2}{\norm{\bv_2}} = \frac1{\sqrt5}
+\begin{pmatrix}
+2 \\ -1
+\end{pmatrix}
+\]
+$P = 
+\begin{pmatrix}
+\hat \bv_1 & \hat \bv_2
+\end{pmatrix}$
+\\
+\answer{$
+P = 
+\frac1{\sqrt5}
+\begin{pmatrix}
+1 & 2 \\
+2 & -1 \\
+\end{pmatrix}
+\qquad
+P^{-1}AP = 
+\begin{pmatrix}
+1 & 0 \\
+0 & 6 \\
+\end{pmatrix}
+$
+\\[6pt]\hspace*{18mm}
+or 
+$P^{-1}AP = P^\top AP  = 
+\frac1{\sqrt5}
+\begin{pmatrix}
+1 & 2 \\
+2 & -1 \\
+\end{pmatrix}
+\begin{pmatrix}[rr]
+5 & -2 \\ -2 & 2
+\end{pmatrix}
+\frac1{\sqrt5}
+\begin{pmatrix}
+1 & 2 \\
+2 & -1 \\
+\end{pmatrix}
+$}
+	\item
+\[
+A=
+\begin{pmatrix}[rrr]
+-2 & 0 & -36 \\
+0 & 3 & 0 \\
+-36 & 0 & -23
+\end{pmatrix}
+\qquad
+\lambda_1 = 3
+\quad
+\left \{
+\begin{matrix}
+\lambda_2 + \lambda_3 = -25 \\
+\lambda_2 \lambda_3 = -1250
+\end{matrix}
+\right.
+\quad
+\lambda_2 = 25
+\quad
+\lambda_3 = -50
+\]
+\[
+\begin{pmatrix}[rrr]
+-5 & 0 & -36 \\
+0 & 0 & 0 \\
+-36 & 0 & -26
+\end{pmatrix}
+\bv
+= 0 
+\quad
+\bv_1 = 
+\begin{pmatrix}[rrr]
+0 \\ 1 \\ 0
+\end{pmatrix} = \hat \bv_1
+\]
+\[
+\begin{pmatrix}[rrr]
+-27 & 0 & -36 \\
+0 & -22 & 0 \\
+-36 & 0 & -48
+\end{pmatrix}
+\bv
+= 0 
+\quad
+\bv_2 = 
+\begin{pmatrix}[rrr]
+4 \\ 0 \\ -3
+\end{pmatrix}
+\quad
+\hat \bv_2 = \frac{\bv_2}{\norm{\bv_2}} = 
+\frac15
+\begin{pmatrix}[rrr]
+4 \\ 0 \\ -3
+\end{pmatrix}
+\]
+\[
+\begin{pmatrix}[rrr]
+48 & 0 & -36 \\
+0 & 53 & 0 \\
+-36 & 0 & 27
+\end{pmatrix}
+\bv
+= 0 
+\quad
+\bv_3 = 
+\begin{pmatrix}[rrr]
+3 \\ 0 \\ 4
+\end{pmatrix}
+\quad
+\hat \bv_3 = \frac{\bv_3}{\norm{\bv_3}} = 
+\frac15
+\begin{pmatrix}[rrr]
+3 \\ 0 \\ 4
+\end{pmatrix}
+\]
+$P = 
+\begin{pmatrix}
+\hat \bv_1 & \hat \bv_2 & \hat \bv_3
+\end{pmatrix}$\\
+\answer{$
+P = 
+\frac15
+\begin{pmatrix}[rrr]
+0 & 4 & 3 \\
+5 & 0 & 0 \\
+0 & -3 & 4 \\
+\end{pmatrix}
+\qquad
+P^{-1}AP
+=
+\begin{pmatrix}[rrr]
+3 & 0 & 0 \\
+0 & 25 & 0 \\
+0 & 0 & -50 \\
+\end{pmatrix}$
+\\[6pt]\hspace*{18mm}
+or 
+$P^{-1}AP = P^\top AP  = 
+\frac15
+\begin{pmatrix}[rrr]
+0 & 5 & 0 \\
+4 & 0 & -3 \\
+3 & 0 & 4 \\
+\end{pmatrix}
+\begin{pmatrix}[rrr]
+-2 & 0 & -36 \\
+0 & 3 & 0 \\
+-36 & 0 & -23
+\end{pmatrix}
+\frac15
+\begin{pmatrix}[rrr]
+0 & 4 & 3 \\
+5 & 0 & 0 \\
+0 & -3 & 4 \\
+\end{pmatrix}
+$}
+\\
+	\item
+\[
+A = 
+\begin{pmatrix}[rrr]
+1 & -4 & 2 \\
+-4 & 1 & -2 \\
+2 & -2 & -2
+\end{pmatrix}
+\qquad
+A + 3I = 
+\begin{pmatrix}[rrr]
+4 & -4 & 2 \\
+-4 & 4 & -2 \\
+2 & -2 & 1
+\end{pmatrix}
+\]
+\[
+\rank{(A + 3I)} = 1
+~ \Rightarrow
+\lambda_1 = \lambda_2 = -3
+\quad
+\lambda_3 = 0 + 3 + 3 = 6
+\]
+\[
+\begin{pmatrix}[rrr]
+4 & -4 & 2 \\
+-4 & 4 & -2 \\
+2 & -2 & 1
+\end{pmatrix}
+\bv = 0
+~\Rightarrow~
+2 v_1 - 2 v_2 + v_3 = 0
+~\Rightarrow~
+v_3 = 2 v_2 - 2 v_1
+~\Rightarrow~
+\bv = 
+v_1
+\begin{pmatrix}[rrr]
+1 \\ 0 \\ - 2 
+\end{pmatrix}
++
+v_2
+\begin{pmatrix}[rrr]
+0 \\ 1 \\ 2 
+\end{pmatrix}
+\]
+\[
+\bv_1 =
+\begin{pmatrix}[rrr]
+1 \\ 0 \\ - 2 
+\end{pmatrix}
+\quad
+\bv_2 =
+\begin{pmatrix}[rrr]
+0 \\ 1 \\ 2 
+\end{pmatrix}
+~\Rightarrow~\text{GS}~\Rightarrow~
+\hat \bv_1 =
+\frac1{\sqrt5}
+\begin{pmatrix}[rrr]
+1 \\ 0 \\ - 2 
+\end{pmatrix}
+\quad
+\hat \bv_2 =
+\frac1{3\sqrt5}
+\begin{pmatrix}[rrr]
+4 \\ 5 \\ 2 
+\end{pmatrix}
+\]
+\[
+\left (
+\bv_1^\top \bv_1 = 5
+\quad
+\bv_1^\top \bv_2 = -4
+\quad
+\hat \bv_2 = \frac{\bv_2 + \frac45 \bv_1}{\norm{\cdot}} =
+\frac1{3\sqrt5}
+\begin{pmatrix}[rrr]
+4 \\ 5 \\ 2 
+\end{pmatrix}
+\right )
+\]
+\[
+\begin{pmatrix}[rrr]
+-5 & -4 & 2 \\
+-4 & -5 & -2 \\
+2 & -2 & -8
+\end{pmatrix}
+\bv = 0
+\quad
+\left \{ \begin{matrix}
+-5v_1-4v_2+2v_3 = 0 \\
+-4v_1 -5v_2 -2v_3 = 0 \\
+v_1 = v_2 +4v_3 \\
+\end{matrix} \right.
+~\Rightarrow~
+-9v_2 -18v_3 = 0
+\]
+\[
+~\Rightarrow~
+\left \{ \begin{matrix}
+v_2 = -2v_3 \\
+v_1 = 2v_3
+\end{matrix} \right.
+\qquad
+\bv_3 =
+\begin{pmatrix}[rrr]
+2 \\ -2 \\ 1
+\end{pmatrix} 
+\qquad
+\hat \bv_3 =
+\frac13
+\begin{pmatrix}[rrr]
+2 \\ -2 \\ 1
+\end{pmatrix} 
+\qquad
+P = 
+\begin{pmatrix}
+\hat \bv_1 & \hat \bv_2 & \hat \bv_3
+\end{pmatrix}
+\]\\
+\answer{$
+P = 
+\frac1{15}
+\begin{pmatrix}[rrr]
+3\sqrt5 & 4\sqrt5 & 10 \\
+0 & 5\sqrt5 &-10 \\
+-6\sqrt5 & 2\sqrt5 & 5
+\end{pmatrix}
+\qquad
+P^{-1}AP
+=
+\begin{pmatrix}[rrr]
+-3 & 0 & 0 \\
+0 & -3 & 0 \\
+0 & 0 & 6
+\end{pmatrix}$
+\\[6pt]\hspace*{18mm}
+or 
+$P^{-1}AP =
+\frac1{15}
+\begin{pmatrix}[rrr]
+3\sqrt5 & 0 & -6\sqrt5 \\
+4\sqrt5 & 5\sqrt5 & 2\sqrt5 \\
+10 & -10 & 5
+\end{pmatrix}
+\begin{pmatrix}[rrr]
+1 & -4 & 2 \\
+-4 & 1 & -2 \\
+2 & -2 & -2
+\end{pmatrix}
+\frac1{15}
+\begin{pmatrix}[rrr]
+3\sqrt5 & 4\sqrt5 & 10 \\
+0 & 5\sqrt5 &-10 \\
+-6\sqrt5 & 2\sqrt5 & 5
+\end{pmatrix}
+$}
+\end{enumerate}
+\end{solution}
+}
+
+
+
+\begin{problem}[Symmetric matrices; 4pt]\rm
+	\begin{enumerate}[(a)]
+		\item Find all values of $a$ and $b$ for which there exists a $3\times3$ symmetric matrix with eigenvalues $\lambda_1=-1$, $\lambda_2=3$, $\lambda_3=7$ and the corresponding eigenvectors
+		\[
+		\bv_1 = \begin{pmatrix}[r] 0 \\ 1 \\ -1\end{pmatrix}, \qquad
+		\bv_2 = \begin{pmatrix}[c] \ 1\  \\ 1 \\ 1 \end{pmatrix}, \qquad
+		\bv_3 = \begin{pmatrix}[c] \ a\  \\ b \\ 0 \end{pmatrix}.
+		\]
+		\item Reconsider the problem if $\lambda_3 = 3$. 
+		\item Find all symmetric matrices~$A$ satisfying the conditions of parts (a) and (b).
+	\end{enumerate}
+\end{problem}
+
+\textcolor{black}{
+\begin{solution}[]\rm .
+\begin{enumerate}[(a)]
+\item
+For the symmetric matrix the eigenvectors corresponding to distinct eigenvalues are necessary orthogonal:
+\[
+\sprod{\bv_1}{\bv_3} = 0 + b + 0 = 0
+~\Rightarrow~
+b = 0
+\qquad
+\sprod{\bv_2}{\bv_3} = a + b + 0 = 0
+~\Rightarrow~
+a = 0
+\]
+Since eigenvector should be nonzero there is no values of $a,b$ satisfying the condition.\\
+\answer{$(a,b) \in \varnothing$}
+	\item
+$\lambda_2 = \lambda_3 = 3$ is a multiple eigenvalue. For the symmetric matrix we can find such $P$ s.t. $P$ is orthogonal and $P^\top A P = diag\{-1, 3, 3\}$.
+So $\bv_3$ only needs to be orthogonal to $\bv_1$ (since they correspond to different eigenvalues).
+% So $\bv_3$ only needs to be linearly independent to $\bv_2$ and satisfy $(A-3I)\bv_3 = 0$
+\[
+\sprod{\bv_1}{\bv_3} = 0 + b + 0 = 0
+~\Rightarrow~
+b = 0
+~\Rightarrow~
+\bv_3 = \begin{pmatrix}[c] a\\ 0 \\ 0 \end{pmatrix}.
+\]
+So now we see that $\bv_3 \in \ls\{e_1\}$ and $a \neq 0$. Let's check and find A:
+\[
+\hat \bv_1 = \frac1{\sqrt2} \begin{pmatrix}[r] 0 \\ 1 \\ -1\end{pmatrix}
+\qquad
+\hat \bv_2 = \frac1{\sqrt3} \begin{pmatrix} 1 \\ 1 \\ 1 \end{pmatrix}
+\]
+\[
+\bv_2^\top \bv_2 = 3
+\quad
+\bv_2^\top \bv_3 = a
+\quad
+\hat \bv_3 = \frac{\bv_3 - \frac{a}3 \bv_2}{\norm{\cdot}} = 
+\frac{a}3
+\begin{pmatrix} 2 \\ - 1 \\ 1 \end{pmatrix}
+/\norm{\frac{a}3\begin{pmatrix} 2  \\ - 1 \\ 1  \end{pmatrix}}
+% =
+% \]
+% \[
+% =
+% \frac1{\sqrt{(2a - b)^2+(2b - a)^2+(a + b)^2}}
+% \begin{pmatrix} 2a - b \\ 2b - a \\ a + b \end{pmatrix}
+=
+\frac{\sgn a}{\sqrt{6}}
+\begin{pmatrix} 2 \\ -1 \\ 1 \end{pmatrix}
+\]
+We're not interested in the orientations of vectors, so let $\hat \bv_3 = \frac1{\sqrt{6}} \begin{pmatrix} 2 & -1 & 1 \end{pmatrix}^\top$
+\[
+P = 
+\begin{pmatrix}
+\hat \bv_1 & \hat \bv_2 & \hat \bv_3
+\end{pmatrix}
+=
+\frac1{\sqrt6}
+\begin{pmatrix}[rrr]
+0 & \sqrt2 & 2 \\
+ \sqrt3 & \sqrt2 & -1 \\
+-\sqrt3 & \sqrt2 & 1 \\
+\end{pmatrix}
+\]
+\[
+PDP^{-1} = PDP^\top
+=
+\frac16
+\begin{pmatrix}[rrr]
+0 & \sqrt2 & 2 \\
+ \sqrt3 & \sqrt2 & - 1 \\
+-\sqrt3 & \sqrt2 & 1 \\
+\end{pmatrix}
+\begin{pmatrix}[rrr]
+-1 & 0 & 0 \\
+0 & 3 & 0 \\
+0 & 0 & 3 \\
+\end{pmatrix}
+\begin{pmatrix}[rrr]
+0 & \sqrt3 & -\sqrt3 \\
+ \sqrt2 & \sqrt2 & \sqrt2 \\
+2 & - 1 & 1 \\
+\end{pmatrix}
+=
+\]
+\[
+=
+\frac16
+\begin{pmatrix}[rrr]
+0 & 3\sqrt2 & 6 \\
+-\sqrt3 & 3\sqrt2 & -3 \\
+\sqrt3 & 3\sqrt2 & 3 \\
+\end{pmatrix}
+\begin{pmatrix}[rrr]
+0 & \sqrt3 & -\sqrt3 \\
+ \sqrt2 & \sqrt2 & \sqrt2 \\
+2 & - 1 & 1 \\
+\end{pmatrix}
+=
+\begin{pmatrix}[rrr]
+3 & 0 & 2 \\
+0 & 1 & 1 \\
+2 & 1 & 1 \\
+\end{pmatrix}
+\]
+\answer{ $a \neq 0$, $b=0$ }
+\item
+\answer{
+(a): $A \in \varnothing \qquad$
+(b): $A = 
+\begin{pmatrix}[rrr]
+3 & 0 & 2 \\
+0 & 1 & 1 \\
+2 & 1 & 1 \\
+\end{pmatrix} }$
+\end{enumerate}
+\end{solution}
+}
+
+
+\begin{problem}[Symmetric matrices; 4pt]\rm
+	A $3\times 3$ symmetric matrix $A$ has eigenvalues $\lambda_1 = 1$, $\lambda_2 = 2$, $\lambda_3 = \lambda$ and the corresponding eigenvectors
+	\[
+	\bv_1 = \begin{pmatrix}[c] \ 1\ \\ 0 \\ 1 \end{pmatrix}, \qquad
+	\bv_2 = \begin{pmatrix}[r]  1 \\ 1 \\ -1 \end{pmatrix}, \qquad
+	\bv_3 = \begin{pmatrix}[c] \ a\ \\ b \\ 0 \end{pmatrix}.
+	\]
+	\begin{enumerate}[(a)]
+		\item Find all possible values of $a$, $b$, and $\lambda$.
+		\item Find the corresponding matrices $A$.
+	\end{enumerate} 
+\end{problem}
+
+\textcolor{black}{
+\begin{solution}[]\rm .
+\begin{enumerate}[(a)]
+	\item
+1. Let $\lambda \neq 1$ and $\lambda \neq 2$. For the symmetric matrix the eigenvectors corresponding to distinct eigenvalues are necessary orthogonal:
+\[
+\sprod{\bv_1}{\bv_3} = a  + 0 = 0
+~\Rightarrow~
+a = 0
+\qquad
+\sprod{\bv_2}{\bv_3} = a + b + 0 = 0
+~\Rightarrow~
+b = 0
+\]
+Since eigenvector should be nonzero, $(a,b) \in \varnothing$.\\
+2. Let $\lambda = 1 $.
+$\lambda_1 = \lambda_3 = 1$ is a multiple eigenvalue. So $\bv_3$ should be orthogonal to $\bv_2$ (since they correspond to different eigenvalues).
+\[
+\sprod{\bv_2}{\bv_3} = a + b = 0
+~\Rightarrow~
+b = - a
+~\Rightarrow~
+\bv_3 = a \begin{pmatrix}[c] 1\\ -1 \\ 0 \end{pmatrix}.
+\]
+Since eigenvector should be nonzero, $a \neq 0$. \\
+3. Let $\lambda = 2 $.
+$\lambda_2 = \lambda_3 = 2$ is a multiple eigenvalue. So $\bv_3$ should be orthogonal to $\bv_1$.
+\[
+\sprod{\bv_1}{\bv_3} = a + 0 = 0
+~\Rightarrow~
+a = 0
+~\Rightarrow~
+\bv_3 = b \begin{pmatrix}[c] 0\\ 1 \\ 0 \end{pmatrix}.
+\]
+Since eigenvector should be nonzero, $b \neq 0$. \\
+\answer{
+$ (\lambda, a, b) \in \{(1,k,-k)~|~k \neq 0 \} \cup \{(2,0,k)~|~k \neq 0 \}
+$
+}
+	\item
+\[
+\hat \bv_1 = \frac1{\sqrt2} \begin{pmatrix}[r] 1 \\ 0 \\ 1\end{pmatrix}
+\qquad
+\hat \bv_2 = \frac1{\sqrt3} \begin{pmatrix} 1 \\ 1 \\ -1 \end{pmatrix}
+\]
+For $\lambda = 1$:
+\[
+\bv_1^\top \bv_1 = 2
+\quad
+\bv_1^\top \bv_3 = a
+\quad
+\hat \bv_3 = \frac{\bv_3 - \frac{a}2 \bv_1}{\norm{\cdot}} = 
+\frac{a}2 \begin{pmatrix} 1 \\ - 2 \\ -1 \end{pmatrix}
+/\norm{\cdot}
+\]
+Let's set (similarly to Problem 12):
+$ \hat \bv_3 = \frac1{\sqrt6}
+\begin{pmatrix} 1 & - 2 & -1 \end{pmatrix}^\top$
+\[
+P = 
+\begin{pmatrix}
+\hat \bv_1 & \hat \bv_2 & \hat \bv_3
+\end{pmatrix}
+=
+\frac1{\sqrt6}
+\begin{pmatrix}[rrr]
+\sqrt3 & \sqrt2 & 1 \\
+0 & \sqrt2 & -2 \\
+\sqrt3 & -\sqrt2 & -1 \\
+\end{pmatrix}
+\]
+\[
+PDP^{-1} = PDP^\top
+=
+\frac16
+\begin{pmatrix}[rrr]
+\sqrt3 & \sqrt2 & 1 \\
+0 & \sqrt2 & -2 \\
+\sqrt3 & -\sqrt2 & -1 \\
+\end{pmatrix}
+\begin{pmatrix}[rrr]
+1 & 0 & 0 \\
+0 & 2 & 0 \\
+0 & 0 & 1 \\
+\end{pmatrix}
+\begin{pmatrix}[rrr]
+\sqrt3 & 0 & \sqrt3 \\
+\sqrt2 & \sqrt2 & -\sqrt2 \\
+1 & -2 & -1 \\
+\end{pmatrix}
+=
+\]
+\[
+\frac16
+\begin{pmatrix}[rrr]
+\sqrt3 & 2\sqrt2 & 1 \\
+0 & 2\sqrt2 & -2 \\
+\sqrt3 & -2\sqrt2 & -1 \\
+\end{pmatrix}
+\begin{pmatrix}[rrr]
+\sqrt3 & 0 & \sqrt3 \\
+\sqrt2 & \sqrt2 & -\sqrt2 \\
+1 & -2 & -1 \\
+\end{pmatrix}
+=
+\frac13
+\begin{pmatrix}[rrr]
+4 & 1 & -1 \\
+1 & 4 & -1 \\
+-1 & -1 & 4 \\
+\end{pmatrix}
+\]
+\answer{$A = 
+\frac13
+\begin{pmatrix}[rrr]
+4 & 1 & -1 \\
+1 & 4 & -1 \\
+-1 & -1 & 4 \\
+\end{pmatrix} $}
+	\\
+For $\lambda = 2$:
+\[
+\bv_2^\top \bv_2 = 3
+\quad
+\bv_2^\top \bv_3 = b
+\quad
+\hat \bv_3 = \frac{\bv_3 - \frac{b}3 \bv_2}{\norm{\cdot}} = 
+\frac{b}3 \begin{pmatrix} -1 \\ 2 \\ 1 \end{pmatrix}
+\norm{\cdot}
+\]
+Let's set (similarly to Problem 12):
+$ \hat \bv_3 = \frac1{\sqrt6}
+\begin{pmatrix} -1 & 2 & 1 \end{pmatrix}^\top $
+\[
+P = 
+\begin{pmatrix}
+\hat \bv_1 & \hat \bv_2 & \hat \bv_3
+\end{pmatrix}
+=
+\frac1{\sqrt6}
+\begin{pmatrix}[rrr]
+\sqrt3 & \sqrt2 & -1 \\
+0 & \sqrt2 & 2 \\
+\sqrt3 & -\sqrt2 & 1 \\
+\end{pmatrix}
+\]
+\[
+PDP^{-1} = PDP^\top
+=
+\frac16
+\begin{pmatrix}[rrr]
+\sqrt3 & \sqrt2 & -1 \\
+0 & \sqrt2 & 2 \\
+\sqrt3 & -\sqrt2 & 1 \\
+\end{pmatrix}
+\begin{pmatrix}[rrr]
+1 & 0 & 0 \\
+0 & 2 & 0 \\
+0 & 0 & 2 \\
+\end{pmatrix}
+\begin{pmatrix}[rrr]
+\sqrt3 & 0 & \sqrt3 \\
+\sqrt2 & \sqrt2 & -\sqrt2 \\
+-1 & 2 & 1 \\
+\end{pmatrix}
+=
+\]
+\[
+\frac16
+\begin{pmatrix}[rrr]
+\sqrt3 & 2\sqrt2 & -2 \\
+0 & 2\sqrt2 & 4 \\
+\sqrt3 & -2\sqrt2 & 2 \\
+\end{pmatrix}
+\begin{pmatrix}[rrr]
+\sqrt3 & 0 & \sqrt3 \\
+\sqrt2 & \sqrt2 & -\sqrt2 \\
+-1 & 2 & 1 \\
+\end{pmatrix}
+=
+\frac12
+\begin{pmatrix}[rrr]
+3 & 0 & -1 \\
+0 & 4 & 0 \\
+-1 & 0 & 3 \\
+\end{pmatrix} 
+\]
+\answer{$A = 
+\frac13
+\begin{pmatrix}[rrr]
+3 & 0 & -1 \\
+0 & 4 & 0 \\
+-1 & 0 & 3 \\
+\end{pmatrix} }$
+\end{enumerate}
+\end{solution}
+}
+
+
+
+\begin{problem}[Quadratic forms; 4 pt]\rm
+	Find an orthogonal change of variables that eliminates the cross product terms in the quadratic form $Q$, and express $Q$ in terms of the new variables:
+	\begin{enumerate}[(a)]
+		\item $Q(x_1,x_2)= 2x_1^2 + 2x_2^2 - 2x_1x_2$;
+		\item $Q(x_1,x_2,x_3) = 3x_1^2 + 4x_2^2 + 5x_3^2 + 4x_1x_2 -4x_2x_3$
+	\end{enumerate}
+\end{problem}
+
+\textcolor{black}{
+\begin{solution}[]\rm .
+\begin{enumerate}[(a)]
+\item
+\[
+Q(*\bx)= 2x_1^2 + 2x_2^2 - 2x_1x_2 = \bx^\top A \bx
+\qquad
+A = 
+\begin{pmatrix}[rrr]
+2 & -1 \\
+-1 & 2 \\
+\end{pmatrix}
+\qquad
+\bx =
+\begin{pmatrix}[rrr]
+x_1 \\ x_2
+\end{pmatrix}
+\]
+\[
+\lambda_1 = 1
+\quad
+\lambda_2 = 4 - 1 = 3
+\]
+\[
+\begin{pmatrix}[rrr]
+1 & -1 \\
+-1 & 1 \\
+\end{pmatrix}
+\bv = 0
+\quad
+\bv_1 = \frac1{\sqrt2}
+\begin{pmatrix}
+1\\ 1\\
+\end{pmatrix}
+\]
+\[
+\begin{pmatrix}[rrr]
+-1 & -1 \\
+-1 & -1 \\
+\end{pmatrix}
+\bv = 0
+\quad
+\bv_2 = \frac1{\sqrt2}
+\begin{pmatrix}
+1\\ -1\\
+\end{pmatrix}
+\]
+\[
+P = \frac1{\sqrt2}
+\begin{pmatrix}[rrr]
+1 & 1 \\
+1 & -1 \\
+\end{pmatrix}
+\qquad
+P^\top = \frac1{\sqrt2}
+\begin{pmatrix}[rrr]
+1 & 1 \\
+1 & -1 \\
+\end{pmatrix}
+\]
+\[
+Q(*\bx) = \bx^\top A \b x = \bx^\top P D P^\top \bx = \left | y = P^\top \bx \right | = \by^\top D \by = y_1^2 + 3y_2^2= Q(*\by)
+\qquad
+\by =
+\begin{pmatrix}[rrr]
+y_1 \\ y_2
+\end{pmatrix}
+\]
+\answer{The orthogonal change of variables:
+$P^\top = \frac1{\sqrt2}
+\begin{pmatrix}[rrr]
+1 & 1 \\
+1 & -1 \\
+\end{pmatrix}$,
+\quad
+$Q(*\by)=y_1^2 + 3y_2^2$
+}
+	\item
+\[
+Q(*\bx) = 3x_1^2 + 4x_2^2 + 5x_3^2 + 4x_1x_2 -4x_2x_3 = \bx^\top A \bx
+\qquad
+A = 
+\begin{pmatrix}[rrr]
+3 & 2 & 0 \\
+2 & 4 & -2\\
+0 & -2 & 5\\
+\end{pmatrix}
+\quad
+\bx =
+\begin{pmatrix}[rrr]
+x_1 \\ x_2 \\ x_3 \\
+\end{pmatrix}
+\]
+\[
+\det(A - \lambda I) = - \lambda^3 + \trace A \lambda^2 - \lambda \sum M_2 + \det A =  - \lambda^3 + 12 \lambda^2 - 39 \lambda + 28
+\]
+\[
+\lambda^3 - 12 \lambda^2 + 39 \lambda - 28 = (\lambda - 1)(\lambda^2 - 11 \lambda + 28) = (\lambda - 1)(\lambda - 4)(\lambda - 7) 
+\]
+\[
+~ \Rightarrow ~
+\lambda_1 = 1
+\quad
+\lambda_2 = 4
+\quad
+\lambda_3 = 7
+\]
+\[
+\begin{pmatrix}[rrr]
+2 & 2 & 0 \\
+2 & 3 & -2\\
+0 & -2 & 4\\
+\end{pmatrix}
+\bv = 0
+\quad
+\bv_1 = \frac13
+\begin{pmatrix}[r]
+2\\ -2\\ -1 \\
+\end{pmatrix}
+\]\\
+\[
+\begin{pmatrix}[rrr]
+-1 & 2 & 0 \\
+2 & 0 & -2\\
+0 & -2 & 1\\
+\end{pmatrix}
+\bv = 0
+\quad
+\bv_2 = \frac13
+\begin{pmatrix}[r]
+2\\ 1\\ 2 \\
+\end{pmatrix}
+\]\\
+\[
+\begin{pmatrix}[rrr]
+-4 & 2 & 0 \\
+2 & -3 & -2\\
+0 & -2 & -2\\
+\end{pmatrix}
+\bv = 0
+\quad
+\bv_3 = \frac13
+\begin{pmatrix}[r]
+1\\ 2\\ -2 \\
+\end{pmatrix}
+\]
+\[
+P = \frac13
+\begin{pmatrix}[rrr]
+2 & 2 & 1\\
+-2 & 1 & 2\\
+-1 & 2 & -2 \\
+\end{pmatrix}
+\qquad
+P^\top = \frac13
+\begin{pmatrix}[rrr]
+2 & -2 & -1\\
+2 & 1 & 2\\
+1 & 2 & -2 \\
+\end{pmatrix}
+\]
+\[
+Q(*\bx) = \bx^\top A \b x = \bx^\top P D P^\top \bx = \left | y = P^\top \bx \right | = \by^\top D \by = y_1^2 + 4y_2^2 + 7y_3^2= Q(*\by)
+\qquad
+\by =
+\begin{pmatrix}[rrr]
+y_1 \\ y_2 \\ y_3 \\
+\end{pmatrix}
+\]
+\answer{The orthogonal transformation:
+$P^\top = \frac13
+\begin{pmatrix}[rrr]
+2 & -2 & -1\\
+2 & 1 & 2\\
+1 & 2 & -2 \\
+\end{pmatrix}$,
+\quad
+$Q(*\by)=y_1^2 + 4y_2^2 + 7y_3$
+}\\
+\end{enumerate}
+\end{solution}
+}
+
+
+\begin{problem}[Quadratic forms; 2 pt]\rm
+	Find  all values of $k$ for which the quadratic form
+	\[
+	5x_1^2 + x_2^2 + kx_3^2 + 4x_1x_2 -2x_1x_3 -2x_2x_3
+	\]
+	is positive definite.
+\end{problem}
+
+\textcolor{black}{
+\begin{solution}[]\rm .
+\[
+Q(*\bx) = 5x_1^2 + x_2^2 + kx_3^2 + 4x_1x_2 -2x_1x_3 -2x_2x_3 = \bx^\top A \bx
+\qquad
+A = 
+\begin{pmatrix}[rrr]
+5 & 2 & -1 \\
+2 & 1 & -1\\
+-1 & -1 & k\\
+\end{pmatrix}
+\quad
+\bx =
+\begin{pmatrix}[rrr]
+x_1 \\ x_2 \\ x_3 \\
+\end{pmatrix}
+\]
+\[
+p_A(\lambda) = - \lambda^3 + \trace A \lambda^2 - \lambda \sum M_2 + \det A =  - \lambda^3 + (6 + k) \lambda^2 - (6k-1) \lambda + k-2 =
+\]
+\[
+= - (\lambda - \lambda_1)(\lambda - \lambda_2)(\lambda - v_3)
+\]
+Q is positive definite $\Leftrightarrow$ A is positive definite $\Leftrightarrow$ $\lambda_i > 0 ~ \forall i \in \overline{1,3}$\\
+Let k = 2, then:
+\[
+p_A(0) = k - 2 = 0
+~ \Rightarrow ~ \lambda_1 = 0
+\qquad
+\lambda^2 - 8 \lambda + 11 = 0
+\qquad
+\lambda_{1,2} = 4 \pm \sqrt5 > 0
+\]
+So all the eigenvalues are non-negative. If we take $k>2$ then the roots will be positive.\\
+\answer{ $k > 2$}
+% \[
+% \lambda^3 - 12 \lambda^2 + 39 \lambda - 28 = (\lambda - 1)(\lambda^2 - 11 \lambda + 28) = (\lambda - 1)(\lambda - 4)(\lambda - 7) 
+% \]
+\end{solution}
+}
+
+
+\begin{problem}[Quadratic forms; 4 pt]\rm
+	Consider the matrix $A$ and the vector $\bv_1$, where
+	\[
+	A = \begin{pmatrix}[rrr]
+	3 &-2 & 1 \\ - 2 & 6 & -2 \\ 1 & -2 & 3
+	\end{pmatrix},
+	\qquad
+	\bv_1 = \begin{pmatrix}[r]-1 \\ 0 \\ 1\end{pmatrix}.
+	\]
+	\begin{enumerate}[(a)]
+		\item Show that $\bv_1$ is an eigenvector of~$A$, and find its corresponding eigenvalue. Then find the other two eigenvalues and eigenvectors and orthogonally diagonalize~$A$.
+		\item Is the quadratic form $Q(\bx) =\bx^\top A \bx$ positive definite, negative definite or indefinite?
+		Find the principal axes of~$Q$ and the corresponding transition matrix.
+	\end{enumerate}
+\end{problem}
+
+\textcolor{black}{
+\begin{solution}[]\rm .
+\begin{enumerate}[(a)]
+	\item
+\[
+A = 
+\begin{pmatrix}[rrr]
+3 &-2 & 1 \\ 
+-2 & 6 & -2 \\
+1 & -2 & 3
+\end{pmatrix}
+\quad
+\bv_1 = 
+\begin{pmatrix}[r]
+-1 \\ 0 \\ 1
+\end{pmatrix}
+\]
+Let's check that $\exists \lambda: ~ (A - \lambda I)\bv_1 = 0$
+\[
+\begin{pmatrix}[rrr]
+3-\lambda &-2 & 1 \\ 
+-2 & 6-\lambda & -2 \\
+1 & -2 & 3-\lambda
+\end{pmatrix}
+\begin{pmatrix}[r]
+-1 \\ 0 \\ 1
+\end{pmatrix}
+=0
+~\Leftrightarrow~
+\left \{ \begin{matrix}
+\lambda - 3 + 1 = 0\\ 
+2 -2 = 0 \\
+-1 + 3-\lambda = 0
+\end{matrix} \right .
+~\Leftrightarrow~
+\lambda_1 = 2
+\]
+\[
+\rank(A - 2I) =
+\rank
+\begin{pmatrix}[rrr]
+1 &-2 & 1 \\ 
+-2 & 4 & -2 \\
+1 & -2 & 1
+\end{pmatrix}
+ = 1
+ ~ \Rightarrow ~
+ \lambda_2 = \lambda_1 = 2
+\qquad
+\lambda_3 = 12 - 2 - 2 = 8
+\]
+\[
+\begin{pmatrix}[rrr]
+1 &-2 & 1 \\ 
+-2 & 4 & -2 \\
+1 & -2 & 1
+\end{pmatrix}
+\bv_2 = 0
+\qquad 
+v_1 = 2v_2 - v_3
+\bv = 
+v_2
+\begin{pmatrix}
+2\\ 1 \\ 0 \\
+\end{pmatrix}
++
+v_3
+\begin{pmatrix}
+-1\\ 0 \\ 1 \\
+\end{pmatrix}
+\]
+\[
+~ \Rightarrow ~
+\bv_2 = 
+\begin{pmatrix}
+2\\ 1 \\ 0 \\
+\end{pmatrix}
+~ \Rightarrow ~ GS:
+\]
+\[
+\bv_1^\top \bv_1 = 2
+\qquad
+\hat \bv_1 = \frac1{\sqrt2}
+\begin{pmatrix}
+-1\\ 0 \\ 1 \\
+\end{pmatrix}
+\qquad
+\bv_1^\top \bv_2 = -2
+\qquad
+\hat \bv_2 = \frac{\bv_2 + \bv_1}{\norm{\bv_2 + \bv_1}}
+=
+\frac1{\sqrt3}
+\begin{pmatrix}
+1\\ 1 \\ 1 \\
+\end{pmatrix}
+\]
+\[
+(A - 8I)\bv = 0
+~\Rightarrow~
+\left \{ \begin{matrix}[l]
+-5 v_1  -2 v_2 +  v_3 = 0\\ 
+-2 v_1  -2 v_2 -2 v_3 = 0 \\
+   v_1  = 2 v_2 + 5 v_3
+\end{matrix} \right .
+\qquad
+\left \{ \begin{matrix}[l]
+v_2 = - 2 v_3 \\ 
+v_1  = 2 v_2 + 5 v_3 =v_3
+\end{matrix} \right .
+\qquad
+\bv_3 = 
+\frac1{\sqrt{6}}
+\begin{pmatrix}
+1 \\ -2 \\ 1
+\end{pmatrix}
+\]
+\[
+P = \frac1{\sqrt6}
+\begin{pmatrix}
+-\sqrt3 & \sqrt2 & 1\\
+0 & \sqrt2 & -2 \\
+\sqrt3 & \sqrt2 & 1\\
+\end{pmatrix}
+\qquad
+P^{-1} = P^\top = \frac1{\sqrt6}
+\begin{pmatrix}
+-\sqrt3 & 0 & \sqrt3\\
+\sqrt2 & \sqrt2 & \sqrt2 \\
+1 & -2 & 1\\
+\end{pmatrix}
+\]
+\[
+A = PDP^\top =
+\frac1{\sqrt6}
+\begin{pmatrix}
+-\sqrt3 & \sqrt2 & 1\\
+0 & \sqrt2 & -2 \\
+\sqrt3 & \sqrt2 & 1\\
+\end{pmatrix}
+\begin{pmatrix}
+2 & 0 & 0 \\
+0 & 2 & 0 \\
+0 & 0 & 8\\
+\end{pmatrix}
+\frac1{\sqrt6}
+\begin{pmatrix}
+-\sqrt3 & 0 & \sqrt3\\
+\sqrt2 & \sqrt2 & \sqrt2 \\
+1 & -2 & 1\\
+\end{pmatrix}
+\]
+	\item
+$Q(\bx)$ is positive definite since all eigenvalues of A are positive.
+Principal axes of $Q$ correspond to the eigenvectors of A:
+$
+% \{\bv_1, \bv_2, \bv_3\} 
+\frac1{\sqrt6} 
+\left \{
+\begin{pmatrix}
+-\sqrt3\\ 0 \\ \sqrt3 \\
+\end{pmatrix}
+,
+\begin{pmatrix}
+\sqrt2\\ \sqrt2 \\ \sqrt2 \\
+\end{pmatrix}
+,
+\begin{pmatrix}
+1 \\ -2 \\ 1
+\end{pmatrix}
+\right \}
+$\\[10pt]
+And the transition matrix is $P^\top$ since it transforms a vector coordinates from the canonical basis to the eigenvectors basis:
+\[
+\frac1{\sqrt6}
+\begin{pmatrix}
+-\sqrt3 & 0 & \sqrt3\\
+\sqrt2 & \sqrt2 & \sqrt2 \\
+1 & -2 & 1\\
+\end{pmatrix}
+\]
+% \[
+% Q(\bx) = \bx^\top A \bx = \by^\top D\by = 2y_1^2 + 2y_2^2 + = Q(\by)
+% \]
+% \[
+% Q(\bx) = \bx^\top A \bx = 9x^2 + 6y^2 + 3z^2 -4xy - 4 yz - zx
+% \]
+% \[
+% \lambda_1 = 2 \text{ (column sums) }
+% \]
+% \[
+% \rank (A-2I) = 
+% \rank
+% \begin{pmatrix}[rrr]
+% 1 &-2 & 1 \\ - 2 & 4 & -2 \\ 1 & -2 & 1
+% \end{pmatrix} = 1
+% ~ \Rightarrow ~
+% \lambda_2 = 2
+% \]
+% \[
+% \begin{pmatrix}[rrr]
+% 1 &-2 & 1 \\ - 2 & 4 & -2 \\ 1 & -2 & 1
+% \end{pmatrix} v_1 = 0
+% ~ \Rightarrow ~
+% v_1 = 
+% \begin{pmatrix}[rrr]
+% 1 \\ 1 \\ 1
+% \end{pmatrix} 
+% \]
+% \[
+% \begin{pmatrix}[rrr]
+% 1 &-2 & 1 \\ - 2 & 4 & -2 \\ 1 & -2 & 1
+% \end{pmatrix} v_2 = v_1 = 
+% \begin{pmatrix}[rrr]
+% 1 \\ 1 \\ 1
+% \end{pmatrix} 
+% ~ \Rightarrow ~
+% v_2 = 
+% \begin{pmatrix}[rrr]
+% 1 \\ 1 \\ 1
+% \end{pmatrix} 
+% \]
+% \[
+% \lambda_3 = \trace A - 4 = 12 - 4 = 8
+% \]
+\end{enumerate}
+\end{solution}
+}
+
+\end{document}

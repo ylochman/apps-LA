@@ -1,0 +1,167 @@
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}1}]:} \PY{k+kn}{import} \PY{n+nn}{numpy} \PY{k}{as} \PY{n+nn}{np}
+        \PY{k+kn}{import} \PY{n+nn}{scipy} \PY{k}{as} \PY{n+nn}{sp}
+        \PY{k+kn}{import} \PY{n+nn}{scipy}\PY{n+nn}{.}\PY{n+nn}{stats} \PY{k}{as} \PY{n+nn}{stats}
+        \PY{k+kn}{from} \PY{n+nn}{scipy} \PY{k}{import} \PY{n}{linalg} \PY{k}{as} \PY{n}{LA}
+        \PY{k+kn}{from} \PY{n+nn}{math} \PY{k}{import} \PY{n}{sqrt}
+        
+        \PY{k}{class} \PY{n+nc}{IterativeMethod}\PY{p}{(}\PY{p}{)}\PY{p}{:}
+            \PY{k}{def} \PY{n+nf}{\PYZus{}\PYZus{}init\PYZus{}\PYZus{}}\PY{p}{(}\PY{n+nb+bp}{self}\PY{p}{,} \PY{n}{A}\PY{p}{,} \PY{n}{b}\PY{p}{)}\PY{p}{:}
+                \PY{n+nb+bp}{self}\PY{o}{.}\PY{n}{A} \PY{o}{=} \PY{n}{A}
+                \PY{n+nb+bp}{self}\PY{o}{.}\PY{n}{b} \PY{o}{=} \PY{n}{b}
+                \PY{n+nb+bp}{self}\PY{o}{.}\PY{n}{m}\PY{p}{,} \PY{n+nb+bp}{self}\PY{o}{.}\PY{n}{n} \PY{o}{=} \PY{n}{A}\PY{o}{.}\PY{n}{shape}
+                
+                \PY{n+nb+bp}{self}\PY{o}{.}\PY{n}{LU} \PY{o}{=} \PY{n+nb+bp}{self}\PY{o}{.}\PY{n}{A} \PY{o}{*} \PY{p}{(}\PY{l+m+mi}{1} \PY{o}{\PYZhy{}} \PY{n}{np}\PY{o}{.}\PY{n}{eye}\PY{p}{(}\PY{n+nb}{min}\PY{p}{(}\PY{o}{*}\PY{n}{A}\PY{o}{.}\PY{n}{shape}\PY{p}{)}\PY{p}{)}\PY{p}{)}
+                \PY{n+nb+bp}{self}\PY{o}{.}\PY{n}{U} \PY{o}{=} \PY{n+nb+bp}{self}\PY{o}{.}\PY{n}{LU}\PY{o}{.}\PY{n}{copy}\PY{p}{(}\PY{p}{)}
+                \PY{k}{for} \PY{n}{i} \PY{o+ow}{in} \PY{n+nb}{range}\PY{p}{(}\PY{n+nb+bp}{self}\PY{o}{.}\PY{n}{m}\PY{p}{)}\PY{p}{:}
+                    \PY{k}{for} \PY{n}{j} \PY{o+ow}{in} \PY{n+nb}{range}\PY{p}{(}\PY{n}{i}\PY{p}{)}\PY{p}{:}
+                        \PY{n+nb+bp}{self}\PY{o}{.}\PY{n}{U}\PY{p}{[}\PY{n}{i}\PY{p}{,}\PY{n}{j}\PY{p}{]} \PY{o}{=} \PY{l+m+mi}{0}
+                \PY{n+nb+bp}{self}\PY{o}{.}\PY{n}{L} \PY{o}{=} \PY{n+nb+bp}{self}\PY{o}{.}\PY{n}{LU} \PY{o}{\PYZhy{}} \PY{n+nb+bp}{self}\PY{o}{.}\PY{n}{U}
+                \PY{n+nb+bp}{self}\PY{o}{.}\PY{n}{D} \PY{o}{=} \PY{n+nb+bp}{self}\PY{o}{.}\PY{n}{A} \PY{o}{\PYZhy{}} \PY{n+nb+bp}{self}\PY{o}{.}\PY{n}{LU}
+                \PY{n+nb+bp}{self}\PY{o}{.}\PY{n}{Dinv} \PY{o}{=} \PY{n}{LA}\PY{o}{.}\PY{n}{inv}\PY{p}{(}\PY{n+nb+bp}{self}\PY{o}{.}\PY{n}{D}\PY{p}{)}
+                
+                \PY{n+nb+bp}{self}\PY{o}{.}\PY{n}{BJ} \PY{o}{=} \PY{o}{\PYZhy{}} \PY{n+nb+bp}{self}\PY{o}{.}\PY{n}{Dinv}\PY{o}{.}\PY{n}{dot}\PY{p}{(}\PY{n+nb+bp}{self}\PY{o}{.}\PY{n}{LU}\PY{p}{)}
+                \PY{n+nb+bp}{self}\PY{o}{.}\PY{n}{bJ} \PY{o}{=} \PY{n+nb+bp}{self}\PY{o}{.}\PY{n}{Dinv}\PY{o}{.}\PY{n}{dot}\PY{p}{(}\PY{n+nb+bp}{self}\PY{o}{.}\PY{n}{b}\PY{p}{)}
+        
+            \PY{k}{def} \PY{n+nf}{stop\PYZus{}criteria}\PY{p}{(}\PY{n+nb+bp}{self}\PY{p}{,} \PY{n}{x\PYZus{}prev}\PY{p}{,} \PY{n}{x\PYZus{}next}\PY{p}{,} \PY{n}{eps}\PY{o}{=}\PY{l+m+mf}{1e\PYZhy{}5}\PY{p}{)}\PY{p}{:}
+                \PY{n}{difference} \PY{o}{=} \PY{n}{LA}\PY{o}{.}\PY{n}{norm}\PY{p}{(}\PY{n}{x\PYZus{}prev} \PY{o}{\PYZhy{}} \PY{n}{x\PYZus{}next}\PY{p}{)} \PY{o}{/} \PY{p}{(}\PY{n}{LA}\PY{o}{.}\PY{n}{norm}\PY{p}{(}\PY{n}{x\PYZus{}prev}\PY{p}{)}\PY{o}{+}\PY{n}{eps}\PY{p}{)}
+                \PY{n}{accuracy} \PY{o}{=} \PY{n+nb+bp}{self}\PY{o}{.}\PY{n}{accuracy}\PY{p}{(}\PY{n}{x\PYZus{}next}\PY{p}{)}
+                \PY{k}{if} \PY{n+nb+bp}{self}\PY{o}{.}\PY{n}{out}\PY{p}{:}
+                    \PY{n+nb}{print}\PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+se}{\PYZbs{}t}\PY{l+s+s1}{rel. diff. = }\PY{l+s+si}{\PYZob{}:.4f\PYZcb{}}\PY{l+s+s1}{, acc. = }\PY{l+s+si}{\PYZob{}:.4f\PYZcb{}}\PY{l+s+s1}{\PYZsq{}}\PYZbs{}
+                          \PY{o}{.}\PY{n}{format}\PY{p}{(}\PY{n}{difference}\PY{p}{,} \PY{n}{accuracy}\PY{p}{)}\PY{p}{)}
+        \PY{c+c1}{\PYZsh{}         return difference \PYZlt{} self.diff\PYZus{}eps}
+                \PY{k}{return} \PY{n}{accuracy} \PY{o}{\PYZlt{}} \PY{n+nb+bp}{self}\PY{o}{.}\PY{n}{acc\PYZus{}eps}
+            
+            \PY{k}{def} \PY{n+nf}{accuracy}\PY{p}{(}\PY{n+nb+bp}{self}\PY{p}{,} \PY{n}{x}\PY{p}{)}\PY{p}{:}
+                \PY{k}{return} \PY{n}{LA}\PY{o}{.}\PY{n}{norm}\PY{p}{(}\PY{n+nb+bp}{self}\PY{o}{.}\PY{n}{A}\PY{o}{.}\PY{n}{dot}\PY{p}{(}\PY{n}{x}\PY{p}{)} \PY{o}{\PYZhy{}} \PY{n+nb+bp}{self}\PY{o}{.}\PY{n}{b}\PY{p}{)}
+            
+            \PY{k}{def} \PY{n+nf}{check\PYZus{}B}\PY{p}{(}\PY{n+nb+bp}{self}\PY{p}{)}\PY{p}{:}
+                \PY{n}{eigvalues}\PY{p}{,} \PY{n}{eigvectors} \PY{o}{=} \PY{n}{LA}\PY{o}{.}\PY{n}{eig}\PY{p}{(}\PY{n+nb+bp}{self}\PY{o}{.}\PY{n}{BJ}\PY{p}{)}
+                \PY{n+nb}{print}\PY{p}{(}\PY{n+nb}{max}\PY{p}{(}\PY{n}{np}\PY{o}{.}\PY{n}{abs}\PY{p}{(}\PY{n}{eigvalues}\PY{p}{)}\PY{p}{)}\PY{p}{)}
+            
+            \PY{k}{def} \PY{n+nf}{run}\PY{p}{(}\PY{n+nb+bp}{self}\PY{p}{,} \PY{n}{x0}\PY{p}{,} \PY{n}{out}\PY{o}{=}\PY{k+kc}{True}\PY{p}{,} \PY{n}{diff\PYZus{}eps}\PY{o}{=}\PY{l+m+mf}{1e\PYZhy{}5}\PY{p}{,} \PY{n}{acc\PYZus{}eps}\PY{o}{=}\PY{l+m+mf}{1e\PYZhy{}3}\PY{p}{,} \PY{n}{maxiter}\PY{o}{=}\PY{l+m+mf}{1e3}\PY{p}{)}\PY{p}{:}
+                \PY{n+nb+bp}{self}\PY{o}{.}\PY{n}{out} \PY{o}{=} \PY{n}{out}
+                \PY{n+nb+bp}{self}\PY{o}{.}\PY{n}{diff\PYZus{}eps} \PY{o}{=} \PY{n}{diff\PYZus{}eps}
+                \PY{n+nb+bp}{self}\PY{o}{.}\PY{n}{acc\PYZus{}eps} \PY{o}{=} \PY{n}{acc\PYZus{}eps}
+                \PY{n+nb+bp}{self}\PY{o}{.}\PY{n}{maxiter} \PY{o}{=} \PY{n}{maxiter}
+                \PY{k}{if} \PY{n+nb+bp}{self}\PY{o}{.}\PY{n}{out}\PY{p}{:}
+                    \PY{n+nb}{print}\PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+se}{\PYZbs{}t}\PY{l+s+s1}{x\PYZus{}}\PY{l+s+si}{\PYZob{}\PYZcb{}}\PY{l+s+s1}{ = }\PY{l+s+si}{\PYZob{}\PYZcb{}}\PY{l+s+s1}{\PYZsq{}}\PY{o}{.}\PY{n}{format}\PY{p}{(}\PY{l+m+mi}{0}\PY{p}{,} \PY{n}{x0}\PY{o}{.}\PY{n}{flatten}\PY{p}{(}\PY{p}{)}\PY{p}{)}\PY{p}{)}
+                \PY{n}{x\PYZus{}prev} \PY{o}{=} \PY{n}{x0}
+                \PY{n}{x\PYZus{}next} \PY{o}{=} \PY{n+nb+bp}{self}\PY{o}{.}\PY{n}{iteration}\PY{p}{(}\PY{n}{x\PYZus{}prev}\PY{p}{)}
+                \PY{n}{it} \PY{o}{=} \PY{l+m+mi}{1}
+                \PY{k}{while} \PY{o+ow}{not} \PY{n+nb+bp}{self}\PY{o}{.}\PY{n}{stop\PYZus{}criteria}\PY{p}{(}\PY{n}{x\PYZus{}prev}\PY{p}{,} \PY{n}{x\PYZus{}next}\PY{p}{)} \PY{o+ow}{and} \PY{n}{it} \PY{o}{\PYZlt{}} \PY{n+nb+bp}{self}\PY{o}{.}\PY{n}{maxiter}\PY{p}{:}
+                    \PY{n}{it} \PY{o}{+}\PY{o}{=} \PY{l+m+mi}{1}
+                    \PY{n}{x\PYZus{}prev} \PY{o}{=} \PY{n}{x\PYZus{}next}
+                    \PY{n}{x\PYZus{}next} \PY{o}{=} \PY{n+nb+bp}{self}\PY{o}{.}\PY{n}{iteration}\PY{p}{(}\PY{n}{x\PYZus{}prev}\PY{p}{)}
+                    \PY{k}{if} \PY{n}{out}\PY{p}{:}
+                        \PY{n+nb}{print}\PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+se}{\PYZbs{}t}\PY{l+s+s1}{x\PYZus{}}\PY{l+s+si}{\PYZob{}\PYZcb{}}\PY{l+s+s1}{ = }\PY{l+s+si}{\PYZob{}\PYZcb{}}\PY{l+s+s1}{\PYZsq{}}\PY{o}{.}\PY{n}{format}\PY{p}{(}\PY{n}{it}\PY{o}{\PYZhy{}}\PY{l+m+mi}{1}\PY{p}{,} \PY{n}{x\PYZus{}prev}\PY{o}{.}\PY{n}{flatten}\PY{p}{(}\PY{p}{)}\PY{p}{)}\PY{p}{)}
+                \PY{n+nb+bp}{self}\PY{o}{.}\PY{n}{finalize}\PY{p}{(}\PY{n}{x\PYZus{}next}\PY{p}{,} \PY{n}{it}\PY{p}{)}
+                \PY{k}{return} \PY{n+nb+bp}{self}\PY{o}{.}\PY{n}{x}
+            
+            \PY{k}{def} \PY{n+nf}{finalize}\PY{p}{(}\PY{n+nb+bp}{self}\PY{p}{,} \PY{n}{x}\PY{p}{,} \PY{n}{it}\PY{p}{)}\PY{p}{:}
+                \PY{n+nb+bp}{self}\PY{o}{.}\PY{n}{it} \PY{o}{=} \PY{n}{it}
+                \PY{k}{if} \PY{n+nb+bp}{self}\PY{o}{.}\PY{n}{it} \PY{o}{\PYZlt{}} \PY{n+nb+bp}{self}\PY{o}{.}\PY{n}{maxiter}\PY{p}{:}
+                    \PY{n+nb+bp}{self}\PY{o}{.}\PY{n}{x} \PY{o}{=} \PY{n}{x}
+                    \PY{n+nb+bp}{self}\PY{o}{.}\PY{n}{acc} \PY{o}{=} \PY{n+nb+bp}{self}\PY{o}{.}\PY{n}{accuracy}\PY{p}{(}\PY{n}{x}\PY{p}{)}
+                    \PY{n+nb}{print}\PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{The method converged in }\PY{l+s+si}{\PYZob{}\PYZcb{}}\PY{l+s+s1}{ it. to x* = }\PY{l+s+si}{\PYZob{}\PYZcb{}}\PY{l+s+s1}{\PYZsq{}}\PYZbs{}
+                          \PY{o}{.}\PY{n}{format}\PY{p}{(}\PY{n+nb+bp}{self}\PY{o}{.}\PY{n}{it}\PY{p}{,} \PY{n+nb+bp}{self}\PY{o}{.}\PY{n}{x}\PY{o}{.}\PY{n}{flatten}\PY{p}{(}\PY{p}{)}\PY{p}{)}\PY{p}{)}
+                    \PY{n+nb}{print}\PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{The accuracy is }\PY{l+s+si}{\PYZob{}:.4f\PYZcb{}}\PY{l+s+s1}{\PYZsq{}}\PY{o}{.}\PY{n}{format}\PY{p}{(}\PY{n+nb+bp}{self}\PY{o}{.}\PY{n}{acc}\PY{p}{)}\PY{p}{)}
+                \PY{k}{else}\PY{p}{:}
+                    \PY{n+nb+bp}{self}\PY{o}{.}\PY{n}{x} \PY{o}{=} \PY{n}{np}\PY{o}{.}\PY{n}{nan}
+                    \PY{n+nb}{print}\PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{The method didn}\PY{l+s+se}{\PYZbs{}\PYZsq{}}\PY{l+s+s1}{t converge.}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}
+        
+        \PY{k}{class} \PY{n+nc}{Jacobi}\PY{p}{(}\PY{n}{IterativeMethod}\PY{p}{)}\PY{p}{:}
+        
+            \PY{k}{def} \PY{n+nf}{iteration}\PY{p}{(}\PY{n+nb+bp}{self}\PY{p}{,} \PY{n}{x\PYZus{}prev}\PY{p}{)}\PY{p}{:}
+                \PY{n}{x\PYZus{}next} \PY{o}{=} \PY{n+nb+bp}{self}\PY{o}{.}\PY{n}{BJ}\PY{o}{.}\PY{n}{dot}\PY{p}{(}\PY{n}{x\PYZus{}prev}\PY{p}{)} \PY{o}{+} \PY{n+nb+bp}{self}\PY{o}{.}\PY{n}{bJ}
+                \PY{k}{return} \PY{n}{x\PYZus{}next}
+        
+        
+        \PY{k}{class} \PY{n+nc}{GaussSeidel}\PY{p}{(}\PY{n}{IterativeMethod}\PY{p}{)}\PY{p}{:}    
+        
+            \PY{k}{def} \PY{n+nf}{iteration}\PY{p}{(}\PY{n+nb+bp}{self}\PY{p}{,} \PY{n}{x\PYZus{}prev}\PY{p}{)}\PY{p}{:}
+                \PY{n}{x\PYZus{}next} \PY{o}{=} \PY{n}{np}\PY{o}{.}\PY{n}{zeros\PYZus{}like}\PY{p}{(}\PY{n}{x\PYZus{}prev}\PY{p}{)}
+                \PY{n}{Dinv} \PY{o}{=} \PY{n}{LA}\PY{o}{.}\PY{n}{inv}\PY{p}{(}\PY{n+nb+bp}{self}\PY{o}{.}\PY{n}{D}\PY{p}{)}
+                \PY{k}{for} \PY{n}{i} \PY{o+ow}{in} \PY{n+nb}{range}\PY{p}{(}\PY{n}{x\PYZus{}next}\PY{o}{.}\PY{n}{shape}\PY{p}{[}\PY{l+m+mi}{0}\PY{p}{]}\PY{p}{)}\PY{p}{:}
+                    \PY{n}{x\PYZus{}next}\PY{p}{[}\PY{n}{i}\PY{p}{]} \PY{o}{=} \PY{n}{Dinv}\PY{p}{[}\PY{n}{i}\PY{p}{,}\PY{n}{i}\PY{p}{]} \PY{o}{*} \PY{p}{(}\PY{n+nb+bp}{self}\PY{o}{.}\PY{n}{b}\PY{p}{[}\PY{n}{i}\PY{p}{]} \PY{o}{\PYZhy{}} \PY{n+nb+bp}{self}\PY{o}{.}\PY{n}{L}\PY{p}{[}\PY{n}{i}\PY{p}{,}\PY{p}{:}\PY{p}{]}\PY{o}{.}\PY{n}{dot}\PY{p}{(}\PY{n}{x\PYZus{}next}\PY{p}{)} 
+                                                       \PY{o}{\PYZhy{}} \PY{n+nb+bp}{self}\PY{o}{.}\PY{n}{U}\PY{p}{[}\PY{n}{i}\PY{p}{,}\PY{p}{:}\PY{p}{]}\PY{o}{.}\PY{n}{dot}\PY{p}{(}\PY{n}{x\PYZus{}prev}\PY{p}{)}\PY{p}{)}
+                \PY{k}{return} \PY{n}{x\PYZus{}next}
+\end{Verbatim}
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}2}]:} \PY{n}{u} \PY{o}{=} \PY{n}{np}\PY{o}{.}\PY{n}{array}\PY{p}{(}\PY{p}{[}\PY{l+m+mi}{1}\PY{p}{,}\PY{o}{\PYZhy{}}\PY{l+m+mi}{1}\PY{p}{,}\PY{l+m+mi}{1}\PY{p}{]}\PY{p}{)}\PY{o}{.}\PY{n}{reshape}\PY{p}{(}\PY{p}{(}\PY{o}{\PYZhy{}}\PY{l+m+mi}{1}\PY{p}{,}\PY{l+m+mi}{1}\PY{p}{)}\PY{p}{)}
+        \PY{n}{alpha} \PY{o}{=} \PY{l+m+mi}{2}
+        \PY{n}{A} \PY{o}{=} \PY{n}{alpha} \PY{o}{*} \PY{n}{np}\PY{o}{.}\PY{n}{eye}\PY{p}{(}\PY{l+m+mi}{3}\PY{p}{)} \PY{o}{+} \PY{n}{u}\PY{o}{.}\PY{n}{dot}\PY{p}{(}\PY{n}{u}\PY{o}{.}\PY{n}{T}\PY{p}{)}
+        \PY{n}{b} \PY{o}{=} \PY{n}{u}
+        \PY{n}{x0} \PY{o}{=} \PY{n}{np}\PY{o}{.}\PY{n}{zeros}\PY{p}{(}\PY{p}{(}\PY{l+m+mi}{3}\PY{p}{,}\PY{l+m+mi}{1}\PY{p}{)}\PY{p}{)}
+\end{Verbatim}
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}3}]:} \PY{n}{J} \PY{o}{=} \PY{n}{Jacobi}\PY{p}{(}\PY{n}{A}\PY{p}{,} \PY{n}{b}\PY{p}{)}
+        \PY{n}{x} \PY{o}{=} \PY{n}{J}\PY{o}{.}\PY{n}{run}\PY{p}{(}\PY{n}{x0}\PY{p}{,} \PY{n}{out}\PY{o}{=}\PY{k+kc}{True}\PY{p}{,} \PY{n}{maxiter}\PY{o}{=}\PY{l+m+mi}{1000}\PY{p}{,} \PY{n}{acc\PYZus{}eps}\PY{o}{=}\PY{l+m+mf}{0.001}\PY{p}{)}
+\end{Verbatim}
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+	x\_0 = [0. 0. 0.]
+	rel. diff. = 57735.0269, acc. = 1.1547
+	x\_1 = [ 0.33333333 -0.33333333  0.33333333]
+	rel. diff. = 0.6667, acc. = 0.7698
+	x\_2 = [ 0.11111111 -0.11111111  0.11111111]
+	rel. diff. = 1.3333, acc. = 0.5132
+	x\_3 = [ 0.25925926 -0.25925926  0.25925926]
+	rel. diff. = 0.3809, acc. = 0.3421
+	x\_4 = [ 0.16049383 -0.16049383  0.16049383]
+	rel. diff. = 0.4102, acc. = 0.2281
+	x\_5 = [ 0.22633745 -0.22633745  0.22633745]
+	rel. diff. = 0.1939, acc. = 0.1521
+	x\_6 = [ 0.1824417 -0.1824417  0.1824417]
+	rel. diff. = 0.1604, acc. = 0.1014
+	x\_7 = [ 0.21170553 -0.21170553  0.21170553]
+	rel. diff. = 0.0922, acc. = 0.0676
+	x\_8 = [ 0.19219631 -0.19219631  0.19219631]
+	rel. diff. = 0.0677, acc. = 0.0451
+	x\_9 = [ 0.20520246 -0.20520246  0.20520246]
+	rel. diff. = 0.0423, acc. = 0.0300
+	x\_10 = [ 0.19653169 -0.19653169  0.19653169]
+	rel. diff. = 0.0294, acc. = 0.0200
+	x\_11 = [ 0.2023122 -0.2023122  0.2023122]
+	rel. diff. = 0.0190, acc. = 0.0133
+	x\_12 = [ 0.19845853 -0.19845853  0.19845853]
+	rel. diff. = 0.0129, acc. = 0.0089
+	x\_13 = [ 0.20102765 -0.20102765  0.20102765]
+	rel. diff. = 0.0085, acc. = 0.0059
+	x\_14 = [ 0.1993149 -0.1993149  0.1993149]
+	rel. diff. = 0.0057, acc. = 0.0040
+	x\_15 = [ 0.20045673 -0.20045673  0.20045673]
+	rel. diff. = 0.0038, acc. = 0.0026
+	x\_16 = [ 0.19969551 -0.19969551  0.19969551]
+	rel. diff. = 0.0025, acc. = 0.0018
+	x\_17 = [ 0.20020299 -0.20020299  0.20020299]
+	rel. diff. = 0.0017, acc. = 0.0012
+	x\_18 = [ 0.19986467 -0.19986467  0.19986467]
+	rel. diff. = 0.0011, acc. = 0.0008
+The method converged in 19 it. to x* = [ 0.20009022 -0.20009022  0.20009022]
+The accuracy is 0.0008
+
+    \end{Verbatim}
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}4}]:} \PY{n}{GS} \PY{o}{=} \PY{n}{GaussSeidel}\PY{p}{(}\PY{n}{A}\PY{p}{,} \PY{n}{b}\PY{p}{)}
+        \PY{n}{x} \PY{o}{=} \PY{n}{GS}\PY{o}{.}\PY{n}{run}\PY{p}{(}\PY{n}{x0}\PY{p}{,} \PY{n}{out}\PY{o}{=}\PY{k+kc}{True}\PY{p}{,} \PY{n}{maxiter}\PY{o}{=}\PY{l+m+mi}{1000}\PY{p}{,} \PY{n}{acc\PYZus{}eps}\PY{o}{=}\PY{l+m+mf}{0.001}\PY{p}{)}
+\end{Verbatim}
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+	x\_0 = [0. 0. 0.]
+	rel. diff. = 42713.1948, acc. = 0.3989
+	x\_1 = [ 0.33333333 -0.22222222  0.14814815]
+	rel. diff. = 0.3074, acc. = 0.0566
+	x\_2 = [ 0.20987654 -0.21399177  0.1920439 ]
+	rel. diff. = 0.0496, acc. = 0.0082
+	x\_3 = [ 0.19798811 -0.20332266  0.19956307]
+	rel. diff. = 0.0089, acc. = 0.0023
+	x\_4 = [ 0.19903809 -0.20046628  0.20016521]
+	rel. diff. = 0.0025, acc. = 0.0006
+The method converged in 5 it. to x* = [ 0.1997895  -0.2000151   0.20006513]
+The accuracy is 0.0006
+
+    \end{Verbatim}

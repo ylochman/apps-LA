@@ -1,0 +1,88 @@
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}1}]:} \PY{k+kn}{import} \PY{n+nn}{numpy} \PY{k}{as} \PY{n+nn}{np}
+        \PY{k+kn}{from} \PY{n+nn}{scipy} \PY{k}{import} \PY{n}{linalg} \PY{k}{as} \PY{n}{LA}
+        \PY{k+kn}{from} \PY{n+nn}{math} \PY{k}{import} \PY{n}{sqrt}
+        
+        \PY{k}{class} \PY{n+nc}{GCM}\PY{p}{(}\PY{p}{)}\PY{p}{:}
+            \PY{k}{def} \PY{n+nf}{\PYZus{}\PYZus{}init\PYZus{}\PYZus{}}\PY{p}{(}\PY{n+nb+bp}{self}\PY{p}{,} \PY{n}{G}\PY{p}{,} \PY{n}{b}\PY{p}{,} \PY{n}{eps}\PY{o}{=}\PY{l+m+mf}{10e\PYZhy{}5}\PY{p}{)}\PY{p}{:}
+                \PY{n+nb+bp}{self}\PY{o}{.}\PY{n}{G} \PY{o}{=} \PY{n}{G}
+                \PY{n+nb+bp}{self}\PY{o}{.}\PY{n}{b} \PY{o}{=} \PY{n}{b}
+                \PY{n+nb+bp}{self}\PY{o}{.}\PY{n}{eps} \PY{o}{=} \PY{n}{eps}
+        
+            \PY{k}{def} \PY{n+nf}{gF}\PY{p}{(}\PY{n+nb+bp}{self}\PY{p}{,} \PY{n}{x}\PY{p}{)}\PY{p}{:}
+                \PY{k}{return} \PY{n+nb+bp}{self}\PY{o}{.}\PY{n}{G}\PY{o}{.}\PY{n}{dot}\PY{p}{(}\PY{n}{x}\PY{p}{)} \PY{o}{\PYZhy{}} \PY{n+nb+bp}{self}\PY{o}{.}\PY{n}{b}
+        
+            \PY{k}{def} \PY{n+nf}{alpha}\PY{p}{(}\PY{n+nb+bp}{self}\PY{p}{,} \PY{n}{p}\PY{p}{)}\PY{p}{:}
+                \PY{k}{return} \PY{p}{(}\PY{n}{p}\PY{o}{.}\PY{n}{T}\PY{o}{.}\PY{n}{dot}\PY{p}{(}\PY{n+nb+bp}{self}\PY{o}{.}\PY{n}{b}\PY{p}{)} \PY{o}{/} \PY{n}{p}\PY{o}{.}\PY{n}{T}\PY{o}{.}\PY{n}{dot}\PY{p}{(}\PY{n+nb+bp}{self}\PY{o}{.}\PY{n}{G}\PY{o}{.}\PY{n}{dot}\PY{p}{(}\PY{n}{p}\PY{p}{)}\PY{p}{)}\PY{p}{)}\PY{o}{.}\PY{n}{flatten}\PY{p}{(}\PY{p}{)}\PY{p}{[}\PY{l+m+mi}{0}\PY{p}{]}
+        
+            \PY{k}{def} \PY{n+nf}{p\PYZus{}next}\PY{p}{(}\PY{n+nb+bp}{self}\PY{p}{,} \PY{n}{P}\PY{p}{,} \PY{n}{r}\PY{p}{)}\PY{p}{:}
+                \PY{n}{coefs} \PY{o}{=} \PY{p}{(}\PY{n}{P}\PY{o}{.}\PY{n}{T}\PY{o}{.}\PY{n}{dot}\PY{p}{(}\PY{n+nb+bp}{self}\PY{o}{.}\PY{n}{G}\PY{o}{.}\PY{n}{dot}\PY{p}{(}\PY{n}{r}\PY{p}{)}\PY{p}{)}\PY{o}{.}\PY{n}{T} \PY{o}{/} \PY{n}{np}\PY{o}{.}\PY{n}{diag}\PY{p}{(}\PY{n}{P}\PY{o}{.}\PY{n}{T}\PY{o}{.}\PY{n}{dot}\PY{p}{(}\PY{n}{G}\PY{o}{.}\PY{n}{dot}\PY{p}{(}\PY{n}{P}\PY{p}{)}\PY{p}{)}\PY{p}{)}\PY{p}{)}\PY{o}{.}\PY{n}{flatten}\PY{p}{(}\PY{p}{)}
+                \PY{n}{p} \PY{o}{=} \PY{n}{r} \PY{o}{\PYZhy{}} \PY{n}{np}\PY{o}{.}\PY{n}{sum}\PY{p}{(}\PY{n}{coefs} \PY{o}{*} \PY{n}{P}\PY{p}{,} \PY{l+m+mi}{1}\PY{p}{,} \PY{n}{keepdims}\PY{o}{=}\PY{k+kc}{True}\PY{p}{)}
+                \PY{k}{return} \PY{n}{p}
+        
+            \PY{k}{def} \PY{n+nf}{run}\PY{p}{(}\PY{n+nb+bp}{self}\PY{p}{,} \PY{n}{x0}\PY{p}{)}\PY{p}{:}
+                \PY{n+nb}{print}\PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+se}{\PYZbs{}t}\PY{l+s+s1}{x\PYZus{}0 = }\PY{l+s+si}{\PYZob{}\PYZcb{}}\PY{l+s+s1}{\PYZsq{}}\PY{o}{.}\PY{n}{format}\PY{p}{(}\PY{n}{x0}\PY{o}{.}\PY{n}{flatten}\PY{p}{(}\PY{p}{)}\PY{p}{)}\PY{p}{)}
+                \PY{n+nb}{print}\PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{iteration 1:}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}
+                \PY{n}{p0} \PY{o}{=} \PY{o}{\PYZhy{}}\PY{n+nb+bp}{self}\PY{o}{.}\PY{n}{gF}\PY{p}{(}\PY{n}{x0}\PY{p}{)}
+                \PY{n}{P} \PY{o}{=} \PY{n}{p0}
+                \PY{n}{alpha0} \PY{o}{=} \PY{n+nb+bp}{self}\PY{o}{.}\PY{n}{alpha}\PY{p}{(}\PY{n}{p0}\PY{p}{)}
+                \PY{n}{x\PYZus{}prev} \PY{o}{=} \PY{n}{x0}
+                \PY{n}{x\PYZus{}next} \PY{o}{=} \PY{n}{x\PYZus{}prev} \PY{o}{+} \PY{n}{alpha0} \PY{o}{*} \PY{n}{p0}
+                \PY{n}{norm\PYZus{}res} \PY{o}{=} \PY{n}{LA}\PY{o}{.}\PY{n}{norm}\PY{p}{(}\PY{n+nb+bp}{self}\PY{o}{.}\PY{n}{G}\PY{o}{.}\PY{n}{dot}\PY{p}{(}\PY{n}{x\PYZus{}next}\PY{p}{)} \PY{o}{\PYZhy{}} \PY{n+nb+bp}{self}\PY{o}{.}\PY{n}{b}\PY{p}{)}
+                \PY{n+nb}{print}\PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+se}{\PYZbs{}t}\PY{l+s+s1}{p\PYZus{}0 = }\PY{l+s+si}{\PYZob{}\PYZcb{}}\PY{l+s+s1}{\PYZsq{}}\PY{o}{.}\PY{n}{format}\PY{p}{(}\PY{n}{p0}\PY{o}{.}\PY{n}{flatten}\PY{p}{(}\PY{p}{)}\PY{p}{)}\PY{p}{)}
+                \PY{n+nb}{print}\PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+se}{\PYZbs{}t}\PY{l+s+s1}{x\PYZus{}1 = }\PY{l+s+si}{\PYZob{}\PYZcb{}}\PY{l+s+s1}{\PYZsq{}}\PY{o}{.}\PY{n}{format}\PY{p}{(}\PY{n}{x\PYZus{}next}\PY{o}{.}\PY{n}{flatten}\PY{p}{(}\PY{p}{)}\PY{p}{)}\PY{p}{)}
+                \PY{n+nb}{print}\PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+se}{\PYZbs{}t}\PY{l+s+s1}{||Gx\PYZhy{}b|| = }\PY{l+s+si}{\PYZob{}:.3f\PYZcb{}}\PY{l+s+s1}{\PYZsq{}}\PY{o}{.}\PY{n}{format}\PY{p}{(}\PY{n}{norm\PYZus{}res}\PY{p}{)}\PY{p}{)}
+                \PY{k}{for} \PY{n}{i} \PY{o+ow}{in} \PY{n+nb}{range}\PY{p}{(}\PY{l+m+mi}{1}\PY{p}{,}\PY{n+nb+bp}{self}\PY{o}{.}\PY{n}{G}\PY{o}{.}\PY{n}{shape}\PY{p}{[}\PY{l+m+mi}{0}\PY{p}{]}\PY{p}{)}\PY{p}{:}
+                    \PY{n+nb}{print}\PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{iteration }\PY{l+s+si}{\PYZob{}\PYZcb{}}\PY{l+s+s1}{:}\PY{l+s+s1}{\PYZsq{}}\PY{o}{.}\PY{n}{format}\PY{p}{(}\PY{n}{i}\PY{o}{+}\PY{l+m+mi}{1}\PY{p}{)}\PY{p}{)}
+                    \PY{n}{x\PYZus{}prev} \PY{o}{=} \PY{n}{x\PYZus{}next}
+                    \PY{n}{r\PYZus{}next} \PY{o}{=} \PY{o}{\PYZhy{}}\PY{n+nb+bp}{self}\PY{o}{.}\PY{n}{gF}\PY{p}{(}\PY{n}{x\PYZus{}prev}\PY{p}{)}
+                    \PY{n}{p\PYZus{}next} \PY{o}{=} \PY{n+nb+bp}{self}\PY{o}{.}\PY{n}{p\PYZus{}next}\PY{p}{(}\PY{n}{P}\PY{p}{,} \PY{n}{r\PYZus{}next}\PY{p}{)}
+                    \PY{n}{P} \PY{o}{=} \PY{n}{np}\PY{o}{.}\PY{n}{hstack}\PY{p}{(}\PY{p}{(}\PY{n}{P}\PY{p}{,} \PY{n}{p\PYZus{}next}\PY{p}{)}\PY{p}{)}
+                    \PY{n}{alpha\PYZus{}next} \PY{o}{=} \PY{n+nb+bp}{self}\PY{o}{.}\PY{n}{alpha}\PY{p}{(}\PY{n}{p\PYZus{}next}\PY{p}{)}
+                    \PY{n}{x\PYZus{}next} \PY{o}{=} \PY{n}{x\PYZus{}prev} \PY{o}{+} \PY{n}{alpha\PYZus{}next} \PY{o}{*} \PY{n}{p\PYZus{}next}
+                    \PY{n}{norm\PYZus{}res} \PY{o}{=} \PY{n}{LA}\PY{o}{.}\PY{n}{norm}\PY{p}{(}\PY{n}{G}\PY{o}{.}\PY{n}{dot}\PY{p}{(}\PY{n}{x\PYZus{}next}\PY{p}{)} \PY{o}{\PYZhy{}} \PY{n}{b}\PY{p}{)}
+                    \PY{n+nb}{print}\PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+se}{\PYZbs{}t}\PY{l+s+s1}{p\PYZus{}}\PY{l+s+si}{\PYZob{}\PYZcb{}}\PY{l+s+s1}{ = }\PY{l+s+si}{\PYZob{}\PYZcb{}}\PY{l+s+s1}{\PYZsq{}}\PY{o}{.}\PY{n}{format}\PY{p}{(}\PY{n}{i}\PY{p}{,} \PY{n}{p\PYZus{}next}\PY{o}{.}\PY{n}{flatten}\PY{p}{(}\PY{p}{)}\PY{p}{)}\PY{p}{)}
+                    \PY{n+nb}{print}\PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+se}{\PYZbs{}t}\PY{l+s+s1}{x\PYZus{}}\PY{l+s+si}{\PYZob{}\PYZcb{}}\PY{l+s+s1}{ = }\PY{l+s+si}{\PYZob{}\PYZcb{}}\PY{l+s+s1}{\PYZsq{}}\PY{o}{.}\PY{n}{format}\PY{p}{(}\PY{n}{i}\PY{o}{+}\PY{l+m+mi}{1}\PY{p}{,} \PY{n}{x\PYZus{}next}\PY{o}{.}\PY{n}{flatten}\PY{p}{(}\PY{p}{)}\PY{p}{)}\PY{p}{)}
+                    \PY{n+nb}{print}\PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+se}{\PYZbs{}t}\PY{l+s+s1}{||Gx\PYZhy{}b|| = }\PY{l+s+si}{\PYZob{}:.3f\PYZcb{}}\PY{l+s+s1}{\PYZsq{}}\PY{o}{.}\PY{n}{format}\PY{p}{(}\PY{n}{norm\PYZus{}res}\PY{p}{)}\PY{p}{)}
+                    \PY{k}{if} \PY{n}{norm\PYZus{}res} \PY{o}{\PYZlt{}} \PY{n+nb+bp}{self}\PY{o}{.}\PY{n}{eps}\PY{p}{:}
+                        \PY{n+nb+bp}{self}\PY{o}{.}\PY{n}{x} \PY{o}{=} \PY{n}{x\PYZus{}next}
+                        \PY{n+nb+bp}{self}\PY{o}{.}\PY{n}{P} \PY{o}{=} \PY{n}{P}
+                        \PY{n+nb}{print}\PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+se}{\PYZbs{}n}\PY{l+s+s1}{The method converged to x* = }\PY{l+s+si}{\PYZob{}\PYZcb{}}\PY{l+s+s1}{\PYZsq{}}\PY{o}{.}\PY{n}{format}\PY{p}{(}\PY{n+nb+bp}{self}\PY{o}{.}\PY{n}{x}\PY{o}{.}\PY{n}{flatten}\PY{p}{(}\PY{p}{)}\PY{p}{)}\PY{p}{)}
+                        \PY{k}{break}
+\end{Verbatim}
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+        \PY{n}{G} \PY{o}{=} \PY{n}{np}\PY{o}{.}\PY{n}{array}\PY{p}{(}\PY{p}{[}
+        \PY{p}{[}\PY{l+m+mi}{2}\PY{p}{,} \PY{o}{\PYZhy{}}\PY{l+m+mi}{1}\PY{p}{,} \PY{l+m+mi}{0}\PY{p}{,} \PY{l+m+mi}{0}\PY{p}{]}\PY{p}{,}
+        \PY{p}{[}\PY{o}{\PYZhy{}}\PY{l+m+mi}{1}\PY{p}{,} \PY{l+m+mi}{2}\PY{p}{,} \PY{o}{\PYZhy{}}\PY{l+m+mi}{1}\PY{p}{,} \PY{l+m+mi}{0}\PY{p}{]}\PY{p}{,}
+        \PY{p}{[}\PY{l+m+mi}{0}\PY{p}{,} \PY{o}{\PYZhy{}}\PY{l+m+mi}{1}\PY{p}{,} \PY{l+m+mi}{2}\PY{p}{,} \PY{o}{\PYZhy{}}\PY{l+m+mi}{1} \PY{p}{]}\PY{p}{,}
+        \PY{p}{[}\PY{l+m+mi}{0}\PY{p}{,}  \PY{l+m+mi}{0}\PY{p}{,} \PY{o}{\PYZhy{}}\PY{l+m+mi}{1}\PY{p}{,} \PY{l+m+mi}{2}\PY{p}{]}\PY{p}{,}
+        \PY{p}{]}\PY{p}{)}
+        \PY{n}{b} \PY{o}{=} \PY{n}{np}\PY{o}{.}\PY{n}{array}\PY{p}{(}\PY{p}{[}\PY{p}{[}\PY{l+m+mi}{1}\PY{p}{,}  \PY{l+m+mi}{0}\PY{p}{,} \PY{l+m+mi}{2}\PY{p}{,} \PY{n}{sqrt}\PY{p}{(}\PY{l+m+mi}{5}\PY{p}{)}\PY{p}{]}\PY{p}{]}\PY{p}{)}\PY{o}{.}\PY{n}{T}
+        \PY{n}{x0} \PY{o}{=} \PY{n}{np}\PY{o}{.}\PY{n}{zeros}\PY{p}{(}\PY{p}{(}\PY{l+m+mi}{4}\PY{p}{,}\PY{l+m+mi}{1}\PY{p}{)}\PY{p}{)}
+        \PY{n}{GCM}\PY{p}{(}\PY{n}{G}\PY{p}{,} \PY{n}{b}\PY{p}{)}\PY{o}{.}\PY{n}{run}\PY{p}{(}\PY{n}{x0}\PY{p}{)}
+\end{Verbatim}
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+
+	x\_0 = [0. 0. 0. 0.]
+iteration 1:
+	p\_0 = [ 1.         -0.          2.          2.23606798]
+	x\_1 = [0.9045085  0.         1.80901699 2.02254249]
+	||Gx-b|| = 2.860
+iteration 2:
+	p\_1 = [0.00911863 2.71352549 2.04077974 1.82940686]
+	x\_2 = [0.91119459 1.98965125 3.30538767 3.36392721]
+	||Gx-b|| = 1.838
+iteration 3:
+	p\_2 = [ 1.17102717  1.35770074  1.58544583 -0.43103244]
+	x\_3 = [1.60398844 2.79288344 4.2433566  3.10892321]
+	||Gx-b|| = 0.906
+iteration 4:
+	p\_3 = [ 0.86953519  0.59157947 -0.19954978  0.15681188]
+	x\_4 = [2.0472136  3.09442719 4.14164079 3.18885438]
+	||Gx-b|| = 0.000
+
+The method converged to x* = [2.0472136  3.09442719 4.14164079 3.18885438]
+
+    \end{Verbatim}    
